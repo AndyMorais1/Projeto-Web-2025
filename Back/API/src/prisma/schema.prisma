@@ -1,0 +1,125 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CLIENT
+  ADMIN
+  AGENT
+}
+
+model User {
+  id                     String     @id @default(uuid())
+  role                   Role       @default(CLIENT) //default role is client
+  email                  String     @unique //client, agent
+  name                   String //client, agent, admin
+  password               String //client, agent, admin
+  phone                  String? //client, agent
+  createdAt              DateTime   @default(now())
+  updatedAt              DateTime   @updatedAt
+  Houses                 House[] //agent, client
+  visitsClient           Visit[]    @relation("ClientVisits") //client
+  isSuperAdmin           Boolean?   @default(false) //admin
+  isEmailVerified        Boolean    @default(false) // Novo campo para verificar o email
+  emailVerificationToken String? // Token para verificar o email
+  photo                  String? //client, agent, admin
+  status                 UserStatus @default(PENDING) //admin,agent,client
+  salt                   String //client, agent, admin
+
+  @@map("users")
+}
+
+model House {
+  id          String       @id @default(uuid())
+  type        Type
+  agent       User         @relation(fields: [agentId], references: [id])
+  agentId     String
+  visits      Visit[]      @relation("HouseVisits")
+  location    Location     @relation(fields: [locationId], references: [id])
+  locationId  String       @unique
+  title       String
+  description String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  images     String[]
+  details     HouseDetails @relation(fields: [detailsId], references: [id])
+  detailsId   String       @unique
+  price       Float
+
+  @@map("houses")
+}
+
+model Visit {
+  id        String      @id @default(uuid())
+  client    User        @relation("ClientVisits", fields: [clientId], references: [id])
+  clientId  String
+  house     House       @relation("HouseVisits", fields: [houseId], references: [id])
+  houseId   String
+  date      DateTime
+  status    VisitStatus @default(PENDING)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@map("visits")
+}
+
+enum Type {
+  APARTMENT
+  HOUSE
+  PENTHOUSE
+  DUPLEX
+  STUDIO
+}
+
+model Price {
+  id    String @id @default(uuid())
+  value Float
+
+  @@map("prices")
+}
+
+model Location {
+  id        String @id @default(uuid())
+  address   String
+  city      String
+  zipCode   String
+  latitude  Float
+  longitude Float
+  house     House?
+
+  @@map("locations")
+   @@unique([address, city, zipCode, latitude, longitude])
+}
+
+enum VisitStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  INACTIVE
+}
+
+model HouseDetails {
+  id        String @id @default(uuid())
+  rooms     Int
+  bathrooms Int
+  area      Float
+  house     House?
+
+  @@map("details")
+}

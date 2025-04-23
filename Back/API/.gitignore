@@ -1,0 +1,15 @@
+# Dependências do Node.js
+node_modules/
+dist/
+
+# Configuração do ambiente
+.env
+
+# Logs e cache
+logs/
+*.log
+.npm/
+.cache/
+
+# Arquivos do Prisma
+prisma/migrations/
