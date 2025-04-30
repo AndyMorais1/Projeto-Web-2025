@@ -8,33 +8,41 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { User, Home, Check } from "lucide-react";
-import { useUsers } from "@/data/UsersContext";
+import { useUsers } from "@/contexts/UsersContext";
+import { useHouses } from "@/contexts/HousesContext";
 
 const cardsInfo = [
   {
     title: "Users",
     icon: User,
-    number: 0,
+    number: "",
   },
   {
     title: "Houses",
     icon: Home,
-    number: 0,
+    number: "",
   },
   {
     title: "Requests",
     icon: Check,
-    number: 0,
+    number: "",
   },
 ];
 
 export function Cards() {
   const { users } = useUsers();
+  const { houses } = useHouses();
+
+  const totalHouses = houses.length;
 
   const totalUsers = users.length;
   const pendingUsers = users.filter(
     (user) => user.status?.toLowerCase() === "pending"
   ).length;
+  const pendingAgents = users.filter(
+    (user) => user.status?.toLowerCase() === "pending" && user.role === "AGENT"
+  ).length;
+
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4 w-full">
@@ -52,6 +60,8 @@ export function Cards() {
             <div className="flex flex-col gap-1">
               <CardDescription className="text-4xl font-bold">
                 {card.title === "Users" ? totalUsers : card.number}
+                {card.title === "Houses" ? totalHouses : card.number}
+                {card.title === "Requests" ? pendingAgents : card.number}
               </CardDescription>
 
               {card.title === "Users" && (

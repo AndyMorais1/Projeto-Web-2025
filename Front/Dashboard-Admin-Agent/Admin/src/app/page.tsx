@@ -1,12 +1,14 @@
-import { LoginForm } from "@/components/myComponents/login-form";
-import { redirect } from "next/navigation";
+// app/page.tsx
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-export default function LoginPage() {
-  return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <LoginForm />
-      </div>
-    </div>
-  );
+export default async function Home() {
+  const cookieStore = await cookies(); // Use await aqui
+  const token = cookieStore.get('token');
+
+  if (token) {
+    redirect('/dashboard');
+  } else {
+    redirect('/login');
+  }
 }

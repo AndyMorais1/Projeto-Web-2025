@@ -12,4 +12,5 @@ logs/
 .cache/
 
 # Arquivos do Prisma
-prisma/migrations/
+prisma/migrations/node_modules
+node_modules

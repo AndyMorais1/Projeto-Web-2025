@@ -23,7 +23,7 @@ import {
 import { Pencil } from "lucide-react";
 import { UserDataOptional, UserData } from "@/data/UserData";
 import { usersServices } from "@/api/Users";
-import { useUsers } from "@/data/UsersContext"; 
+import { useUsers } from "@/contexts/UsersContext";
 import { toast } from "sonner"; 
 
 export function DialogEditUser({

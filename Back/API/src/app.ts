@@ -2,7 +2,7 @@ import Fastify, { FastifyReply, FastifyRequest } from 'fastify';
 import { userRoutes } from './routes/UserRoute';
 import fastifyStatic from '@fastify/static';
 import path from 'path';
-import fjwt from 'fastify-jwt';
+import fastifyJwt from '@fastify/jwt'
 import { houseRoutes } from './routes/HouseRoute';
 import cors from '@fastify/cors';
 import dotenv from 'dotenv';
@@ -34,7 +34,7 @@ declare module 'fastify' {
   }
 }
 
-server.register(fjwt, {
+server.register(fastifyJwt, {
   secret: 'supersecret'
 });
 

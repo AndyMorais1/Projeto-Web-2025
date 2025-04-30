@@ -17,7 +17,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { UserData } from "@/data/UserData";
-import { useUsers } from "@/data/UsersContext";
+import { useUsers } from "@/contexts/UsersContext";
 import { toast } from "sonner";
 
 // Função auxiliar para cor do status

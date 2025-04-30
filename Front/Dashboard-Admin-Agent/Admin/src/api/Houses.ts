@@ -1,13 +1,13 @@
 import axios, { AxiosInstance } from 'axios';
 import Cookie from 'js-cookie';
-import { HouseData } from '@/data/HouseData';
+import { HouseData, DetailsData, LocationData } from '@/data/HouseData';
 
 class HousesServices {
     private api: AxiosInstance;
 
     constructor() {
         this.api = axios.create({
-            baseURL: 'https://localhost:3000/houses',
+            baseURL: 'http://localhost:3000/houses',
             headers: { 'Content-Type': 'application/json' },
             timeout: 5000, // Timeout de 5 segundos
         });

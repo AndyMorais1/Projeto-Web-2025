@@ -1,27 +1,26 @@
-// utils/authMiddleware.ts
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import Cookies from 'js-cookie';
+import Cookie from 'js-cookie'; // Importar a biblioteca js-cookie para manipulação de cookies
 
 export function middleware(req: NextRequest) {
-    // Verifica o token no localStorage ou nos cookies
-    const token = Cookies.get('token') || localStorage.getItem('token');
+  // Verificar se o token está presente nos cookies
+  const token = Cookie.get('token'); // Aqui usamos Cookie.get() para acessar o token nos cookies
 
-    // Se não houver token, redireciona o usuário para a página de login
-    if (!token) {
-        return NextResponse.redirect(new URL('/', req.url));
-    }
+  // Se não houver token, redireciona para a página de login
+  if (!token) {
+    return NextResponse.redirect(new URL('/', req.url));  // Redireciona para a página de login
+  }
 
-    // Se houver token, a requisição segue normalmente
-    return NextResponse.next();
+  // Caso o token exista, continua a requisição normalmente
+  return NextResponse.next();
 }
 
+// Configuração do middleware, que define as rotas protegidas
 export const config = {
-    matcher: ['/dashboard',
-        '/profile',
-        '/settings',
-        '/dashboard/users',
-        '/dashboard/houses',
-        '/dashboard/requests',
-    ], // Defina as rotas que você deseja proteger
+  matcher: [
+    '/dashboard',  // Rotas privadas (exemplo de dashboard)
+    '/dashboard/:path*',
+    '/profile',    // Rota de perfil
+    '/settings',   // Rota de configurações
+  ], // Aqui você pode adicionar mais rotas que precisam de autenticação
 };

@@ -7,6 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { usersServices } from "@/api/Users";
+import { useUsers } from "@/contexts/UsersContext";
+import { useHouses } from "@/contexts/HousesContext";
+
 
 export function LoginForm({
   className,
@@ -16,16 +19,29 @@ export function LoginForm({
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { initializeUsersData } = useUsers(); // <-- usaremos a função do contexto para inicializar dados
+  const { initializeHouses } = useHouses();
+
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setError(null); // Limpa erros anteriores
+    setError(null); // Resetando erro no início do processo de login
 
-    const token = await usersServices.login(email, password);
-    if (token) {
-      router.push("/dashboard");
-    } else {
-      setError("Email ou senha inválidos.");
+    try {
+      // Realizando o login e obtendo o token
+      const token = await usersServices.login(email, password);
+
+      if (token) {
+        // Inicializando dados do contexto após login bem-sucedido
+        await initializeUsersData();
+        await initializeHouses();
+        router.push("/dashboard"); // Redirecionar após login bem-sucedido
+      } else {
+        setError("Email ou senha inválidos.");
+      }
+    } catch (error: any) {
+      console.error("Erro no login:", error);
+      setError("Ocorreu um erro ao tentar fazer login. Tente novamente.");
     }
   };
 
@@ -53,8 +69,8 @@ export function LoginForm({
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
-                  placeholder="Enter your password"
                   type="password"
+                  placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required

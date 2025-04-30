@@ -31,9 +31,15 @@ export function UserSidebar({
   const router = useRouter();
 
   function handleLogout() {
-    usersServices.logout().then(() => {
-      router.replace("/"); 
-    });
+    usersServices.logout()
+      .then(() => {
+        // Redireciona o usuário para a página de login após o logout
+        router.replace("/"); // O replace impede que o usuário volte à página anterior após o logout
+      })
+      .catch((error) => {
+        console.error("Erro ao fazer logout:", error);
+        // Aqui você pode também mostrar uma mensagem de erro, se desejar
+      });
   }
 
   return (

@@ -1,8 +1,8 @@
-import { House } from '@prisma/client';
-import { prisma } from '../prisma/prisma';
-import { CreateHouseSchema } from '../schema/HouseSchema';
-import { UpdateHouseSchema } from '../schema/HouseSchema';
-import { getCoordinates } from '../utils/getCoordinates';
+import {House} from '@prisma/client';
+import {prisma} from '../prisma/prisma';
+import {CreateHouseSchema} from '../schema/HouseSchema';
+import {UpdateHouseSchema} from '../schema/HouseSchema';
+import {getCoordinates} from '../utils/getCoordinates';
 
 class HouseService {
     public async createHouse(data: CreateHouseSchema): Promise<House> {
@@ -21,12 +21,12 @@ class HouseService {
                 throw new Error("Não foi possível obter as coordenadas para a localização.");
             }
 
-            const { latitude, longitude } = coordinates;
+            const {latitude, longitude} = coordinates;
             console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
 
             // Verificar se o agente existe
             const agentExists = await prisma.user.findUnique({
-                where: { id: data.agentId },
+                where: {id: data.agentId},
             });
 
             if (!agentExists) {
@@ -88,7 +88,6 @@ class HouseService {
     }
 
 
-
     public async getHouseById(id: string): Promise<House | null> {
         return prisma.house.findUnique({
             where: {
@@ -107,7 +106,8 @@ class HouseService {
             include: {
                 location: true,
                 details: true,
-            },});
+            },
+        });
     }
 
     public async updateHouse(id: string, data: UpdateHouseSchema): Promise<House> {
@@ -155,13 +155,29 @@ class HouseService {
         });
     }
 
-    public async deleteHouse(id: string): Promise<House> {
-        return prisma.house.delete({
-            where: {
-                id,
-            },
+    public async deleteHouse(id: string) {
+        const house = await this.getHouseById(id);
+        if (!house) {
+            throw new Error(`Casa não encontrada!`);
+        }
+
+        // Deleta a casa primeiro para evitar conflitos de chave estrangeira
+        await prisma.house.delete({
+            where: { id },
         });
+
+        // Depois, remove os dados relacionados
+        await prisma.houseDetails.delete({
+            where: { id: house.detailsId },
+        });
+
+        await prisma.location.delete({
+            where: { id: house.locationId },
+        });
+
+        return { message: "Casa deletada com sucesso." };
     }
+
 
     public async getHousesByAgent(agentId: string): Promise<House[]> {
         return prisma.house.findMany({
@@ -177,4 +193,5 @@ class HouseService {
     }
 
 }
+
 export const houseService = new HouseService();

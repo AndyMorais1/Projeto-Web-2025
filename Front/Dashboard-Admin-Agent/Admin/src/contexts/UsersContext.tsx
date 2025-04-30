@@ -1,15 +1,16 @@
 "use client";
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { usersServices } from "@/api/Users"; // Importa serviço da API
+import { usersServices } from "@/api/Users";
 import { UserData } from "@/data/UserData";
 import { jwtDecode } from "jwt-decode";
 
-// Definindo o tipo do contexto
+// Tipagem do contexto
 interface UsersContextType {
   users: UserData[];
-  currentUser: UserData | null;  // Adicionamos o usuário atual ao contexto
+  currentUser: UserData | null;
   setUsers: React.Dispatch<React.SetStateAction<UserData[]>>;
-  setCurrentUser: React.Dispatch<React.SetStateAction<UserData | null>>;  // Função para atualizar o usuário atual
+  setCurrentUser: React.Dispatch<React.SetStateAction<UserData | null>>;
+  initializeUsersData: () => Promise<void>; // <- nova função exposta
 }
 
 // Criando o contexto
@@ -20,42 +21,47 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [users, setUsers] = useState<UserData[]>([]);
   const [currentUser, setCurrentUser] = useState<UserData | null>(null);
 
-  // Carregar usuários da API e o usuário atual ao montar o contexto
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        // Primeiro, buscamos o usuário atual do token
-        const token = localStorage.getItem("token");
+  // Função para ser chamada após o login
+  const initializeUsersData = async () => {
+    try {
+      const token = localStorage.getItem("token");
 
-        if (token) {
-          try {
-            const decoded = jwtDecode<Omit<UserData, "password">>(token); // Decodificamos o token para obter os dados do usuário atual
-            setCurrentUser(decoded); // Atualizamos o estado com o usuário atual
-          } catch (err) {
-            console.error("Erro ao decodificar o token:", err);
-          }
+      if (token) {
+        try {
+          // Decodificando o token e definindo o usuário atual
+          const decoded = jwtDecode<Omit<UserData, "password">>(token);
+          setCurrentUser(decoded);
+        } catch (err) {
+          console.error("Erro ao decodificar o token:", err);
         }
 
-        // Agora, carregamos a lista de usuários da API
+        // Carregar os dados dos usuários
         const data = await usersServices.getAllUsers();
-        console.log(" Dados de usuários carregados no contexto:", data);
+        console.log("Usuários carregados após login:", data);
         setUsers(data);
-      } catch (error) {
-        console.error(" Erro ao buscar usuários:", error);
+      } else {
+        console.log("Token não encontrado no localStorage.");
       }
-    };
+    } catch (error) {
+      console.error("Erro ao inicializar dados dos usuários:", error);
+    }
+  };
 
-    fetchUsers();
+  // Chamada para inicializar os dados do usuário quando o componente for montado
+  useEffect(() => {
+    initializeUsersData();
   }, []);
 
   return (
-    <UsersContext.Provider value={{ users, currentUser, setUsers, setCurrentUser }}>
+    <UsersContext.Provider
+      value={{ users, currentUser, setUsers, setCurrentUser, initializeUsersData }}
+    >
       {children}
     </UsersContext.Provider>
   );
 };
 
-// Hook customizado para acessar o contexto
+// Hook customizado
 export const useUsers = (): UsersContextType => {
   const context = useContext(UsersContext);
   if (!context) {

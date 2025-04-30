@@ -1,17 +1,33 @@
 export interface HouseData {
-  id: number;
+  id?: string;
   title: string;
-  address: string;
-  zipCode: string;
-  latitude: number;
-  longitude: number;
-  price: string | number;
-  agent: string;
-  image: string[];
-  area: number | string;
-  bedrooms: number;
-  bathrooms: number;
   type: string;
   description: string;
   agentId: string;
+  images: string[];
+  price: number;
+  details: DetailsData;
+  location: LocationData;
+}
+export interface DetailsData {
+  id?: string;
+  rooms: number;
+  bathrooms: number;
+  area: number;
+}
+export interface LocationData {
+  id?: string;
+  latitude?: number;
+  longitude?: number;
+  address: string;
+  zipCode: string;
+  city: string;
+}
+
+export enum Type {
+  APARTMENT = 'APARTMENT',
+  HOUSE = 'HOUSE',
+  PENTHOUSE = 'PENTHOUSE',
+  STUDIO = 'STUDIO',
+  DUPLEX = 'DUPLEX',
 }
