@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="tail.css">
+  <title>Spot Home</title>
+</head>
+<body class="font-sans">
+
+  <!-- Navbar -->
+  <nav class="flex items-center justify-between py-6 px-8 ">
+    <div>
+      <a href="./index.html"> <img src="./assets/images/logo.png" alt="Logo" class=" h-5 lg:h-10 object-cover"> </a>
+    </div>
+    <ul id="menu" class="hidden flex flex-col justify-center items-center h-[50vh] bg-gray-100 absolute right-0 top-16 w-60 shadow-lg  lg:flex lg:static lg:h-auto lg:flex-row lg:w-[80%] lg:bg-white lg:shadow-none lg:justify-end lg:space-x-6 lg:text-lg z-50" >
+      <li><a href="#offer" class=" hover:text-blue-500">O que oferecemos?</a></li>
+      <li><a href="#expertise" class=" block py-2 px-4 hover:text-blue-500">Porque nos escolher?</a></li>
+      <li><a href="./public/about.html" class=" block py-2 px-4 hover:text-blue-500">Contatos</a></li>
+      <li> <a href="./public/login.html"> <img src="./assets/images/icons/userIcon.png" alt="User" class="h-8"> </a> </li>
+    </ul>
+
+    <div id="button" class="flex flex-col w-50 h-50 lg:hidden gap-1">
+      <span class="w-8 h-0.5 bg-black rounded-full"></span>
+      <span class="w-8 h-0.5 bg-black rounded-full"></span>
+      <span class="w-8 h-0.5 bg-black rounded-full"></span>
+    </div>
+
+  </nav>
+  <hr class="border-gray-300"/>
+
+  <!-- Hero Section -->
+  <div class=" relative flex flex-col items-center text-center">
+    <img src="./assets/images/image1.jpeg" alt="" class=" main-image w-full h-[50vh] lg:h-[560px] object-cover brightness-90">
+    <div class="absolute top-1/2 -translate-y-1/2 space-y-6">
+      <h1 class="text-white font-bold text-3xl lg:text-5xl">Discover Modern Villa</h1>
+      <p class="text-white text-2xl lg:text-2xl">O ponto certo para o seu novo lar</p>
+      <div class="flex flex-row justify-center items-center space-x-4 mt-6">
+        <a href="./public/about.html" class="bg-blue-500 text-white py-1 px-4 lg:py-3 lg:px-6 rounded-full">Learn More</a>
+        <a href="./public/login.html" class="bg-blue-500 text-white py-3 px-6 rounded-full">Get Started Now</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div class="bg-gray-100 py-10 flex flex-col items-center">
+    <h2 class=" text-xl :text-3xl font-semibold">Features</h2>
+
+    <!-- the div that contains the fields -->
+    <div class="gap-3 mt-3 mx-7 w-4/5 md:grid md:grid-cols-3 md:grid-rows-2 md:gap-6 md:mt-6 md:mx-10 md:w-4/5">
+      <!-- the text of options with the label  -->
+      <div class="flex flex-col space-y-2">
+        <label for="bathrooms" class="text-gray-600">Property Type</label>
+        <select id="bathrooms" class="border rounded-md px-3 py-4">
+          <option value="1">1</option>
+          <option value="2">2</option>
+        </select>
+      </div>
+      <!-- the text of options with the label  -->
+      <div class="flex flex-col space-y-2">
+        <label for="location" class="text-gray-600">Location</label>
+        <select id="location" class="border rounded-md px-3 py-4">
+          <option value="Foros de amora">Foros de amora</option>
+          <option value="Seixal">Seixal</option>
+          <option value="Lisboa">Lisboa</option>
+        </select>
+      </div>
+      <!-- the text of options with the label  -->
+      <div class="flex flex-col space-y-2">
+        <label for="year" class="text-gray-600">Year Built</label>
+        <select id="year" class="border rounded-md px-3 py-4">
+          <option value="1999">1999</option>
+          <option value="2000">2000</option>
+        </select>
+      </div>
+      <!-- the text of options with the label  -->
+      <div class="flex flex-col space-y-2">
+        <label for="bathrooms" class="text-gray-600">Property Type</label>
+        <select id="bathrooms" class="border rounded-md px-3 py-4">
+          <option value="1">1</option>
+          <option value="2">2</option>
+        </select>
+      </div>
+      <!-- the text of options with the label  -->
+      <div class="flex flex-col space-y-2">
+        <label for="bathrooms" class="text-gray-600">Property Type</label>
+        <select id="bathrooms" class="border rounded-md px-3 py-4">
+          <option value="1">1</option>
+          <option value="2">2</option>
+        </select>
+      </div>
+      <!-- the text of options with the label  -->
+      <div class="flex flex-col space-y-2">
+        <label for="bathrooms" class="text-gray-600">Property Type</label>
+        <select id="bathrooms" class="border rounded-md px-4 py-4">
+          <option value="1">1</option>
+          <option value="2">2</option>
+        </select>
+      </div>
+    </div>
+    <a href="./public/search.html" class=" mt-6 bg-blue-500 text-white py-3 px-6 rounded-full">Search</a>
+  </div>
+
+  <!-- House Example -->
+  <div class=" houses flex flex-col items-center text-center py-10">
+    <p class="text-lg">Best properties to buy</p>
+    <h2 class="text-3xl font-bold">Properties</h2>
+    <img src="./assets/images/image5.jpg" alt="" class="w-2/3 h-50 object-cover mt-4">
+    <!-- card with the house informations -->
+    <div class="bg-white p-6 shadow-lg w-4/5 lg:w-1/3 lg:-mt-32">
+      <h2 class="text-xl font-semibold">Modern Family Home</h2>
+
+      <div class="flex flex-row items-center space-x-2 text-gray-600 mt-2">
+        <img src="./assets/images/icons/locaIcon.png" alt="" class="h-5">
+        <p>Rua Damião de Góis 38, Alfornelos</p>
+      </div>
+      <div class="grid grid-cols-2 grid-rows-2 gap-4 mt-4">
+        <div class="flex items-center space-x-2">
+          <img src="./assets/images/icons/locaIcon.png" alt="" class="h-5">
+          <p>3 Bedrooms</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <img src="./assets/images/icons/locaIcon.png" alt="" class="h-5">
+          <p>2 Bathrooms</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <img src="./assets/images/icons/locaIcon.png" alt="" class="h-5">
+          <p>Sq Ft: 3400</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <img src="./assets/images/icons/locaIcon.png" alt="" class="h-5">
+          <p>1 Garage</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Services -->
+  <div id="offer" class="flex flex-col justify-center items-center py-10 md:flex-row md:justify-evenly md:py-20 bg-gray-100 ">
+    <!-- card 1  -->
+    <div  class="md:flex md:flex-col md:items-start">
+      <h2 class="text-xl text-6xl font-semibold ml-10 mb-7 md:mb-7 md:ml-0 ">O que oferecemos?</h2>
+
+      <div  class="flex flex-col justify-center items-center md:flex-row md:justify-evenly bg-gray-100 ">
+        <div class="flex flex-col justify-center items-center bg-white shadow-lg p-10 w-3/4 mb-10 md:p-10 md:w-1/3 rounded-lg">
+          <img src="./assets/images/icons/sell.png" alt="" class="h-12 mx-auto">
+          <h2 class="text-xl font-semibold mt-4">Compra de casa</h2>
+          <p class="text-gray-600 mt-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+          <a href="public/search.html" class="mt-6 bg-blue-500 text-white py-3 px-6 rounded-full">Search</a>
+        </div>
+        <!-- card 2 -->
+        <div class="flex flex-col justify-center items-center bg-white shadow-lg p-10 w-3/4 mb-10 md:p-10 md:w-1/3 rounded-lg">
+          <img src="./assets/images/icons/sale.png" alt="" class="h-12 mx-auto">
+          <h2 class="text-xl font-semibold mt-4">Venda de casa</h2>
+          <p class="text-gray-600 mt-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+          <a href="#" class="mt-6 bg-blue-500 text-white py-3 px-6 rounded-full">Search</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Expertise -->
+  <div id="expertise" class="flex flex-col py-6 justify-center items-center md:flex-row md:py-20 w-full h-full">
+    <!-- half, text part -->
+    <div class="flex flex-col justify-center items-center w-2/3 md:justify-items-start md:items-start md:w-1/3 md:ml-20">
+      <h2 class="text-2xl md:text-3xl font-semibold">Our Expertise</h2>
+      <h3 class="text-xl  md:mt-2 md:text-2xl  text-gray-700 ">Why Choose Us</h3>
+      <p class="text-gray-600 text-xl mt-4">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+    </div>
+
+    <div class=" flex flex-col p-15 w-3/4 mb-10 md:grid md:grid-cols-2 md:grid-rows-2 md:w-1/2 md:gap-4 md:pr-8">
+      <div class="bg-gray-100 p-5 rounded-lg mb-7 mt-7 md:mt-0 md:mb-0">
+        <div class="flex flex-col justify-center items-center ">
+          <h2 class="text-xl font-semibold">Apartament</h2>
+          <p class="text-base">Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam vero quibusdam magnam vitae, aspernatur sapiente mollitia exercitationem eveniet voluptates aliquid!</p>
+        </div>
+      </div>
+
+      <div class="bg-gray-100 p-5 rounded-lg mb-7 md:mb-0">
+        <div class="flex flex-col justify-center items-center ">
+          <h2 class="text-xl font-semibold">Apartament</h2>
+          <p class="text-base">Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam vero quibusdam magnam vitae, aspernatur sapiente mollitia exercitationem eveniet voluptates aliquid!</p>
+        </div>
+      </div>
+
+      <div class=" bg-gray-100 p-5 rounded-lg mb-7 md:mb-0">
+        <div class="flex flex-col justify-center items-center ">
+          <h2 class="text-xl font-semibold">Apartament</h2>
+          <p class="text-base">Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam vero quibusdam magnam vitae, aspernatur sapiente mollitia exercitationem eveniet voluptates aliquid!</p>
+        </div>
+      </div>
+
+      <div class=" bg-gray-100 p-5 rounded-lg">
+        <div class="flex flex-col justify-center items-center ">
+          <h2 class="text-xl font-semibold">Apartament</h2>
+          <p class="text-base">Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam vero quibusdam magnam vitae, aspernatur sapiente mollitia exercitationem eveniet voluptates aliquid!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="bg-gray-100 text-black py-8">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center md:text-left ">
+        <!-- Company Info -->
+        <div>
+          <h2 class="text-xl font-semibold">Spot Home</h2>
+          <p class="text-gray-400 mt-2">Delivering quality since 2025.</p>
+        </div>
+        
+        <!-- Navigation Links -->
+        <div>
+          <h3 class="text-lg font-semibold">Quick Links</h3>
+          <ul class="mt-2 space-y-2">
+            <li><a href="./public/about.html" class="text-gray-400 hover:text-white">About Us</a></li>
+            <li><a href="#offer" class="text-gray-400 hover:text-white">Services</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white">Contact</a></li>
+          </ul>
+        </div>
+        
+        <!-- Social Links -->
+    
+      </div>
+      
+      <!-- Copyright -->
+      <div class="text-center text-gray-500 text-sm mt-6 border-t border-gray-700 pt-4">
+        &copy; 2025 Company Name. All rights reserved.
+      </div>
+    </div>
+  </footer>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="./index.js"></script>
+  
+</body>
+</html>
