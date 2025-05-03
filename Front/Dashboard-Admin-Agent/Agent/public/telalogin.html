@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login - Agente Imobiliário</title>
+  <link rel="stylesheet" href="css/style.css">
+  <meta name="description" content="Login para agentes imobiliários">
+  <meta name="theme-color" content="#fafafa">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f6f8;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .container {
+      display: flex;
+      width: 900px;
+      height: 500px;
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .imagem {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .imagem img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .login {
+      flex: 1;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-form h1 {
+
+      padding-bottom: 60px;
+      color: #333;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .labelinput {
+      display: flex;
+      flex-direction: column;
+      width: 270px;
+    }
+
+    label {
+      font-size: 10px;
+      margin-bottom: 5px;
+      color: #444;
+      font-weight: 500;
+    }
+
+    input {
+      height: 40px;
+      width: 100%;
+      font-size: 14px;
+      padding: 0 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      transition: border 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #007BFF;
+      outline: none;
+    }
+
+    .button {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    button {
+      background-color: #10a3e2;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 200px;
+      margin-top: 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #007bff;
+    }
+
+    .forgot-password {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #007BFF;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .forgot-password:hover {
+      color: #0056b3;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="imagem">
+    <img src="https://img.freepik.com/fotos-gratis/agente-imobiliario-masculino-fazendo-negocios-e-mostrando-a-casa-para-um-possivel-casal-comprador_23-2150164710.jpg?semt=ais_hybrid&w=740" alt="Imagem de um imóvel">
+  </div>
+
+  <div class="login">
+    <div class="login-form">
+      <h1>Login do Agente Imobiliário</h1>
+    </div>
+
+    <div class="labelinput">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" placeholder="Seu e-mail" required>
+
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" placeholder="Sua senha" required>
+    </div>
+
+    <div class="button">
+      <button type="button" onclick="window.location.href='homeagent.html'">Entrar</button>
+    </div>
+
+    <a href="#" class="forgot-password">Esqueceu a senha?</a>
+  </div>
+</div>
+
+</body>
+
+</html>

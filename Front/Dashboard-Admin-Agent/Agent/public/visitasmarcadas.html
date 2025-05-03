@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Visitas Marcadas - SpotHome</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      background-color: #f4f6f8;
+    }
+
+    .sidedashboard {
+      width: 250px;
+      background-color: #ffffff;
+      border-right: 1px solid #ddd;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .sidedashboard h2 {
+      color: #007bff;
+      margin-bottom: 30px;
+    }
+
+    .sidedashboard a {
+      text-decoration: none;
+      color: #333;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      transition: 0.3s;
+      display: block;
+    }
+
+    .sidedashboard a:hover {
+      background-color: #f0f0f0;
+      color: #007bff;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+
+    .user-info img {
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+    }
+
+    .user-info span {
+      font-size: 14px;
+      color: #555;
+    }
+
+    .main {
+      flex: 1;
+      padding: 40px;
+    }
+
+    .main h1 {
+      margin-bottom: 30px;
+      font-size: 26px;
+      color: #333;
+    }
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      border: 1px solid #ddd;
+    }
+
+    .card-header {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .card-header img {
+      width: 120px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .card-header h3 {
+      margin: 0;
+      font-size: 20px;
+      color: #007bff;
+    }
+
+    .card-header p {
+      margin: 4px 0 0 0;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .visit-list {
+      margin-top: 10px;
+      border-top: 1px solid #eee;
+      padding-top: 10px;
+    }
+
+    .visit-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #f1f1f1;
+    }
+
+    .visit-item:last-child {
+      border-bottom: none;
+    }
+
+    .visit-name {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .visit-date {
+      color: #555;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      .sidedashboard {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .main {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidedashboard">
+  <div>
+    <h2>SpotHome</h2>
+    <a href="homeagent.html">Estatísticas</a>
+    <a href="meusimoveis.html">Meus Imóveis</a>
+    <a href="visitasmarcadas.html">Visitas Marcadas</a>
+  </div>
+  <div class="user-info">
+    <img src="https://via.placeholder.com/50" alt="Foto do usuário">
+    <span>Ariel Costa</span>
+  </div>
+</div>
+
+<div class="main">
+  <h1>Visitas Marcadas</h1>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-header">
+        <img src="https://images.unsplash.com/photo-1501183638710-841dd1904471" alt="Imóvel">
+        <div>
+          <h3>Casa Moderna</h3>
+          <p>Lisboa, Portugal</p>
+        </div>
+      </div>
+      <div class="visit-list">
+        <div class="visit-item">
+          <span class="visit-name">Joana Silva</span>
+          <span class="visit-date">04/05/2025 às 15:00</span>
+        </div>
+        <div class="visit-item">
+          <span class="visit-name">Carlos Mendes</span>
+          <span class="visit-date">05/05/2025 às 11:30</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914" alt="Imóvel">
+        <div>
+          <h3>Moradia Clássica</h3>
+          <p>Porto, Portugal</p>
+        </div>
+      </div>
+      <div class="visit-list">
+        <div class="visit-item">
+          <span class="visit-name">Ana Ribeiro</span>
+          <span class="visit-date">06/05/2025 às 10:00</span>
+        </div>
+        <div class="visit-item">
+          <span class="visit-name">Miguel Costa</span>
+          <span class="visit-date">06/05/2025 às 13:00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard - SpotHome</title>
+  <meta name="description" content="Dashboard do usuário SpotHome">
+  <meta name="theme-color" content="#fafafa">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      height: 100vh;
+    }
+
+    .sidedashboard {
+      width: 240px;
+      background-color: white;
+      border-right: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .sidedashboard h2 {
+      margin-bottom: 30px;
+      color: #007bff;
+    }
+
+    .sidedashboard a {
+      text-decoration: none;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 6px;
+      color: #333;
+      transition: background-color 0.3s ease;
+    }
+
+    .sidedashboard a:hover {
+      background-color: lightgray;
+      color: #007bff;
+    }
+
+    .user-info {
+      margin-top: auto;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-info img {
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+    }
+
+    .user-info span {
+      font-size: 14px;
+      color: #555;
+    }
+
+    .container {
+      flex-grow: 1;
+      padding: 30px;
+    }
+
+    .cards {
+      display: flex;
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      flex: 1;
+      border: 1px solid #ddd;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .card h4 {
+      font-weight: normal;
+      color: #444;
+      margin-bottom: 10px;
+    }
+
+    .number {
+      font-size: 24px;
+      font-weight: bold;
+      color: #007bff;
+    }
+  </style>
+</head>
+
+<body>
+<div class="sidedashboard">
+  <h2>SpotHome</h2>
+  <a href="homeagent.html">Estatísticas</a>
+  <a href="meusimoveis.html">Meus imóveis</a>
+  <a href="#">Visitas marcadas</a>
+
+  <div class="user-info">
+    <img src="https://via.placeholder.com/50" alt="Foto do usuário">
+    <span>Usuário</span>
+  </div>
+</div>
+
+<div class="container">
+  <h1>Bem-vindo(a) ao seu painel</h1>
+  <div class="cards">
+    <div class="card">
+      <h4>Total de imóveis</h4>
+      <div class="number">12</div>
+    </div>
+    <div class="card">
+      <h4>Visitas agendadas</h4>
+      <div class="number">5</div>
+    </div>
+    <div class="card">
+      <h4>Mensagens novas</h4>
+      <div class="number">3</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

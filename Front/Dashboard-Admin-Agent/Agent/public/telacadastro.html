@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: white;
+    }
+
+    .container {
+      display: flex;
+      width: 900px;
+      height: 500px;
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .imagem {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .imagem img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .login {
+      flex: 1;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-form {
+      padding-bottom: 20px;
+    }
+
+    .labelinput {
+      display: flex;
+      flex-direction: column;
+      width: 250px; /* Ajuste a largura do formulário */
+    }
+
+    label {
+      font-size: 10px;
+      margin-bottom: 5px;
+      align-self: flex-start;
+    }
+
+    input {
+      height: 35px;
+      width: 100%;
+      font-size: 8px;
+      padding: 0 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .button {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    button {
+      background-color: #10a3e2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 200px;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #007bff;
+    }
+
+    .CreateAccount{
+      flex: 1;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+
+  </style>
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Criação de conta</title>
+
+</head>
+<body>
+
+<div class="container">
+  <div class = "imagem">
+    <img src="https://i.pinimg.com/736x/86/dd/85/86dd85f606d59b007b87854bb31fa19a.jpg" alt="imagem da casa">
+  </div>
+  <div class = "CreateAccount">
+    <div class="login-form">
+      <h1>Create Account</h1>
+    </div >
+    <div class = labelinput>
+      <label for="name">Name</label>
+      <input id="name" placeholder="Enter your firstname and lastname" required>
+
+      <label for="phone">Phone Number</label>
+      <input id="phone" placeholder="Enter your phone number" required>
+
+      <label for="email">Email Address</label>
+      <input id="email" placeholder="Enter your email address" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter your password" required>
+
+      <div class = "button">
+        <button type = "button">Sign up</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+
+</html>
+
+
+</body>
+</html>

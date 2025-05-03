@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro de Agente Imobiliário</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f6f8;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      padding: 40px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .container h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #222;
+      font-size: 26px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #444;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: #007BFF;
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 15px;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+    }
+
+    .btn-link {
+      display: inline-block;
+      text-align: center;
+      width: 100%;
+      padding: 14px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .btn-link:hover {
+      background-color: #0056b3;
+    }
+
+    @media (max-width: 600px) {
+      .form-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Cadastro de Agente Imobiliário</h1>
+  <form>
+    <div class="form-group">
+      <label for="nome">Nome completo</label>
+      <input type="text" id="nome" name="nome" placeholder="Ex: João da Silva" required>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Telefone</label>
+        <input type="tel" id="phone" name="phone" placeholder="(+351) 912-345-678" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="agency">Agência / Empresa</label>
+      <input type="text" id="agency" name="agency" placeholder="Nome da empresa">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="experience">Anos de experiência</label>
+        <input type="number" id="experience" name="experience" min="0" placeholder="Ex: 5">
+      </div>
+
+      <div class="form-group">
+        <label for="specialty">Especialização</label>
+        <input type="text" id="specialty" name="specialty" placeholder="Ex: Imóveis residenciais">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="bio">Descrição profissional</label>
+      <textarea id="bio" name="bio" rows="4" placeholder="Fale um pouco sobre sua experiência e perfil profissional..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="photo">Foto de perfil (opcional)</label>
+      <input type="file" id="photo" name="photo" accept="image/*">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+
+      <div class="form-group">
+        <label for="confirm">Confirmar senha</label>
+        <input type="password" id="confirm" name="confirm" required>
+      </div>
+    </div>
+
+    <a href="homeagent.html" class="btn-link">Cadastrar</a>
+  </form>
+</div>
+
+</body>
+</html>

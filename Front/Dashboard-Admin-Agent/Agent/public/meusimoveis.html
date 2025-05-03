@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Meus Imóveis</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      background-color: #f4f6f8;
+    }
+
+    .sidedashboard {
+      width: 250px;
+      background-color: #ffffff;
+      border-right: 1px solid #ddd;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .sidedashboard h2 {
+      color: #007bff;
+      margin-bottom: 30px;
+    }
+
+    .sidedashboard a {
+      text-decoration: none;
+      color: #333;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      transition: 0.3s;
+      display: block;
+    }
+
+    .sidedashboard a:hover {
+      background-color: #f0f0f0;
+      color: #007bff;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+
+    .user-info img {
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+    }
+
+    .user-info span {
+      font-size: 14px;
+      color: #555;
+    }
+
+    .main {
+      flex: 1;
+      padding: 40px;
+    }
+
+    .main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .main-header h1 {
+      font-size: 26px;
+      color: #333;
+    }
+
+    .btn-create {
+      padding: 10px 20px;
+      background-color: #007bff;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .cards {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      width: 240px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 15px;
+      flex-grow: 1;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #777;
+      margin: 5px 0 10px 0;
+    }
+
+    .actionbutton {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px;
+      border-top: 1px solid #eee;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      .sidedashboard {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .main {
+        padding: 20px;
+      }
+
+      .cards {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidedashboard">
+  <div>
+    <h2>SpotHome</h2>
+    <a href="homeagent.html">Estatísticas</a>
+    <a href="meusimoveis.html">Meus Imóveis</a>
+    <a href="visitasmarcadas.html">Visitas Marcadas</a>
+  </div>
+  <div class="user-info">
+    <img src="https://via.placeholder.com/50" alt="Foto do usuário">
+    <span>Ariel Costa</span>
+  </div>
+</div>
+
+<div class="main">
+  <div class="main-header">
+    <h1>Meus Imóveis</h1>
+    <button class="btn-create">Criar Imóvel</button>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <img src="https://plus.unsplash.com/premium_photo-1687960116228-13d383d20188?fm=jpg&q=60&w=3000" alt="Casa 1">
+      <div class="card-content">
+        <h3>Casa Moderna</h3>
+        <p>Lisboa, Portugal</p>
+      </div>
+      <div class="actionbutton"></div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.arquidicas.com.br/wp-content/uploads/2015/09/09005318/casas-bonitas-por-dentro-e-por-fora.jpg" alt="Casa 2">
+      <div class="card-content">
+        <h3>Moradia Clássica</h3>
+        <p>Porto, Portugal</p>
+      </div>
+      <div class="actionbutton"></div>
+    </div>
+
+    <div class="card">
+      <img src="https://i.pinimg.com/736x/12/1c/de/121cde7b20a15836930858c1b17e3410.jpg" alt="Casa 3">
+      <div class="card-content">
+        <h3>Vivenda Luxuosa</h3>
+        <p>Algarve, Portugal</p>
+      </div>
+      <div class="actionbutton"></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
