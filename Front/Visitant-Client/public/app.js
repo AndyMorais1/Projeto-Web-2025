@@ -39,6 +39,12 @@ function imageSlide (){
   })
 }
 
+function heartColor (){
+  $("#heart").on("click", function (){
+    
+  })
+}
+
 pageChange();
 imageSlide();
 closeMenuScroll();
