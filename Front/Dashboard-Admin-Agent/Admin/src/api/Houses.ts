@@ -1,5 +1,4 @@
 import axios, { AxiosInstance } from 'axios';
-import Cookie from 'js-cookie';
 import { HouseData, DetailsData, LocationData } from '@/data/HouseData';
 
 class HousesServices {

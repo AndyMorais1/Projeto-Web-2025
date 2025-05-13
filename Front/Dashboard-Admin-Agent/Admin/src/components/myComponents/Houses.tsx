@@ -88,7 +88,7 @@ export function Houses() {
   return (
     <div className="p-6">
       <div className="flex justify-end gap-2 mb-6">
-        <DialogFilterHouses onFilter={refreshHouses} />
+        <DialogFilterHouses />
         <DialogCreateHouse />
       </div>
 

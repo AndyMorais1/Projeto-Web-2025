@@ -116,7 +116,7 @@ export function UserTable() {
                   <TableCell className="text-center">
                     {user.email || "-"}
                   </TableCell>
-                  <TableCell className="text-center">{user.phone}</TableCell>
+                  <TableCell className="text-center">{user.phone||"---"}</TableCell>
                   <TableCell
                     className={`text-center ${getStatusTextColor(
                       user.status || ""

@@ -25,7 +25,6 @@ export function DialogEditHouse({
 }) {
   const [isOpen, setIsOpen] = React.useState(false);
 
-  // Inicializando o estado com os dados da casa
   const [form, setForm] = React.useState({
     title: house.title || "",
     description: house.description || "",
@@ -37,28 +36,24 @@ export function DialogEditHouse({
     rooms: house.details.rooms || "",
     bathrooms: house.details.bathrooms || "",
     area: house.details.area || "",
-    agentId: house.agentId || "", // Adicionando o campo do agente responsável
+    agentId: house.agentId || "",
   });
 
-  const { users } = useUsers(); // Pegando os usuários do contexto
+  const { users } = useUsers();
   const [images, setImages] = React.useState<string[]>(house.images || []);
   const [agents, setAgents] = React.useState<UserData[]>([]);
   const { refreshHouses } = useHouses();
 
-  // Usando o hook useEffect para filtrar os agentes do contexto
   React.useEffect(() => {
-    // Filtra os agentes a partir dos usuários carregados no contexto
     const filteredAgents = users.filter(user => user.role === "AGENT");
     setAgents(filteredAgents);
-  }, [users]); // Isso vai ser executado sempre que 'users' mudar
+  }, [users]);
 
-  // Função para manipular as mudanças nos campos de entrada
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
     setForm(prev => ({ ...prev, [id]: value }));
   };
 
-  // Função para lidar com o upload de imagens
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length + images.length <= 5) {
@@ -69,7 +64,6 @@ export function DialogEditHouse({
     }
   };
 
-  // Função para enviar os dados e salvar a casa
   const handleSubmit = async () => {
     if (!form.title || !form.address || !form.price || !form.agentId) {
       toast.error("Preencha todos os campos obrigatórios.");
@@ -82,7 +76,7 @@ export function DialogEditHouse({
     }
 
     const updatedHouse: HouseData = {
-      agentId: form.agentId, // Incluindo o agente responsável
+      agentId: form.agentId,
       title: form.title,
       description: form.description,
       type: form.type,
@@ -100,18 +94,17 @@ export function DialogEditHouse({
       images: images,
     };
 
-
     try {
-      if(!house.id) {
+      if (!house.id) {
         toast.error("ID da casa não encontrado.");
         return;
       }
-      const response = await housesServices.updateHouse(house.id, updatedHouse);  // Chama o updateHouse
+      const response = await housesServices.updateHouse(house.id, updatedHouse);
       if (response) {
-        await refreshHouses();  // Atualiza a lista de casas
+        await refreshHouses();
         toast.success("Casa atualizada com sucesso!");
-        onSave(response);  // Atualiza a casa no estado principal
-        setIsOpen(false);  // Fecha o modal
+        onSave(response);
+        setIsOpen(false);
       } else {
         toast.error("Erro ao atualizar a casa.");
       }
@@ -139,80 +132,78 @@ export function DialogEditHouse({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-4 py-4">
+        <div className="grid grid-cols-4 gap-4 py-4">
           {["title", "description", "price", "rooms", "bathrooms", "area", "address", "city", "zipCode"].map(field => (
-            <div key={field} className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor={field} className="text-right">
+            <React.Fragment key={field}>
+              <Label htmlFor={field} className="text-right col-span-1">
                 {field.charAt(0).toUpperCase() + field.slice(1)}
               </Label>
               <Input
                 id={field}
-                type={field === "price" || field === "rooms" || field === "bathrooms" || field === "area" ? "number" : "text"}
+                type={["price", "rooms", "bathrooms", "area"].includes(field) ? "number" : "text"}
                 className="col-span-3"
                 value={(form as any)[field]}
                 onChange={handleChange}
-                min={field === "price" || field === "rooms" || field === "bathrooms" || field === "area" ? 0 : undefined}
+                min={["price", "rooms", "bathrooms", "area"].includes(field) ? 0 : undefined}
               />
-            </div>
+            </React.Fragment>
           ))}
 
-          {/* Seletor de Agente Responsável */}
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="agentId" className="text-right">Agent</Label>
-            <select
-              id="agentId"
-              value={form.agentId}
-              onChange={handleChange}
-              className="col-span-3 p-2 border rounded"
-            >
-              <option value="">Select Agent</option>
-              {agents.map(agent => (
-                <option key={agent.id} value={agent.id}>
-                  {agent.name} {/* Aqui você pode adicionar o nome do agente */}
-                </option>
-              ))}
-            </select>
-          </div>
+          {/* Agent */}
+          <Label htmlFor="agentId" className="text-right col-span-1">Agent</Label>
+          <select
+            id="agentId"
+            value={form.agentId}
+            onChange={handleChange}
+            className="col-span-3 p-2 border rounded"
+          >
+            <option value="">Select Agent</option>
+            {agents.map(agent => (
+              <option key={agent.id} value={agent.id}>
+                {agent.name}
+              </option>
+            ))}
+          </select>
 
-          {/* Tipo da casa */}
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="type" className="text-right">Type</Label>
-            <select
-              id="type"
-              value={form.type}
-              onChange={handleChange}
-              className="col-span-3 p-2 border rounded"
-            >
-              {Object.values(Type).map((type) => (
-                <option key={type} value={type}>{type}</option>
-              ))}
-            </select>
-          </div>
+          {/* Type */}
+          <Label htmlFor="type" className="text-right col-span-1">Type</Label>
+          <select
+            id="type"
+            value={form.type}
+            onChange={handleChange}
+            className="col-span-3 p-2 border rounded"
+          >
+            {Object.values(Type).map((type) => (
+              <option key={type} value={type}>{type}</option>
+            ))}
+          </select>
 
-          {/* Upload de imagens */}
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="images" className="text-right">Upload Photos</Label>
-            <Input
-              id="images"
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="col-span-3"
-            />
-          </div>
+          {/* Upload Photos */}
+          <Label htmlFor="images" className="text-right col-span-1">Upload Photos</Label>
+          <Input
+            id="images"
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="col-span-3"
+          />
 
+          {/* Preview Images */}
           {images.length > 0 && (
-            <div className="col-span-4 grid grid-cols-2 gap-2 px-4">
-              {images.map((img, index) => (
-                <img
-                  key={index}
-                  src={img}
-                  alt={`Preview ${index}`}
-                  className="w-full h-24 object-cover rounded"
-                />
-              ))}
-            </div>
+            <>
+              <Label className="text-right col-span-1">Preview</Label>
+              <div className="col-span-3 grid grid-cols-2 gap-2">
+                {images.map((img, index) => (
+                  <img
+                    key={index}
+                    src={img}
+                    alt={`Preview ${index}`}
+                    className="w-full h-24 object-cover rounded"
+                  />
+                ))}
+              </div>
+            </>
           )}
         </div>
 

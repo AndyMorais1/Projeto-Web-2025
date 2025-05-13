@@ -6,6 +6,7 @@ import { housesServices } from "@/api/Houses";
 interface HousesContextType {
   houses: HouseData[];
   setHouses: React.Dispatch<React.SetStateAction<HouseData[]>>;
+  originalHouses: HouseData[];
   initializeHouses: () => Promise<void>;
   refreshHouses: () => Promise<void>;
 }
@@ -13,6 +14,7 @@ interface HousesContextType {
 const HousesContext = createContext<HousesContextType>({
   houses: [],
   setHouses: () => {},
+  originalHouses: [],
   initializeHouses: async () => {},
   refreshHouses: async () => {},
 });
@@ -21,6 +23,7 @@ export const useHouses = () => useContext(HousesContext);
 
 export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [houses, setHouses] = useState<HouseData[]>([]);
+  const [originalHouses, setOriginalHouses] = useState<HouseData[]>([]);
 
   const fetchHouses = async () => {
     try {
@@ -30,6 +33,7 @@ export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         return;
       }
       setHouses(fetchedHouses);
+      setOriginalHouses(fetchedHouses); // Armazena uma cópia original
     } catch (error) {
       console.error("Erro ao buscar casas:", error);
     }
@@ -49,7 +53,7 @@ export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   return (
     <HousesContext.Provider
-      value={{ houses, setHouses, initializeHouses, refreshHouses }}
+      value={{ houses, setHouses, originalHouses, initializeHouses, refreshHouses }}
     >
       {children}
     </HousesContext.Provider>
