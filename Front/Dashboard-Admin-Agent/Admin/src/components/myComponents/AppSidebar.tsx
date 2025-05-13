@@ -73,10 +73,7 @@ export function AppSidebar() {
       </SidebarContent>
       <Separator />
       <SidebarFooter className="p-4">
-        <UserSidebar user={{
-          name: currentUser.name,
-          avatar: "https://avatars.githubusercontent.com/u/34351007?v=4"
-        }} />
+        <UserSidebar />
       </SidebarFooter>
     </Sidebar>
   );

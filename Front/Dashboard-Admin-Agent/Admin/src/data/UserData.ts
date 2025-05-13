@@ -6,6 +6,7 @@ export interface UserData {
   phone: string;
   status?: string;
   password?: string;
+  photo?: string;
 }
 
 
