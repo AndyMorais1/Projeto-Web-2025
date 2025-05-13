@@ -41,10 +41,11 @@ function imageSlide (){
 
 function heartColor (){
   $("#heart").on("click", function (){
-    
+    $("#heart").attr("src", "../assets/images/icons/red-heart.webp")
   })
 }
 
 pageChange();
 imageSlide();
 closeMenuScroll();
+heartColor();
