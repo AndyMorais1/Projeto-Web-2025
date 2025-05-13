@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
         await window.usersServices.logout();
         alert('Logout realizado com sucesso!');
-        //window.location.href = 'index.html';
+      window.location.href = '/public/login.html';
+
         }
     catch (err) {
         console.error('Erro ao fazer logout:', err);

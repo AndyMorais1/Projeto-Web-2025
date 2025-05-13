@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const token = await window.usersServices.login(email, password);
       if (token) {
         alert('Login realizado com sucesso!');
-      window.location.href = 'clientHome.html';
+      window.location.href = '/public/clientHome.html';
       } else {
         alert('Email ou senha incorretos.');
       }
