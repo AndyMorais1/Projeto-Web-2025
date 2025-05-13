@@ -33,7 +33,7 @@ export function DialogCreateHouse() {
   // Usando o hook useEffect para filtrar os agentes do contexto
   React.useEffect(() => {
     // Filtra os agentes a partir dos usuários carregados no contexto
-    const filteredAgents = users.filter(user => user.role === "AGENT");
+    const filteredAgents = users.filter(user => user.role === "AGENT" && user.status == "ACTIVE");
     setAgents(filteredAgents);
   }, [users]); // Isso vai ser executado sempre que 'users' mudar
 
@@ -66,53 +66,71 @@ export function DialogCreateHouse() {
   };
 
   const handleSubmit = async () => {
-    try {
-      const imagesBase64 = await convertImagesToBase64();
-
-      const payload = {
-        title: form.title,
-        description: form.description,
-        type: form.type as Type,
-        price: Number(form.price),
-        agentId: form.agentId,
-        images: imagesBase64,
-        location: {
-          address: form.address,
-          city: form.city,
-          zipCode: form.zipCode,
-        },
-        details: {
-          rooms: Number(form.rooms),
-          bathrooms: Number(form.bathrooms),
-          area: Number(form.area),
-        },
-      };
-
-      const created = await housesServices.createHouse(payload);
-      if (created) {
-         toast.success("Casa Criada com sucesso!",{
-                  description: `Casa criada com sucesso!`,
-                  duration: 3000,
-                });
-        await refreshHouses(); // Atualiza a lista de casas
-        setIsOpen(false);
-        setForm({
-          title: "", description: "", type: Type.APARTMENT, price: "",
-          agentId: "", address: "", city: "", zipCode: "",
-          rooms: "", bathrooms: "", area: "",
-        });
-        setImages([]);
-      } else {
-        alert("Failed to create house.");
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Erro ao criar casa.",{
-        description: "Erro ao criar casa.",
+  try {
+    const agent = agents.find((a) => a.id === form.agentId);
+    if (!agent) {
+      toast.error("Agente não encontrado.", {
+        description: "Por favor, selecione um agente válido.",
         duration: 3000,
       });
+      return;
     }
-  };
+
+    if (agent.status === "PENDING") {
+      toast.error("Agente pendente.", {
+        description: "Você não pode atribuir uma casa a um agente com status PENDING.",
+        duration: 3000,
+      });
+      return;
+    }
+
+    const imagesBase64 = await convertImagesToBase64();
+
+    const payload = {
+      title: form.title,
+      description: form.description,
+      type: form.type as Type,
+      price: Number(form.price),
+      agentId: form.agentId,
+      images: imagesBase64,
+      location: {
+        address: form.address,
+        city: form.city,
+        zipCode: form.zipCode,
+      },
+      details: {
+        rooms: Number(form.rooms),
+        bathrooms: Number(form.bathrooms),
+        area: Number(form.area),
+      },
+    };
+
+    const created = await housesServices.createHouse(payload);
+    if (created) {
+      toast.success("Casa Criada com sucesso!", {
+        description: `Casa criada com sucesso!`,
+        duration: 3000,
+      });
+      await refreshHouses();
+      setIsOpen(false);
+      setForm({
+        title: "", description: "", type: Type.APARTMENT, price: "",
+        agentId: "", address: "", city: "", zipCode: "",
+        rooms: "", bathrooms: "", area: "",
+      });
+      setImages([]);
+    } else {
+      alert("Failed to create house.");
+    }
+  } catch (err) {
+    console.error(err);
+    toast.error("Erro ao criar casa.", {
+      description: "Erro ao criar casa.",
+      duration: 3000,
+    });
+  }
+};
+
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

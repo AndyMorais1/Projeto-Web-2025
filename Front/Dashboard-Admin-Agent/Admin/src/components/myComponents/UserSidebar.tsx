@@ -79,16 +79,10 @@ export function UserSidebar({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuGroup>
-              <a href="/profile">
+              <a href="/dashboard/profile">
                 <DropdownMenuItem>
                   <User />
                   Profile
-                </DropdownMenuItem>
-              </a>
-              <a href="/settings">
-                <DropdownMenuItem>
-                  <Settings />
-                  Settings
                 </DropdownMenuItem>
               </a>
             </DropdownMenuGroup>

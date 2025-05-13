@@ -1,7 +1,3 @@
- 
-import axios from 'axios';
-import Cookie from 'js-cookie';
-
 class UsersServices {
     constructor() {
         this.api = axios.create({
@@ -11,31 +7,21 @@ class UsersServices {
         });
     }
 
-    // Método para fazer login
     async login(email, password) {
         try {
-            const response = await this.api.post('/users/login/admin', {
-                email,
-                password,
-            });
+            const response = await this.api.post('/users/login', { email, password });
 
-            if (!response.data || !response.data.token) {
+            const token = response.data?.token;
+            if (!token) {
                 console.error('Token não encontrado');
                 return null;
             }
 
-            const token = response.data.token;
-
-            localStorage.removeItem('token');
-            Cookie.remove('token');
-
             localStorage.setItem('token', token);
-
-            Cookie.set('token', token, {
+            Cookies.set('token', token, {
                 expires: 7,
-                secure: process.env.NODE_ENV === 'production',
+                secure: location.protocol === 'https:',
                 sameSite: 'Strict',
-                httpOnly: false,
             });
 
             console.log('Login bem-sucedido');
@@ -46,18 +32,16 @@ class UsersServices {
         }
     }
 
-    // Método para fazer logout
     async logout() {
         try {
             localStorage.removeItem('token');
-            Cookie.remove('token');
+            Cookies.remove('token');
             console.log('Logout bem-sucedido');
         } catch (error) {
             console.error('Erro no logout:', error);
         }
     }
 
-    // Método para obter todos os usuários
     async getAllUsers() {
         try {
             const token = localStorage.getItem("token");
@@ -81,7 +65,6 @@ class UsersServices {
         }
     }
 
-    // Método para excluir um usuário
     async deleteUser(userId) {
         try {
             const token = localStorage.getItem("token");
@@ -99,7 +82,6 @@ class UsersServices {
         }
     }
 
-    // Método para criar um usuário
     async createUser(userData) {
         try {
             const token = localStorage.getItem("token");
@@ -119,7 +101,6 @@ class UsersServices {
         }
     }
 
-    // Método para atualizar um usuário
     async updateUser(userId, userData) {
         try {
             const token = localStorage.getItem("token");
@@ -138,28 +119,6 @@ class UsersServices {
             throw error;
         }
     }
-
-    // Método para atualizar o status de um agente
-    async updateAgentStatus(userId) {
-        try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                console.error("Erro: Token de autenticação ausente!");
-                return;
-            }
-
-            const response = await this.api.put(`/users/agent/${userId}`, {}, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
-            return response.data;
-        } catch (error) {
-            console.error("Erro ao atualizar status do agente:", error.message);
-            throw error;
-        }
-    }
-
-    // Método para obter um usuário pelo ID
     async getUserById(userId) {
         try {
             const token = localStorage.getItem("token");
@@ -180,4 +139,5 @@ class UsersServices {
     }
 }
 
-export const usersServices = new UsersServices();
+// Disponibiliza para outros scripts no navegador
+window.usersServices = new UsersServices();
