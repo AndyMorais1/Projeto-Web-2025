@@ -18,22 +18,22 @@ import {
 // Menu items.
 const items = [
   {
-    title: "Dashboard",
+    title: "Painel",
     url: "/dashboard",
     icon: LayoutDashboard,
   },
   {
-    title: "Users",
+    title: "Usuários",
     url: "/dashboard/users",
     icon: User,
   },
   {
-    title: "Houses",
+    title: "Imóveis",
     url: "/dashboard/houses",
     icon: Home,
   },
   {
-    title: "Agents Requests",
+    title: "Requisições de Agentes",
     url: "/dashboard/requests",
     icon: Check,
   },
@@ -54,7 +54,7 @@ export function AppSidebar() {
       <Separator />
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="mb-2">Application</SidebarGroupLabel>
+          <SidebarGroupLabel className="mb-2">Applicação</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (

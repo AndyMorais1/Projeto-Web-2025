@@ -7,6 +7,7 @@ export interface UserData {
   status?: string;
   password?: string;
   photo?: string;
+  createdAt?: Date;
 }
 
 

@@ -48,33 +48,33 @@ export function DialogFilterHouses() {
       <DialogTrigger asChild>
         <Button variant="outline">
           <Filter className="mr-2" size={18} />
-          Filter
+          Filtrar
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[400px] max-h-[70vh] overflow-y-auto p-4">
         <DialogHeader>
-          <DialogTitle className="text-lg">Filter Houses by Agent</DialogTitle>
+          <DialogTitle className="text-lg">Filtrar Casas por Agente</DialogTitle>
           <DialogDescription className="text-sm">
-            Select an agent to filter the houses.
+            Selecione um agente para filtrar as casas.
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-3 py-4">
           <div className="grid grid-cols-4 items-center gap-3">
-            <Label htmlFor="agentId" className="text-right">Agent</Label>
+            <Label htmlFor="agentId" className="text-right">Agente</Label>
             <Select
               value={selectedAgentId}
               onValueChange={setSelectedAgentId}
             >
               <SelectTrigger className="col-span-3">
-                <SelectValue placeholder="Select Agent" />
+                <SelectValue placeholder="Selecione o agente" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ALL">All Agents</SelectItem>
+                <SelectItem value="ALL">Todos os Agentes</SelectItem>
                 {users
                   .filter(user => user.role === "AGENT" && user.id && originalHouses.some(h => h.agentId === user.id))
                   .map(agent => (
-                    <SelectItem key={agent.id} value={agent.id|| ""}>
+                    <SelectItem key={agent.id} value={agent.id || ""}>
                       {agent.name}
                     </SelectItem>
                   ))}
@@ -84,8 +84,8 @@ export function DialogFilterHouses() {
         </div>
 
         <DialogFooter>
-          <Button type="button" onClick={handleFilter}>Apply Filter</Button>
-          <Button type="button" variant="outline" onClick={handleCloseDialog}>Cancel</Button>
+          <Button type="button" onClick={handleFilter}>Aplicar Filtro</Button>
+          <Button type="button" variant="outline" onClick={handleCloseDialog}>Cancelar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

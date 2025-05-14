@@ -23,8 +23,8 @@ import {
 import { Pencil } from "lucide-react";
 import { UserDataOptional, UserData } from "@/data/UserData";
 import { usersServices } from "@/api/Users";
-import { useUsers } from "@/contexts/UsersContext";
-import { toast } from "sonner"; 
+import { toast } from "sonner";
+import { uploadImage } from "@/utils/uploadImage";
 
 export function DialogEditUser({
   user,
@@ -33,18 +33,16 @@ export function DialogEditUser({
   user: UserDataOptional;
   onUserUpdated: (updatedUser: UserData) => void;
 }) {
-  // Estados para armazenar dados do usuário
   const [role, setRole] = React.useState<string>(user.role ?? "CLIENT");
   const [name, setName] = React.useState<string>(user.name ?? "");
   const [email, setEmail] = React.useState<string>(user.email ?? "");
   const [phone, setPhone] = React.useState<string>(user.phone ?? "");
   const [status, setStatus] = React.useState<string>(user.status ?? "PENDING");
+  const [image, setImage] = React.useState<File | null>(null);
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
-  // Atualiza os estados quando o modal é aberto
   const handleOpen = (open: boolean) => {
     if (open) {
-      // Quando o modal é aberto, os dados do usuário são carregados nos estados
       setRole(user.role ?? "CLIENT");
       setName(user.name ?? "");
       setEmail(user.email ?? "");
@@ -54,33 +52,37 @@ export function DialogEditUser({
     setIsOpen(open);
   };
 
-  // Verifica se a role é "admin" e desativa inputs
   const isDisabled = user.role?.toLowerCase() === "admin";
 
-  // Atualizar usuário
   const handleUpdateUser = async () => {
     try {
-      const updatedUser: UserDataOptional = {
-        role: role || undefined,
-        name: name || undefined,
-        email: email || undefined,
-        phone: phone || undefined,
-        status: status || undefined,
-      };
-
       if (!user.id) {
         console.error("Erro: ID do usuário não encontrado");
         return;
       }
 
+      let photoUrl: string | undefined = user.photo;
+
+      // Se houver nova imagem, faz upload no Firebase e pega a URL
+      if (image) {
+        photoUrl = await uploadImage(image);
+      }
+
+      const updatedUser: UserDataOptional = {
+        role,
+        name,
+        email,
+        phone,
+        status,
+        photo: photoUrl,
+      };
+
       const response = await usersServices.updateUser(user.id, updatedUser);
 
-      console.log("Usuário atualizado com sucesso:", response);
-
       onUserUpdated(response);
-toast.success("Usuário atualizado com sucesso!",{
+      toast.success("Usuário atualizado com sucesso!", {
         duration: 3000,
-}); // Exibe mensagem de sucesso
+      });
       setIsOpen(false);
     } catch (error) {
       console.error("Erro ao atualizar usuário:", error);
@@ -115,10 +117,10 @@ toast.success("Usuário atualizado com sucesso!",{
             <Select
               onValueChange={setRole}
               value={role}
-              disabled={isDisabled} // Desativa se a role for admin
+              disabled={isDisabled}
             >
               <SelectTrigger id="role">
-                <SelectValue placeholder="select role" />
+                <SelectValue placeholder="Select role" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="CLIENT">Client</SelectItem>
@@ -135,7 +137,7 @@ toast.success("Usuário atualizado com sucesso!",{
             <Label htmlFor="status">Status</Label>
             <Select onValueChange={setStatus} value={status}>
               <SelectTrigger id="status">
-                <SelectValue placeholder="Select a status" />
+                <SelectValue placeholder="Select status" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="ACTIVE">Active</SelectItem>
@@ -145,10 +147,10 @@ toast.success("Usuário atualizado com sucesso!",{
             </Select>
           </div>
 
-          {/* Inputs visíveis conforme a Role */}
+          {/* Form */}
           <form>
             <div className="grid gap-4">
-              {/* Nome */}
+              {/* Name */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">
                   Name
@@ -163,10 +165,9 @@ toast.success("Usuário atualizado com sucesso!",{
                 />
               </div>
 
-              {/* Campos exclusivos para "client" e "agent" */}
+              {/* Email & Phone */}
               {(role === "CLIENT" || role === "AGENT") && (
                 <>
-                  {/* E-mail */}
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="email" className="text-right">
                       E-mail
@@ -181,7 +182,6 @@ toast.success("Usuário atualizado com sucesso!",{
                     />
                   </div>
 
-                  {/* Telefone */}
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="phone" className="text-right">
                       Phone
@@ -196,6 +196,44 @@ toast.success("Usuário atualizado com sucesso!",{
                     />
                   </div>
                 </>
+              )}
+
+              {/* Profile Image Upload */}
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="image" className="text-right">
+                  Profile Image
+                </Label>
+                <Input
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  className="col-span-3"
+                  onChange={(e) =>
+                    setImage(e.target.files ? e.target.files[0] : null)
+                  }
+                />
+              </div>
+
+              {/* Preview atual */}
+              {user.photo && (
+                <div className="flex justify-center">
+                  <img
+                    src={user.photo}
+                    alt="Foto atual"
+                    className="w-20 h-20 rounded-full object-cover"
+                  />
+                </div>
+              )}
+
+              {/* Preview nova imagem */}
+              {image && (
+                <div className="flex justify-center">
+                  <img
+                    src={URL.createObjectURL(image)}
+                    alt="Nova imagem"
+                    className="w-20 h-20 rounded-full object-cover"
+                  />
+                </div>
               )}
             </div>
           </form>

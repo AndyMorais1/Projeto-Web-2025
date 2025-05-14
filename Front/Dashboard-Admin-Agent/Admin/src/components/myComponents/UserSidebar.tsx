@@ -77,14 +77,14 @@ export function UserSidebar() {
               <a href="/dashboard/profile">
                 <DropdownMenuItem>
                   <User />
-                  Profile
+                  Perfil
                 </DropdownMenuItem>
               </a>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut className="text-red-600" />
-              <p className="text-red-600">Log Out</p>
+              <p className="text-red-600">Sair</p>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

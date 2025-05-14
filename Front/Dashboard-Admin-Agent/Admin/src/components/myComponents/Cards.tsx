@@ -13,17 +13,17 @@ import { useHouses } from "@/contexts/HousesContext";
 
 const cardsInfo = [
   {
-    title: "Users",
+    title: "Usuários",
     icon: User,
     number: "",
   },
   {
-    title: "Houses",
+    title: "Imóveis",
     icon: Home,
     number: "",
   },
   {
-    title: "Requests",
+    title: "Requisições",
     icon: Check,
     number: "",
   },
@@ -59,14 +59,14 @@ export function Cards() {
           <CardContent>
             <div className="flex flex-col gap-1">
               <CardDescription className="text-4xl font-bold">
-                {card.title === "Users" ? totalUsers : card.number}
-                {card.title === "Houses" ? totalHouses : card.number}
-                {card.title === "Requests" ? pendingAgents : card.number}
+                {card.title === "Usuários" ? totalUsers : card.number}
+                {card.title === "Imóveis" ? totalHouses : card.number}
+                {card.title === "Requisições" ? pendingAgents : card.number}
               </CardDescription>
 
-              {card.title === "Users" && (
+              {card.title === "Usuários" && (
                 <div className="text-m space-y-1">
-                  <p className="text-yellow-600 font-medium">{pendingUsers} pending</p>
+                  <p className="text-yellow-600 font-medium">{pendingUsers} pendentes</p>
                 </div>
               )}
             </div>

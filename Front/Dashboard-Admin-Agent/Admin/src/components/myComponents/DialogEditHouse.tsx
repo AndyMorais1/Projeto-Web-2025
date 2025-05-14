@@ -126,9 +126,9 @@ export function DialogEditHouse({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Edit House</DialogTitle>
+          <DialogTitle>Editar Imóvel</DialogTitle>
           <DialogDescription>
-            Modify the house details and click save to update.
+            Preencha os campos abaixo para editar o imóvel.
           </DialogDescription>
         </DialogHeader>
 

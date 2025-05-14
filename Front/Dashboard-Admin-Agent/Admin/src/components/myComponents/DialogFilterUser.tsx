@@ -46,30 +46,30 @@ export function DialogFilterUser({
       <DialogTrigger asChild>
         <Button onClick={() => setIsOpen(true)} variant="outline">
           <Filter className="mr-2 h-4 w-4" />
-          Filter
+          Filtrar
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Filter by Role</DialogTitle>
+          <DialogTitle>Filtrar</DialogTitle>
           <DialogDescription>
-            Choose a role to filter the users.
+            Selecione os filtros desejados para visualizar os usuários.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <label htmlFor="role" className="text-right font-medium">
-              Role
+              Tipo
             </label>
             <Select value={role || "none"} onValueChange={handleRoleChange}>
               <SelectTrigger className="col-span-3">
                 <SelectValue placeholder="Select Role" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">All Roles</SelectItem>
-                <SelectItem value="ADMIN">Admin</SelectItem>
-                <SelectItem value="CLIENT">Client</SelectItem>
-                <SelectItem value="AGENT">Agent</SelectItem>
+                <SelectItem value="none">Todos os tipos</SelectItem>
+                <SelectItem value="ADMIN">Administrador</SelectItem>
+                <SelectItem value="CLIENT">Cliente</SelectItem>
+                <SelectItem value="AGENT">Agente</SelectItem>
               </SelectContent>
             </Select>
           </div>

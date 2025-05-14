@@ -21,7 +21,8 @@ import {
 import { CirclePlus } from "lucide-react";
 import { usersServices } from "@/api/Users";
 import { UserData } from "@/data/UserData";
-import { toast } from "sonner"; 
+import { toast } from "sonner";
+import { uploadImage } from "@/utils/uploadImage";
 
 export function DialogCreateUser({
   onUserCreated,
@@ -33,40 +34,56 @@ export function DialogCreateUser({
   const [email, setEmail] = React.useState<string>("");
   const [phone, setPhone] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
+  const [image, setImage] = React.useState<File | null>(null);
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
-  const handleCreateUser = () => {
-    const userData: UserData = {
-      role,
-      name,
-      email,
-      phone,
-      password,
-      status: "PENDING",
-    };
+  const handleCreateUser = async () => {
+    try {
+      let photo = "";
+      if (image) {
+        photo = await uploadImage(image);
+      }
 
-    usersServices
-      .createUser(userData)
-      .then((createdUser) => {
-        toast.success("Usuário criado com sucesso!",{
-          description: `Usuário ${createdUser.name} criado com sucesso!`,
-          duration: 3000,
+      const userData: UserData = {
+        role,
+        name,
+        email,
+        phone,
+        password,
+        status: "PENDING",
+        photo,
+      };
+
+      usersServices
+        .createUser(userData)
+        .then((createdUser) => {
+          toast.success("Usuário criado com sucesso!", {
+            description: `Usuário ${createdUser.name} criado com sucesso!`,
+            duration: 3000,
+          });
+          setIsOpen(false);
+          setRole("");
+          setName("");
+          setEmail("");
+          setPhone("");
+          setPassword("");
+          setImage(null);
+          onUserCreated(createdUser);
+        })
+        .catch((error) => {
+          toast.error("Erro ao criar usuário.", {
+            description: error.message || "Erro ao criar usuário.",
+            duration: 3000,
+          });
+          console.error("Erro ao criar usuário:", error);
         });
-        setIsOpen(false);
-        setRole("");
-        setName("");
-        setEmail("");
-        setPhone("");
-        setPassword("");
-
-        onUserCreated(createdUser);
-      })
-      .catch((error) => {
-        toast.error("Erro ao criar usuário.",{
-          description: error.message || "Erro ao criar usuário.",
-          duration: 3000,});
-        console.error("Erro ao criar usuário:", error);
+    } catch (error: any) {
+      toast.error("Erro no upload da imagem.", {
+        description: error.message || "Erro no upload da imagem.",
+        duration: 3000,
       });
+      console.error("Erro no upload da imagem:", error);
+    }
   };
 
   const handleCancel = () => {
@@ -76,34 +93,35 @@ export function DialogCreateUser({
     setEmail("");
     setPhone("");
     setPassword("");
+    setImage(null);
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button onClick={() => setIsOpen(true)}>
-          <CirclePlus />
-          Create User
+          <CirclePlus className="mr-2" />
+        Criar Usuário
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create User</DialogTitle>
+          <DialogTitle>Criar Novo Usuário</DialogTitle>
           <DialogDescription>
-            Choose the role before creating a user.
+            Escolha o tipo de usuário antes de preencher os dados.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="role">Role</Label>
+            <Label htmlFor="role">Tipo de Usuário</Label>
             <Select value={role} onValueChange={(value) => setRole(value)}>
               <SelectTrigger id="role">
-                <SelectValue placeholder="Select a role" />
+                <SelectValue placeholder="Selecione o tipo" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="CLIENT">Client</SelectItem>
-                <SelectItem value="AGENT">Agent</SelectItem>
-                <SelectItem value="ADMIN" disabled>Admin</SelectItem>
+                <SelectItem value="CLIENT">Cliente</SelectItem>
+                <SelectItem value="AGENT">Agente</SelectItem>
+                <SelectItem value="ADMIN" disabled>Administrador</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -113,7 +131,7 @@ export function DialogCreateUser({
               <div className="grid gap-4">
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="name" className="text-right">
-                    Name
+                    Nome
                   </Label>
                   <Input
                     id="name"
@@ -139,7 +157,7 @@ export function DialogCreateUser({
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
                       <Label htmlFor="phone" className="text-right">
-                        Phone
+                        Telefone
                       </Label>
                       <Input
                         id="phone"
@@ -153,7 +171,7 @@ export function DialogCreateUser({
                 )}
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="password" className="text-right">
-                    Password
+                    Senha
                   </Label>
                   <Input
                     id="password"
@@ -161,6 +179,20 @@ export function DialogCreateUser({
                     className="col-span-3"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="image" className="text-right">
+                    Foto de Perfil
+                  </Label>
+                  <Input
+                    id="image"
+                    type="file"
+                    accept="image/*"
+                    className="col-span-3"
+                    onChange={(e) =>
+                      setImage(e.target.files ? e.target.files[0] : null)
+                    }
                   />
                 </div>
               </div>
@@ -173,10 +205,10 @@ export function DialogCreateUser({
             onClick={handleCreateUser}
             disabled={!role || !name || !password}
           >
-            Create
+            Criar
           </Button>
           <Button type="button" variant="outline" onClick={handleCancel}>
-            Cancel
+            Cancelar
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -7,7 +7,7 @@ export default function DashboardPage() {
   return (
     <div className="w-full">
       <header>
-        <h1 className="p-2.5 text-2xl font-medium mb-5">Dashboard</h1>
+        <h1 className="p-2.5 text-2xl font-medium mb-5">Painel</h1>
       </header>
 
       <main>

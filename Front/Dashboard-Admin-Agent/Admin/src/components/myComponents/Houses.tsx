@@ -158,46 +158,46 @@ export function Houses() {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>House Information</DialogTitle>
+              <DialogTitle>Informações da Casa</DialogTitle>
               <DialogDescription>
-                Details about {selectedHouse.title}
+                Detalhes sobre {selectedHouse.title}
               </DialogDescription>
             </DialogHeader>
 
             <div className="grid gap-4 py-4">
               <div className="flex flex-col space-y-1.5">
                 <p>
-                  <strong>Title:</strong> {selectedHouse.title}
+                  <strong>Título:</strong> {selectedHouse.title}
                 </p>
                 <p>
-                  <strong>Address:</strong> {selectedHouse.location.address}
+                  <strong>Endereço:</strong> {selectedHouse.location.address}
                 </p>
                 <p>
-                  <strong>City:</strong> {selectedHouse.location.city}
+                  <strong>Cidade:</strong> {selectedHouse.location.city}
                 </p>
                 <p>
-                  <strong>Price:</strong>{" "}
+                  <strong>Preço:</strong>{" "}
                   {priceFormatter.format(selectedHouse.price)}
                 </p>
                 <p>
-                  <strong>Agent:</strong>{" "}
+                  <strong>Agente:</strong>{" "}
                   {users.find((user) => user.id === selectedHouse.agentId)
                     ?.name || "Agente desconhecido"}
                 </p>
                 <p>
-                  <strong>Rooms:</strong> {selectedHouse.details.rooms}
+                  <strong>Quartos:</strong> {selectedHouse.details.rooms}
                 </p>
                 <p>
-                  <strong>Bathrooms:</strong> {selectedHouse.details.bathrooms}
+                  <strong>Banheiros:</strong> {selectedHouse.details.bathrooms}
                 </p>
                 <p>
-                  <strong>Area:</strong> {selectedHouse.details.area} m²
+                  <strong>Área:</strong> {selectedHouse.details.area} m²
                 </p>
                 <p>
-                  <strong>Type:</strong> {selectedHouse.type}
+                  <strong>Tipo:</strong> {selectedHouse.type}
                 </p>
                 <p>
-                  <strong>Description:</strong> {selectedHouse.description}
+                  <strong>Descrição:</strong> {selectedHouse.description}
                 </p>
 
                 <div className="w-full h-60 overflow-hidden mt-4 relative">
@@ -224,7 +224,7 @@ export function Houses() {
 
             <DialogFooter>
               <Button variant="outline" onClick={handleCloseDialog}>
-                Close
+                Fechar
               </Button>
             </DialogFooter>
           </DialogContent>
