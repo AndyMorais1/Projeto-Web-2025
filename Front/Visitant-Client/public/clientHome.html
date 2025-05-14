@@ -36,9 +36,9 @@
               <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
             </a>
             <ul class="dropdown-menu text-small">
-              <li><a class="dropdown-item" href="#">Profile</a></li>
-              <li><a class="dropdown-item" href="#">Favorites</a></li>
-              <li><a class="dropdown-item" href="#">Visit Requests</a></li>
+              <li><a class="dropdown-item" href="../public/profile.html">Perfil</a></li>
+              <!-- <li><a class="dropdown-item" href="#">Favoritos</a></li> -->
+              <li><a class="dropdown-item" href="#">Pedidos de visita</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><button id="logout-btn">logout</button></li>
             </ul>
@@ -54,23 +54,23 @@
       <div class="nav-scroller py-1 mb-0">
         <nav class="nav nav-underline justify-content-evenly flex-nowrap overflow-auto">
           <div class="col-5 col-md-3">
-            <a class="nav-item nav-link link-body-emphasis" href="#"> <img src="../assets/images/icons/building.svg" alt="Apartament" height="25"> Apartament</a>
+            <a class="nav-item nav-link link-body-emphasis" href="#"> <img src="../assets/images/icons/building.svg" alt="Apartament" height="25"> Apartamento</a>
           </div>
 
           <div class="col-5 col-md-3">
-            <a class="nav-item nav-link link-body-emphasis" href="#"> <img src="../assets/images/icons/house.svg" alt="" height="25"> House</a>
+            <a class="nav-item nav-link link-body-emphasis" href="#"> <img src="../assets/images/icons/house.svg" alt="" height="25"> Vivenda</a>
           </div>
 
           <div class="col-3 col-md-3">
-            <a class="nav-item nav-link link-body-emphasis" href="#"> <img src="../assets/images/icons/farm.svg" alt="" height="25"> Farm</a>
+            <a class="nav-item nav-link link-body-emphasis" href="#"> <img src="../assets/images/icons/farm.svg" alt="" height="25"> Quinta</a>
           </div>
 
           <div class="col-4 col-md-2">
-            <a class="nav-item nav-link link-body-emphasis" href="#"> <img src="../assets/images/icons/garage.svg" alt="" height="25"> Garage</a>
+            <a class="nav-item nav-link link-body-emphasis" href="#"> <img src="../assets/images/icons/garage.svg" alt="" height="25"> Garagem</a>
           </div>
 
           <div class="col-5 col-md-2">
-            <a class="nav-item nav-link link-body-emphasis" href="#"> <img src="../assets/images/icons/apartment.svg" alt="" height="25"> Condominium</a>
+            <a class="nav-item nav-link link-body-emphasis" href="#"> <img src="../assets/images/icons/apartment.svg" alt="" height="25"> Condominío</a>
           </div>
         </nav>
       </div>
@@ -86,8 +86,8 @@
           <div class="col-12 col-md-8 col-lg-10 mb-2 mb-md-0">
             <form class="d-flex" role="search">
               <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <a href="#"> <div class="btn btn-outline-success me-2 " type="submit">Search</div> </a> 
-                <a href="#"> <div class="btn btn-outline-success" type="submit">Filters</div> </a>
+                <a href="#"> <div class="btn btn-outline-success me-2 " type="submit">Pesquisar</div> </a> 
+                <a href="#"> <div class="btn btn-outline-success" type="submit">Filtros</div> </a>
             </form>
           </div>
 
@@ -97,222 +97,114 @@
   </section>
 
   <!-- houses examples part1 -->
-  <section >
-    <div class="container px-4" id="custom-cards">
-  
-      <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
-        <div class="col">
-          <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('../assets/images/image3.jpg');background-position: center; background-repeat: no-repeat; background-size: contain;">
-            <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-              <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold"></h3>
-              <ul class="d-flex list-unstyled mt-auto">
-                <li class="me-auto ">
-                  <a href="../index.html"> <img src="../assets/images/icons/heartss.png" alt="Bootstrap" width="32" height="32" class="object-fit-cover heart"> </a>
-                </li>
-                <li class="d-flex align-items-center me-3">
-                  <svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Location"><use xlink:href="#geo-fill"></use></svg>
-                  <small>Lisbon</small>
-                </li>
-                <li class="d-flex align-items-center">
-                  <svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Duration"><use xlink:href="#calendar3"></use></svg>
-                  <small>3d</small>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-  
-        <div class="col">
-          <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('../assets/images/image2.jpg');background-position: center; background-repeat: no-repeat; background-size: contain;">
-            <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-              <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold"></h3>
-              <ul class="d-flex list-unstyled mt-auto">
-                <li class="me-auto">
-                  <a href="../index.html"> <img src="../assets/images/icons/heartss.png" alt="Bootstrap" width="32" height="32" class="object-fit-cover "> </a>
-                </li>
-                <li class="d-flex align-items-center me-3">
-                  <svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Location"><use xlink:href="#geo-fill"></use></svg>
-                  <small>Earth</small>
-                </li>
-                <li class="d-flex align-items-center">
-                  <svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Duration"><use xlink:href="#calendar3"></use></svg>
-                  <small>3d</small>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-  
-  
-        <div class="col">
-          <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('../assets/images/image2.jpg');background-position: center; background-repeat: no-repeat; background-size: contain;">
-            <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-              <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold"></h3>
-              <ul class="d-flex list-unstyled mt-auto">
-                <li class="me-auto">
-                  <a href="../index.html"> <img src="../assets/images/icons/heartss.png" alt="Bootstrap" width="32" height="32" class="object-fit-cover "> </a>
-                </li>
-                <li class="d-flex align-items-center me-3">
-                  <svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Location"><use xlink:href="#geo-fill"></use></svg>
-                  <small>Earth</small>
-                </li>
-                <li class="d-flex align-items-center">
-                  <svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Duration"><use xlink:href="#calendar3"></use></svg>
-                  <small>3d</small>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-  
-      </div>
+<section>
+  <div class="container px-4" id="houses-section">
+    <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5" id="houses-grid">
+      <!-- JS irá preencher aqui -->
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- houses examples part2 -->
-  <section>
-    <div class="container px-4" id="custom-cards">
-  
-      <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-3">
-        <div class="col">
-          <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('../assets/images/image3.jpg');background-position: center; background-repeat: no-repeat; background-size: contain;">
-            <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-              <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold"></h3>
-              <ul class="d-flex list-unstyled mt-auto">
-                <li class="me-auto ">
-                  <a href="../index.html"> <img src="../assets/images/icons/heartss.png" alt="Bootstrap" width="32" height="32" class="object-fit-cover "> </a>
-                </li>
-                <li class="d-flex align-items-center me-3">
-                  <svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Location"><use xlink:href="#geo-fill"></use></svg>
-                  <small>Lisbon</small>
-                </li>
-                <li class="d-flex align-items-center">
-                  <svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Duration"><use xlink:href="#calendar3"></use></svg>
-                  <small>3d</small>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-  
-        <div class="col">
-          <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('../assets/images/image2.jpg');background-position: center; background-repeat: no-repeat; background-size: contain;">
-            <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-              <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold"></h3>
-              <ul class="d-flex list-unstyled mt-auto">
-                <li class="me-auto">
-                  <a href="../index.html"> <img src="../assets/images/icons/heartss.png" alt="Bootstrap" width="32" height="32" class="object-fit-cover "> </a>
-                </li>
-                <li class="d-flex align-items-center me-3">
-                  <svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Location"><use xlink:href="#geo-fill"></use></svg>
-                  <small>Earth</small>
-                </li>
-                <li class="d-flex align-items-center">
-                  <svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Duration"><use xlink:href="#calendar3"></use></svg>
-                  <small>3d</small>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-  
-  
-        <div class="col">
-          <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('../assets/images/image2.jpg');background-position: center; background-repeat: no-repeat; background-size: contain;">
-            <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-              <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold"></h3>
-              <ul class="d-flex list-unstyled mt-auto">
-                <li class="me-auto">
-                  <a href="../index.html"> <img src="../assets/images/icons/heartss.png" alt="Bootstrap" width="32" height="32" class="object-fit-cover "> </a>
-                </li>
-                <li class="d-flex align-items-center me-3">
-                  <svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Location"><use xlink:href="#geo-fill"></use></svg>
-                  <small>Earth</small>
-                </li>
-                <li class="d-flex align-items-center">
-                  <svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Duration"><use xlink:href="#calendar3"></use></svg>
-                  <small>3d</small>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-  
-      </div>
-    </div>
-  </section>
-  
+<script>
+  // Define the list of houses (title, description, and images)
+  const houseList = [
+    {
+      title: "Moradia Moderna em Lisboa",
+      description: "3 quartos · 2 casas de banho · 180m² · Jardim e garagem privada.",
+      images: ["../assets/images/image1.jpeg", "../assets/images/image2.jpg", "../assets/images/image3.jpg"]
+    },
+    {
+      title: "Apartamento Luxuoso em Porto",
+      description: "2 quartos · 2 casas de banho · 120m² · Varanda com vista.",
+      images: ["../assets/images/image2.jpg", "../assets/images/image3.jpg", "../assets/images/image1.jpeg"]
+    },
+    {
+      title: "Vivenda Familiar em Coimbra",
+      description: "4 quartos · 3 casas de banho · 250m² · Piscina e jardim.",
+      images: ["../assets/images/image3.jpg", "../assets/images/image1.jpeg", "../assets/images/image2.jpg"]
+    },
+    {
+      title: "Casa Térrea em Faro",
+      description: "2 quartos · 1 casa de banho · 90m² · Quintal espaçoso.",
+      images: ["../assets/images/image1.jpeg", "../assets/images/image2.jpg", "../assets/images/image3.jpg"]
+    },
+    {
+      title: "Moradia com Vista Mar",
+      description: "5 quartos · 4 casas de banho · 300m² · Terraço e garagem dupla.",
+      images: ["../assets/images/image2.jpg", "../assets/images/image1.jpeg", "../assets/images/image3.jpg"]
+    },
+    {
+      title: "Apartamento Compacto em Braga",
+      description: "1 quarto · 1 casa de banho · 60m² · Ideal para casal jovem.",
+      images: ["../assets/images/image3.jpg", "../assets/images/image2.jpg", "../assets/images/image1.jpeg"]
+    }
+  ];
 
-  <!-- <section>
-    <div class="container px-4" id="custom-cards">
-  
-      <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-4">
-        <div class="col">
-          <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('../assets/images/image2.jpg');background-position: center; background-repeat: no-repeat; background-size: cover;">
-            <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-              <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Short title, long jacket</h3>
-              <ul class="d-flex list-unstyled mt-auto">
-                <li class="me-auto">
-                  <img src="../assets/images/image2.jpg" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
-                </li>
-                <li class="d-flex align-items-center me-3">
-                  <svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Location"><use xlink:href="#geo-fill"></use></svg>
-                  <small>Earth</small>
-                </li>
-                <li class="d-flex align-items-center">
-                  <svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Duration"><use xlink:href="#calendar3"></use></svg>
-                  <small>3d</small>
-                </li>
-              </ul>
+  // Get the div where we want to add the house cards
+  const grid = document.getElementById("houses-grid");
+
+  // Loop through each house and build the HTML
+  for (let i = 0; i < houseList.length; i++) {
+    const house = houseList[i];
+    const carouselId = "carousel" + (i + 1);
+
+    // Start the carousel HTML
+    let carouselHTML = '<div id="' + carouselId + '" class="carousel slide">';
+    carouselHTML += '<div class="carousel-inner">';
+
+    // Add each image in the carousel
+    for (let j = 0; j < house.images.length; j++) {
+      const activeClass = j === 0 ? "active" : "";
+      carouselHTML += '<div class="carousel-item ' + activeClass + '">';
+      carouselHTML += '<img src="' + house.images[j] + '" class="d-block w-100" alt="House image">';
+      carouselHTML += '</div>';
+    }
+
+    carouselHTML += '</div>'; // close carousel-inner
+
+    // Add carousel controls (previous/next buttons)
+    carouselHTML += `
+      <button class="carousel-control-prev" type="button" data-bs-target="#${carouselId}" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#${carouselId}" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    `;
+    carouselHTML += '</div>'; // close carousel
+
+    // Now create the full card HTML with carousel and text
+    const cardHTML = `
+      <div class="col">
+        <div class="card shadow-lg rounded-4 overflow-hidden position-relative">
+          ${carouselHTML}
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h5 class="card-title fw-semibold">${house.title}</h5>
+              <a href="#" title="Favoritar">
+                <img src="../assets/images/icons/heartss.png" alt="Favorito" width="24" height="24">
+              </a>
             </div>
-          </div>
-        </div>
-  
-        <div class="col">
-          <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('../assets/images/image2.jpg');background-position: center; background-repeat: no-repeat; background-size: cover;">
-            <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-              <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Much longer title that wraps to multiple lines</h3>
-              <ul class="d-flex list-unstyled mt-auto">
-                <li class="me-auto">
-                  <img src="https://github.com/twbs.png" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
-                </li>
-                <li class="d-flex align-items-center me-3">
-                  <svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Location"><use xlink:href="#geo-fill"></use></svg>
-                  <small>Pakistan</small>
-                </li>
-                <li class="d-flex align-items-center">
-                  <svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Duration"><use xlink:href="#calendar3"></use></svg>
-                  <small>4d</small>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-  
-        <div class="col">
-          <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('../assets/images/image2.jpg');background-position: center; background-repeat: no-repeat; background-size: cover;">
-            <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
-              <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Another longer title belongs here</h3>
-              <ul class="d-flex list-unstyled mt-auto">
-                <li class="me-auto">
-                  <img src="https://github.com/twbs.png" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
-                </li>
-                <li class="d-flex align-items-center me-3">
-                  <svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Location"><use xlink:href="#geo-fill"></use></svg>
-                  <small>California</small>
-                </li>
-                <li class="d-flex align-items-center">
-                  <svg class="bi me-2" width="1em" height="1em" role="img" aria-label="Duration"><use xlink:href="#calendar3"></use></svg>
-                  <small>5d</small>
-                </li>
-              </ul>
+            <p class="card-text text-muted small">${house.description}</p>
+            <div class="d-flex gap-2 mt-3">
+              <a href='../public/clientHomeDetails.html'> <button class="btn btn-outline-primary btn-sm">Agendar Visita</button>  </a>
+              <a href='../public/clientHomeDetails.html'> <button class="btn btn-outline-primary btn-sm">Mais Detalhes</button>  </a>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-   -->
+    `;
+
+    // Add the card to the page
+    grid.innerHTML += cardHTML;
+  }
+</script>
+
+</script>
+
+
   
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
   <script src="./app.js"></script>

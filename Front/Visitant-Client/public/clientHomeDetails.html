@@ -3,13 +3,273 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
   <title>SpotHome</title>
-</head>
-<body>
 
-<script src="../api/user.js"></script>
-<script src="../api/house.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+
+  <style>
+    .carousel-image{
+      max-height: 400px;
+      object-fit:cover;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #ccc;
+      padding: 16px;
+      max-width: 900px;
+      margin: auto;
+      margin-top: 50px;
+      gap: 16px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 1;
+    }
+
+    .profile img {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .text {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+    }
+
+    .name {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .subtext {
+      color: #6e6e6e;
+      font-size: 14px;
+    }
+
+    .btn {
+      background-color: #007bff;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      background-color: #008bff;
+    }
+
+    .badge-status {
+      font-size: 12px;
+      background-color: #198754;
+      color: white;
+      padding: 4px 10px;
+      border-radius: 12px;
+      margin-right: 8px;
+    }
+
+    .favorite-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .favorite-btn.active {
+      color: red;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    /* Responsive layout */
+    @media (max-width: 600px) {
+      .card {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: 0px;
+      }
+
+      .btn {
+        align-self: stretch;
+        width: 100%;
+        margin-top: 12px;
+      }
+    }
+
+    .description {
+      display: flex;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .description-body {
+      max-width: 800px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .description-body h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .description-body h2 {
+      font-size: 20px;
+      margin-top: 24px;
+      color: #222;
+    }
+
+    .description-body p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #444;
+    }
+
+    .description-body ul {
+      margin-top: 8px;
+      padding-left: 20px;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .description-body ul li {
+      margin-bottom: 8px;
+      list-style-type: disc;
+    }
+
+    @media (max-width: 600px) {
+      .description-body h1 {
+        font-size: 20px;
+      }
+
+      .description-body h2 {
+        font-size: 18px;
+      }
+
+      .description-body p,
+      .description-body ul {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body style="font-family: sans-serif;">
+  <!-- NavBar -->
+  <nav class="navbar bg-body-tertiary">
+    <div class="container">
+      <a class="navbar-brand" href="./clientHome.html" >
+        <img src="../assets/images/icons/arrow-left-circle-fill.svg" alt="Bootstrap" width="30" height="30">
+      </a>
+    </div>
+  </nav>
+
+  <!-- Slide show -->
+  <section>
+    <div id="carouselExampleRide" class="carousel slide" data-bs-ride="true">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="../assets/images/image1.jpeg" class="d-block w-100 carousel-image" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="../assets/images/image2.jpg" class="d-block w-100 carousel-image" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="../assets/images/image3.jpg" class="d-block w-100 carousel-image" alt="...">
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleRide" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleRide" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Meta Info -->
+  <section class="meta-row">
+    <span class="badge-status">Disponível</span>
+    <button class="favorite-btn" id="favBtn" onclick="toggleFavorite(this)">❤</button>
+    <small class="text-muted">Publicado há 3 dias</small>
+  </section>
+
+  <!-- Agent Card -->
+  <section>
+    <div class="card">
+      <div class="profile">
+        <img src="../assets/images/Screenshot 2025-05-15 at 00.49.59.png" alt="Profile photo">
+        <div class="text">
+          <div class="name">Edson Manuel</div>
+          <!-- <div class="subtext">Lorem</div> -->
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn">Mensagem</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="description">
+      <div class="description-body">
+        <h1>Moradia independente à venda na rua António Sardinha, 18</h1>
+        <p>
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iure harum
+          laudantium corrupti architecto dignissimos sunt ut doloremque, veniam
+          fuga explicabo perspiciatis ipsa voluptates praesentium? Ipsam
+          dignissimos quia praesentium cumque cum sit, natus aspernatur quaerat
+          earum, ratione suscipit!
+        </p>
+
+        <h2>Características</h2>
+        <ul>
+          <li>3 quartos</li>
+          <li>2 casas de banho</li>
+          <li>Cozinha equipada</li>
+          <li>Jardim privativo</li>
+          <li>Garagem para 2 carros</li>
+          <li>Área total: 180 m²</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+  <script src="../api/user.js"></script>
+  <script src="../api/house.js"></script>
+
+  <script>
+    function toggleFavorite(btn) {
+      btn.classList.toggle('active');
+    }
+  </script>
 </body>
 </html>

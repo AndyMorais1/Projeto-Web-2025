@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
         await window.usersServices.logout();
         alert('Logout realizado com sucesso!');
-      window.location.replace = '/public/login.html';
+        window.location.replace = '../index.html';
 
         }
     catch (err) {
