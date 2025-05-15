@@ -11,8 +11,8 @@
       -webkit-overflow-scrolling: touch; /* for iOS smooth scrolling */
     }
   </style>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
 </head>
 <body class="font-sans">
   <!-- NavBar -->
@@ -40,7 +40,7 @@
               <!-- <li><a class="dropdown-item" href="#">Favoritos</a></li> -->
               <li><a class="dropdown-item" href="#">Pedidos de visita</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><button id="logout-btn">logout</button></li>
+              <li><button class="btn" id="logout-btn">logout</button></li>
             </ul>
           </div>
         </div>
@@ -189,7 +189,6 @@
             </div>
             <p class="card-text text-muted small">${house.description}</p>
             <div class="d-flex gap-2 mt-3">
-              <a href='../public/clientHomeDetails.html'> <button class="btn btn-outline-primary btn-sm">Agendar Visita</button>  </a>
               <a href='../public/clientHomeDetails.html'> <button class="btn btn-outline-primary btn-sm">Mais Detalhes</button>  </a>
             </div>
           </div>

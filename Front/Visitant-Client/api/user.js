@@ -82,6 +82,17 @@ class UsersServices {
         }
     }
 
+    async registerUser(userData) {
+        try {
+            const response = await this.api.post("/users", userData); // no token!
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao registrar usuário:", error.message);
+            throw error;
+        }
+    }
+
+
     async createUser(userData) {
         try {
             const token = localStorage.getItem("token");
