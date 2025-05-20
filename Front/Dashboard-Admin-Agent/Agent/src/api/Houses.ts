@@ -27,7 +27,7 @@ class HousesServices {
             return response.data;
         } catch (error: any) {
             console.error('Erro ao obter casas:', error.response?.data || error.message);
-            return [];    
+            return [];
         }
     }
 
@@ -106,23 +106,30 @@ class HousesServices {
     }
 
     async getHouseByAgentId(agentId: string): Promise<HouseData[]> {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('Token não encontrado no localStorage');
-                return [];
-            }
-            const response = await this.api.get<HouseData[]>(`/agents/${agentId}/houses`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            return response.data;
-        } catch (error: any) {
-            console.error('Erro ao obter casas do agente:', error.response?.data || error.message);
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('Token não encontrado no localStorage');
             return [];
         }
+
+        const response = await this.api.get<HouseData[]>(`/agents/${agentId}/houses`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        return response.data;
+    } catch (error: any) {
+        console.error('Erro ao obter casas do agente:', {
+            message: error.message,
+            response: error.response,
+            request: error.request,
+            stack: error.stack,
+        });
+        return [];
     }
+}
 
 }
 export const housesServices = new HousesServices();

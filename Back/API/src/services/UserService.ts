@@ -56,11 +56,20 @@ class UserService {
                 role: true,
                 photo: true,
                 Houses: true,
+                status: true,
+                createdAt: true,
+
             },
         });
         return user;
     }
     public async updateUser(id: string, data: UpdateUserSchema) {
+        // Verifica se 'photo' é uma URL válida (opcional)
+        if (data.photo && !this.isValidUrl(data.photo)) {
+            throw new Error("URL de foto inválida");
+        }
+
+        // Atualização do usuário
         const user = await prisma.user.update({
             where: {
                 id,
@@ -71,9 +80,16 @@ class UserService {
                 phone: data.phone,
                 role: data.role,
                 status: data.status,
+                photo: data.photo || null,  // Se não houver foto, mantém null
             },
         });
+
         return user;
+    }
+
+    private  isValidUrl(url: string): boolean {
+        const pattern = new RegExp('^(https?:\\/\\/(?:www\\.)?[\\w-]+(?:\\.[\\w-]+)+(/[^\\s]*)?)$', 'i');
+        return pattern.test(url);
     }
 
     public async updateAgentStatus(id: string) {
@@ -122,6 +138,7 @@ class UserService {
                 photo: true,
                 Houses: true,
                 status: true,
+                createdAt: true,
             },
         });
         return users;

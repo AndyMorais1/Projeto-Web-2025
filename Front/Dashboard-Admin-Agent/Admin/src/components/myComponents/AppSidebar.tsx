@@ -15,6 +15,7 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
 // Menu items.
 const items = [
   {
@@ -42,10 +43,6 @@ const items = [
 export function AppSidebar() {
   const { currentUser, users } = useUsers();
 
-  if (!currentUser) {
-    return <div>Carregando usuário...</div>; 
-  }
-
   return (
     <Sidebar>
       <SidebarHeader className="flex mx-auto p-6">
@@ -60,10 +57,10 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

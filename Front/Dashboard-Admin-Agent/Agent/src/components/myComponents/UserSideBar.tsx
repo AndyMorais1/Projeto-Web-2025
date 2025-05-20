@@ -17,22 +17,29 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-//import { usersServices } from "@/api/Users";
-//import { useAuthToken } from "@/api/auth"; // Importa o hook
+import { usersServices } from "@/api/Users";
+import { useUsers } from "@/contexts/UsersContext";
+import { useHouses } from "@/contexts/HousesContext";
 
-export function UserSidebar({
-  user,
-}: {
-  user: {
-    name: string;
-    avatar: string;
-  };
-}) {
+export function UserSidebar() {
   const { isMobile } = useSidebar();
   const router = useRouter();
-  //const { removeToken } = useAuthToken(); // Usa o hook para remover o token
+  const { currentUser, resetUsers } = useUsers();
+  const { resetHouses } = useHouses();
 
   function handleLogout() {
+    usersServices.logout()
+      .then(() => {
+        // Redireciona o usuário para a página de login após o logout
+        router.replace("/"); // O replace impede que o usuário volte à página anterior após o logout
+        resetHouses(); // Reseta as casas após o logout
+        resetUsers(); // Reseta os usuários após o logout
+        
+      })
+      .catch((error) => {
+        console.error("Erro ao fazer logout:", error);
+        // Aqui você pode também mostrar uma mensagem de erro, se desejar
+      });
   }
 
   return (
@@ -45,11 +52,11 @@ export function UserSidebar({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarImage src={currentUser?.photo || "https://avatars.githubusercontent.com/u/34351007?v=4"} alt={currentUser?.name[0]} />
+                <AvatarFallback className="rounded-lg">{currentUser?.name[0]}</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
+                <span className="truncate font-semibold">{currentUser?.name}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -63,32 +70,26 @@ export function UserSidebar({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarImage src={currentUser?.photo || "https://avatars.githubusercontent.com/u/34351007?v=4"} alt={currentUser?.name[0]} />
+                  <AvatarFallback className="rounded-lg">{currentUser?.name[0]}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
+                  <span className="truncate font-semibold">{currentUser?.name}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuGroup>
-              <a href="/profile">
+              <a href="/dashboard/profile">
                 <DropdownMenuItem>
                   <User />
-                  Profile
-                </DropdownMenuItem>
-              </a>
-              <a href="/settings">
-                <DropdownMenuItem>
-                  <Settings />
-                  Settings
+                  Perfil
                 </DropdownMenuItem>
               </a>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut className="text-red-600" />
-              <p className="text-red-600">Log Out</p>
+              <p className="text-red-600">Sair</p>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

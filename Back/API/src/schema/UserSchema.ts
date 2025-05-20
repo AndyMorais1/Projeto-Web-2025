@@ -21,6 +21,7 @@ export const UpdateUserSchema = zod.object({
     phone: zod.string().optional(),
     role: zod.enum(['CLIENT', 'ADMIN', 'AGENT']).optional(),
     status: zod.enum(['ACTIVE', 'INACTIVE','PENDING']).optional(),
+    photo: zod.string().optional(),
 });
 
 export const ResponseUserSchema = zod.object({
@@ -34,6 +35,7 @@ export const ResponseUserSchema = zod.object({
     role: zod.enum(['CLIENT', 'ADMIN', 'AGENT']).optional(),
     photo: zod.union([zod.string(), zod.null()]).optional(),
     houses: zod.array(zod.string()).optional(),
+    createdAt: zod.date(),
 });
 
 export const LoginSchema = zod.object({

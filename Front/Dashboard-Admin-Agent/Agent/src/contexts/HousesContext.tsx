@@ -38,7 +38,7 @@ export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
       console.log("ID do agente usado:", currentUser?.id);
 
-      const fetchedHouses = await housesServices.getAllHouses();
+      const fetchedHouses = await housesServices.getHouseByAgentId(currentUser.id);
       if (!fetchedHouses || fetchedHouses.length === 0) {
         console.warn("Nenhuma casa foi retornada.");
         return;
