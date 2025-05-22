@@ -1,5 +1,5 @@
 "use client";
-import { LayoutDashboard, User, Home, Check, NotebookText, MessageCircle } from "lucide-react";
+import { LayoutDashboard, User, Home, Check, NotebookText, MessageCircle, Rss } from "lucide-react";
 import { Separator } from "../ui/separator";
 import { UserSidebar } from "./UserSidebar";
 import { useUsers } from "@/contexts/UsersContext"; // Importa o contexto de usuários
@@ -32,6 +32,11 @@ const items = [
     title: "Minhas Visitas",
     url: "/dashboard/visits",
     icon: NotebookText,
+  },
+   {
+    title: "Minha Rede",
+    url: "#",
+    icon: Rss,
   },
   {
     title: "Suporte",

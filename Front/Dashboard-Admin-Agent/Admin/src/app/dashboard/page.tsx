@@ -1,7 +1,6 @@
 // DashboardPage.tsx
 import { Cards } from "@/components/myComponents/Cards";
 import { Chart1 } from "@/components/myComponents/chart1";
-import { Chart2 } from "@/components/myComponents/chart2";
 
 export default function DashboardPage() {
   return (
@@ -13,16 +12,13 @@ export default function DashboardPage() {
       <main>
         <Cards />
 
-        <div className="flex w-full p-6">
-          <div className="flex flex-wrap justify-between  w-full max-w-7xl mx-auto p-6">
-            <div className="flex-1 min-w-[320px] max-w-[500px]">
-              <Chart1 />
-            </div>
-            <div className="flex-1 min-w-[320px] max-w-[500px]">
-              <Chart2 />
-            </div>
+        {/* Chart1 em toda a largura com padding */}
+        <div className="w-full px-6 pb-6">
+          <div className="w-full h-[300px]">
+            <Chart1 />
           </div>
         </div>
+
       </main>
     </div>
   );

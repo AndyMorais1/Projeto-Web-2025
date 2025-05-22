@@ -6,9 +6,10 @@ import { DialogEditProfile } from "@/components/myComponents/DialogEditProfile";
 export default function ProfilePage() {
     const { currentUser } = useUsers();
     return (
-        <div className="flex flex-col min-h-screen p-4 w-full">
-            <h1 className="text-2xl font-bold ">Perfil</h1>
-
+        <div className="flex flex-col min-h-screen w-full">
+            <header>
+                <h1 className="p-2.5 text-2xl font-medium mb-5">Perfil</h1>
+            </header>
             <div className="flex flex-col items-center justify-center w-full p-6 mt-8">
                 {/* Imagem do usuário */}
                 <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-grey-500 mb-4">

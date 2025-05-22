@@ -7,12 +7,17 @@ export interface UserData {
   status?: string;
   password?: string;
   photo?: string;
-  createdAt?: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 
 
-export type UserDataOptional = Partial<UserData>;
+export type UserDataOptional = Partial<UserData> & {
+  currentPassword?: string;
+  newPassword?: string;
+};
+
 
 export interface UserAgentInfoDialogProps {
   user: {

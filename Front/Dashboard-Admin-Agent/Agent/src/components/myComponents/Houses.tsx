@@ -1,17 +1,15 @@
 "use client";
-
+import { useState } from "react";
 import { DialogEditHouse } from "./DialogEditHouse";
 import { toast } from "sonner";
-import { useState } from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Trash, Filter, User, Info } from "lucide-react";
+import { Trash, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,19 +19,23 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { DialogCreateHouse } from "./DialogCreateHouse";
 import { HouseData } from "@/data/HouseData";
 import { useHouses } from "@/contexts/HousesContext";
 import { useUsers } from "@/contexts/UsersContext";
 import { housesServices } from "@/api/Houses";
-import { DialogFilterHouses } from "./DialogFilterHouses";
 
 export function Houses() {
-  const { houses, refreshHouses } = useHouses();
-  const [selectedHouse, setSelectedHouse] = useState<HouseData | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const {
+    houses,
+    refreshHouses,
+    selectedHouse,
+    setSelectedHouse,
+    isDialogOpen,
+    setIsDialogOpen,
+  } = useHouses();
+
   const { users } = useUsers();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const priceFormatter = new Intl.NumberFormat("pt-PT", {
     style: "currency",
@@ -53,78 +55,67 @@ export function Houses() {
 
   const handlePrevImage = () => {
     if (selectedHouse?.images?.length) {
-      setCurrentImageIndex((prevIndex) =>
-        prevIndex === 0 ? selectedHouse.images.length - 1 : prevIndex - 1
+      setCurrentImageIndex((prev) =>
+        prev === 0 ? selectedHouse.images.length - 1 : prev - 1
       );
     }
   };
 
   const handleNextImage = () => {
     if (selectedHouse?.images?.length) {
-      setCurrentImageIndex((prevIndex) =>
-        prevIndex === selectedHouse.images.length - 1 ? 0 : prevIndex + 1
+      setCurrentImageIndex((prev) =>
+        prev === selectedHouse.images.length - 1 ? 0 : prev + 1
       );
     }
-  };
-
-  const handleEditHouse = (updatedHouse: HouseData) => {
-    // Se necessário, usar refreshHouses aqui depois da edição
   };
 
   const handleDeleteHouse = async (houseId: string) => {
     try {
       await housesServices.deleteHouse(houseId);
       await refreshHouses();
-      toast.success("Casa excluída com sucesso!", {
-        description: "A casa foi removida do sistema.",
-        duration: 3000,
-      });
-    } catch (error: any) {
-      console.error("Erro ao excluir casa:", error);
+      toast.success("Casa excluída com sucesso!");
+    } catch (error) {
       toast.error("Erro ao excluir casa.");
     }
   };
 
   return (
-     <div className="flex flex-col gap-4 items-center justify-center">
-
+    <div className="flex flex-col gap-4 items-center justify-center">
       {houses.length === 0 ? (
         <div className="text-center text-gray-500 text-lg mt-20">
           Nenhuma casa disponível no momento.
         </div>
       ) : (
-        <div className="p-4 gap-4">
+        <div className="flex flex-col gap-4 px-2">
           {houses.map((house) => (
-            <Card
-              key={house.id}
-              className="w-full sm:w-72 bg-gray-100 shadow-md rounded-xl border border-gray-300"
-            >
-              <CardHeader className="p-3 flex justify-center">
-                <img
-                  src={house.images[0]}
-                  alt={house.title}
-                  className="w-full h-40 object-cover rounded-lg"
-                />
-              </CardHeader>
-
-              <CardContent className="p-4">
-                <CardTitle className="text-lg text-gray-800">
-                  {house.title}
-                </CardTitle>
-                <CardDescription className="text-sm text-gray-600">
-                  {house.location.address}
-                </CardDescription>
-
-                <div className="flex items-center gap-2 text-gray-700 mt-3">
-                  <User size={18} className="text-gray-500" />
-                  <span className="text-sm">
-                    {users.find((user) => user.id === house.agentId)?.name ||
-                      "Agente desconhecido"}
-                  </span>
+            <Card key={house.id} className="w-full sm:w-96">
+              <div className="p-3">
+                <div className="relative">
+                  <img
+                    src={house.images[0]}
+                    alt={house.title}
+                    className="w-full h-52 object-cover rounded-lg"
+                  />
                 </div>
-
-                <div className="flex justify-end gap-2 mt-4">
-                  <DialogEditHouse house={house} onSave={handleEditHouse} />
+              </div>
+              <div className="px-4 pb-4 space-y-2">
+                <div className="text-lg font-semibold">{house.title}</div>
+                <div className="text-xl font-semibold">
+                  {priceFormatter.format(house.price)}
+                </div>
+                <div className="text-sm text-gray-700">
+                  {house.details.rooms} quartos · {house.details.bathrooms} banheiros ·{" "}
+                  {house.details.area} m² - {house.type}
+                </div>
+                <div className="text-sm text-gray-600">
+                  {house.location.address}, {house.location.city}
+                </div>
+                <div className="text-sm text-gray-600">
+                  Agente:{" "}
+                  {users.find((u) => u.id === house.agentId)?.name || "Desconhecido"}
+                </div>
+                <div className="flex justify-end gap-2 pt-2">
+                  <DialogEditHouse house={house} onSave={() => {}} />
                   <Button
                     variant="outline"
                     size="icon"
@@ -140,11 +131,7 @@ export function Houses() {
                     <Info className="text-black" size={18} />
                   </Button>
                 </div>
-              </CardContent>
-
-              <CardFooter className="p-4 text-lg font-semibold text-right text-gray-800">
-                {priceFormatter.format(house.price)}
-              </CardFooter>
+              </div>
             </Card>
           ))}
         </div>
@@ -161,40 +148,17 @@ export function Houses() {
             </DialogHeader>
 
             <div className="grid gap-4 py-4">
-              <div className="flex flex-col space-y-1.5">
-                <p>
-                  <strong>Título:</strong> {selectedHouse.title}
-                </p>
-                <p>
-                  <strong>Endereço:</strong> {selectedHouse.location.address}
-                </p>
-                <p>
-                  <strong>Cidade:</strong> {selectedHouse.location.city}
-                </p>
-                <p>
-                  <strong>Preço:</strong>{" "}
-                  {priceFormatter.format(selectedHouse.price)}
-                </p>
-                <p>
-                  <strong>Agente:</strong>{" "}
-                  {users.find((user) => user.id === selectedHouse.agentId)
-                    ?.name || "Agente desconhecido"}
-                </p>
-                <p>
-                  <strong>Quartos:</strong> {selectedHouse.details.rooms}
-                </p>
-                <p>
-                  <strong>Banheiros:</strong> {selectedHouse.details.bathrooms}
-                </p>
-                <p>
-                  <strong>Área:</strong> {selectedHouse.details.area} m²
-                </p>
-                <p>
-                  <strong>Tipo:</strong> {selectedHouse.type}
-                </p>
-                <p>
-                  <strong>Descrição:</strong> {selectedHouse.description}
-                </p>
+              <div className="space-y-2 text-sm">
+                <p><strong>Título:</strong> {selectedHouse.title}</p>
+                <p><strong>Endereço:</strong> {selectedHouse.location.address}</p>
+                <p><strong>Cidade:</strong> {selectedHouse.location.city}</p>
+                <p><strong>Preço:</strong> {priceFormatter.format(selectedHouse.price)}</p>
+                <p><strong>Agente:</strong> {users.find((u) => u.id === selectedHouse.agentId)?.name || "Desconhecido"}</p>
+                <p><strong>Quartos:</strong> {selectedHouse.details.rooms}</p>
+                <p><strong>Banheiros:</strong> {selectedHouse.details.bathrooms}</p>
+                <p><strong>Área:</strong> {selectedHouse.details.area} m²</p>
+                <p><strong>Tipo:</strong> {selectedHouse.type}</p>
+                <p><strong>Descrição:</strong> {selectedHouse.description}</p>
 
                 <div className="w-full h-60 overflow-hidden mt-4 relative">
                   <img
@@ -219,9 +183,7 @@ export function Houses() {
             </div>
 
             <DialogFooter>
-              <Button variant="outline" onClick={handleCloseDialog}>
-                Fechar
-              </Button>
+              <Button variant="outline" onClick={handleCloseDialog}>Fechar</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

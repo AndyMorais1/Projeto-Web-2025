@@ -36,19 +36,27 @@ class UserController {
 
         reply.send(user);
     }
-    public async updateUser(request: FastifyRequest<{ Params: { id: string }; Body: UpdateUserSchema }>, reply: FastifyReply) {
+    public async updateUser(
+        request: FastifyRequest<{ Params: { id: string }; Body: UpdateUserSchema }>,
+        reply: FastifyReply
+    ) {
         const { id } = request.params;
-        const parsedData = UpdateUserSchema.parse(request.body);
 
-        const user = await userService.updateUser(id, parsedData);
+        try {
+            const parsedData = UpdateUserSchema.parse(request.body);
 
-        if (!user) {
-            reply.status(404).send({ message: "Usuário não encontrado" });
-            return;
+            const user = await userService.updateUser(id, parsedData);
+
+            reply.send(user);
+        } catch (error) {
+            if (error instanceof Error) {
+                reply.status(400).send({ message: error.message });
+            } else {
+                reply.status(500).send({ message: "Erro interno no servidor" });
+            }
         }
-
-        reply.send(user);
     }
+
 
     public async updateAgentStatus (request:FastifyRequest<{Params:{id:string}}>, reply: FastifyReply) {
         const { id } = request.params;

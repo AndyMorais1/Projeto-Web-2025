@@ -7,32 +7,41 @@ import {
   DialogFooter, DialogHeader, DialogTitle, DialogTrigger
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select, SelectContent, SelectItem,
+  SelectTrigger, SelectValue
+} from "@/components/ui/select";
 import { toast } from "sonner";
-import { useUsers } from "@/contexts/UsersContext";
 import { useHouses } from "@/contexts/HousesContext";
 import { Filter } from "lucide-react";
 
+// Enum dos tipos de casas
+export enum Type {
+  APARTMENT = 'APARTMENT',
+  HOUSE = 'HOUSE',
+  PENTHOUSE = 'PENTHOUSE',
+  STUDIO = 'STUDIO',
+  DUPLEX = 'DUPLEX',
+}
+
 export function DialogFilterHouses() {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [selectedAgentId, setSelectedAgentId] = React.useState<string>("");
+  const [selectedType, setSelectedType] = React.useState<string>("");
 
-  const { users } = useUsers();
   const { houses, setHouses, originalHouses } = useHouses();
 
   const handleFilter = () => {
-    if (!selectedAgentId || selectedAgentId === "ALL") {
-      // Restaurar todas as casas
+    if (!selectedType || selectedType === "ALL") {
       setHouses(originalHouses);
       toast.success("Filtro removido. Listando todas as casas.");
       setIsOpen(false);
       return;
     }
 
-    const filtered = originalHouses.filter(house => house.agentId === selectedAgentId);
+    const filtered = originalHouses.filter(house => house.type === selectedType);
 
     if (filtered.length === 0) {
-      toast.error("Não há casas para o agente selecionado.");
+      toast.error("Não há casas do tipo selecionado.");
     }
 
     setHouses(filtered);
@@ -53,31 +62,29 @@ export function DialogFilterHouses() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[400px] max-h-[70vh] overflow-y-auto p-4">
         <DialogHeader>
-          <DialogTitle className="text-lg">Filtrar Casas por Agente</DialogTitle>
+          <DialogTitle className="text-lg">Filtrar Casas por Tipo</DialogTitle>
           <DialogDescription className="text-sm">
-            Selecione um agente para filtrar as casas.
+            Selecione um tipo para filtrar as casas.
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-3 py-4">
           <div className="grid grid-cols-4 items-center gap-3">
-            <Label htmlFor="agentId" className="text-right">Agente</Label>
+            <Label htmlFor="type" className="text-right">Tipo</Label>
             <Select
-              value={selectedAgentId}
-              onValueChange={setSelectedAgentId}
+              value={selectedType}
+              onValueChange={setSelectedType}
             >
               <SelectTrigger className="col-span-3">
-                <SelectValue placeholder="Selecione o agente" />
+                <SelectValue placeholder="Selecione o tipo" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ALL">Todos os Agentes</SelectItem>
-                {users
-                  .filter(user => user.role === "AGENT" && user.id && originalHouses.some(h => h.agentId === user.id))
-                  .map(agent => (
-                    <SelectItem key={agent.id} value={agent.id || ""}>
-                      {agent.name}
-                    </SelectItem>
-                  ))}
+                <SelectItem value="ALL">Todos os Tipos</SelectItem>
+                {Object.values(Type).map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {type.charAt(0) + type.slice(1).toLowerCase()}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

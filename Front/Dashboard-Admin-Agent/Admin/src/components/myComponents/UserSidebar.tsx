@@ -47,7 +47,7 @@ export function UserSidebar() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={currentUser?.photo || "https://avatars.githubusercontent.com/u/34351007?v=4"} alt={currentUser?.name[0]} />
+                <AvatarImage src={currentUser?.photo} alt={currentUser?.name[0]} />
                 <AvatarFallback className="rounded-lg">{currentUser?.name[0]}</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">

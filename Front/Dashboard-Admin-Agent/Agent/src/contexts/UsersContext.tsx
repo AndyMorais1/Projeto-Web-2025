@@ -51,7 +51,12 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   };
 
   useEffect(() => {
-    initializeUsersData();
+    const token = localStorage.getItem("token");
+    if (token) {
+      initializeUsersData();
+    } else {
+      console.log("Ignorando carregamento de usuários: usuário não autenticado.");
+    }
   }, []);
 
   return (

@@ -17,7 +17,8 @@ export const UpdateUserSchema = zod.object({
         required_error: 'Email é obrigatório',
         invalid_type_error: 'Email inválido',
     }).email().optional(),
-    password: zod.string().optional(),
+    currentPassword: zod.string().optional(),
+    newPassword: zod.string().optional(),
     phone: zod.string().optional(),
     role: zod.enum(['CLIENT', 'ADMIN', 'AGENT']).optional(),
     status: zod.enum(['ACTIVE', 'INACTIVE','PENDING']).optional(),
@@ -36,6 +37,7 @@ export const ResponseUserSchema = zod.object({
     photo: zod.union([zod.string(), zod.null()]).optional(),
     houses: zod.array(zod.string()).optional(),
     createdAt: zod.date(),
+    updatedAt:zod.date(),
 });
 
 export const LoginSchema = zod.object({

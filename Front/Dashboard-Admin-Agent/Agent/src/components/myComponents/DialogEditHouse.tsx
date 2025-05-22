@@ -39,7 +39,7 @@ export function DialogEditHouse({
     agentId: house.agentId || "",
   });
 
-  const { users } = useUsers();
+  const { users, currentUser } = useUsers();
   const [images, setImages] = React.useState<string[]>(house.images || []);
   const [agents, setAgents] = React.useState<UserData[]>([]);
   const { refreshHouses } = useHouses();
@@ -47,7 +47,14 @@ export function DialogEditHouse({
   React.useEffect(() => {
     const filteredAgents = users.filter(user => user.role === "AGENT");
     setAgents(filteredAgents);
-  }, [users]);
+
+    if (isOpen && currentUser) {
+      setForm(prev => ({
+        ...prev,
+        agentId: currentUser.id || "",
+      }));
+    }
+  }, [isOpen, users, currentUser]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
@@ -75,7 +82,7 @@ export function DialogEditHouse({
       return;
     }
 
-    const updatedHouse: HouseData = {
+   const updatedHouse: Partial< HouseData> = {
       agentId: form.agentId,
       title: form.title,
       description: form.description,
@@ -128,45 +135,48 @@ export function DialogEditHouse({
         <DialogHeader>
           <DialogTitle>Editar Imóvel</DialogTitle>
           <DialogDescription>
-            Preencha os campos abaixo para editar o imóvel.
+            Atualize os dados do imóvel abaixo.
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid grid-cols-4 gap-4 py-4">
-          {["title", "description", "price", "rooms", "bathrooms", "area", "address", "city", "zipCode"].map(field => (
-            <React.Fragment key={field}>
-              <Label htmlFor={field} className="text-right col-span-1">
-                {field.charAt(0).toUpperCase() + field.slice(1)}
-              </Label>
+          {[
+            { id: "title", label: "Título" },
+            { id: "description", label: "Descrição" },
+            { id: "price", label: "Preço" },
+            { id: "rooms", label: "Quartos" },
+            { id: "bathrooms", label: "Banheiros" },
+            { id: "area", label: "Área (m²)" },
+            { id: "address", label: "Endereço" },
+            { id: "city", label: "Cidade" },
+            { id: "zipCode", label: "CEP" },
+          ].map(({ id, label }) => (
+            <React.Fragment key={id}>
+              <Label htmlFor={id} className="text-right col-span-1">{label}</Label>
               <Input
-                id={field}
-                type={["price", "rooms", "bathrooms", "area"].includes(field) ? "number" : "text"}
+                id={id}
+                type={["price", "rooms", "bathrooms", "area"].includes(id) ? "number" : "text"}
                 className="col-span-3"
-                value={(form as any)[field]}
+                value={(form as any)[id]}
                 onChange={handleChange}
-                min={["price", "rooms", "bathrooms", "area"].includes(field) ? 0 : undefined}
+                min={["price", "rooms", "bathrooms", "area"].includes(id) ? 0 : undefined}
               />
             </React.Fragment>
           ))}
 
-          {/* Agent */}
-          <Label htmlFor="agentId" className="text-right col-span-1">Agent</Label>
+          {/* Agente */}
+          <Label htmlFor="agentId" className="text-right col-span-1">Agente</Label>
           <select
             id="agentId"
             value={form.agentId}
-            onChange={handleChange}
-            className="col-span-3 p-2 border rounded"
+            disabled
+            className="col-span-3 p-2 border rounded bg-gray-100 text-gray-600 cursor-not-allowed"
           >
-            <option value="">Select Agent</option>
-            {agents.map(agent => (
-              <option key={agent.id} value={agent.id}>
-                {agent.name}
-              </option>
-            ))}
+            <option value={currentUser?.id}>{currentUser?.name}</option>
           </select>
 
-          {/* Type */}
-          <Label htmlFor="type" className="text-right col-span-1">Type</Label>
+          {/* Tipo */}
+          <Label htmlFor="type" className="text-right col-span-1">Tipo</Label>
           <select
             id="type"
             value={form.type}
@@ -178,8 +188,8 @@ export function DialogEditHouse({
             ))}
           </select>
 
-          {/* Upload Photos */}
-          <Label htmlFor="images" className="text-right col-span-1">Upload Photos</Label>
+          {/* Upload de imagens */}
+          <Label htmlFor="images" className="text-right col-span-1">Enviar fotos</Label>
           <Input
             id="images"
             type="file"
@@ -189,10 +199,10 @@ export function DialogEditHouse({
             className="col-span-3"
           />
 
-          {/* Preview Images */}
+          {/* Preview das imagens */}
           {images.length > 0 && (
             <>
-              <Label className="text-right col-span-1">Preview</Label>
+              <Label className="text-right col-span-1">Pré-visualização</Label>
               <div className="col-span-3 grid grid-cols-2 gap-2">
                 {images.map((img, index) => (
                   <img
@@ -208,8 +218,8 @@ export function DialogEditHouse({
         </div>
 
         <DialogFooter>
-          <Button type="button" onClick={handleSubmit}>Save Changes</Button>
-          <Button type="button" variant="outline" onClick={handleCloseDialog}>Cancel</Button>
+          <Button type="button" onClick={handleSubmit}>Salvar Alterações</Button>
+          <Button type="button" variant="outline" onClick={handleCloseDialog}>Cancelar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -58,6 +58,7 @@ class UserService {
                 Houses: true,
                 status: true,
                 createdAt: true,
+                updatedAt: true,
 
             },
         });
@@ -69,23 +70,55 @@ class UserService {
             throw new Error("URL de foto inválida");
         }
 
-        // Atualização do usuário
+        // Atualiza senha se fornecida
+        if (data.newPassword && data.currentPassword) {
+            await this.updatePassword(id, data.currentPassword, data.newPassword);
+            console.log("senha atualizada");
+        }
+
+        // Atualização do restante dos dados
         const user = await prisma.user.update({
-            where: {
-                id,
-            },
+            where: { id },
             data: {
                 name: data.name,
                 email: data.email,
                 phone: data.phone,
                 role: data.role,
                 status: data.status,
-                photo: data.photo || null,  // Se não houver foto, mantém null
+                photo: data.photo || null,
             },
         });
 
         return user;
     }
+
+    public async updatePassword(userId: string, currentPassword: string, newPassword: string) {
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+        if (!user) {
+            throw new Error("Usuário não encontrado");
+        }
+
+        const isValid = verifyPassword({
+            candidatePassword: currentPassword,
+            hash: user.password,
+            salt: user.salt,
+        });
+
+        if (!isValid) {
+            throw new Error("Senha atual incorreta");
+        }
+
+        const { hash, salt } = hashPassword(newPassword);
+
+        await prisma.user.update({
+            where: { id: userId },
+            data: {
+                password: hash,
+                salt: salt,
+            },
+        });
+    }
+
 
     private  isValidUrl(url: string): boolean {
         const pattern = new RegExp('^(https?:\\/\\/(?:www\\.)?[\\w-]+(?:\\.[\\w-]+)+(/[^\\s]*)?)$', 'i');
@@ -139,6 +172,7 @@ class UserService {
                 Houses: true,
                 status: true,
                 createdAt: true,
+                updatedAt: true,
             },
         });
         return users;

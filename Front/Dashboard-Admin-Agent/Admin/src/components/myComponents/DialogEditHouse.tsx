@@ -75,7 +75,7 @@ export function DialogEditHouse({
       return;
     }
 
-    const updatedHouse: HouseData = {
+    const updatedHouse: Partial< HouseData> = {
       agentId: form.agentId,
       title: form.title,
       description: form.description,

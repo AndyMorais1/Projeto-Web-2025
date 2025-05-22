@@ -69,7 +69,7 @@ class HousesServices {
         }
     }
 
-    async updateHouse(id: string, house: HouseData): Promise<HouseData | null> {
+    async updateHouse(id: string, house: Partial <HouseData>): Promise<HouseData | null> {
         try {
             const token = localStorage.getItem('token');
             if (!token) {

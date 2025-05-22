@@ -12,14 +12,13 @@ import { CirclePlus } from "lucide-react";
 import { housesServices } from "@/api/Houses";
 import { useUsers } from "@/contexts/UsersContext";
 import { UserData } from "@/data/UserData";
-import { HouseData } from "@/data/HouseData";
-import { Type } from "@/data/HouseData";
+import { HouseData, Type } from "@/data/HouseData";
 import { useHouses } from "@/contexts/HousesContext";
 import { toast } from "sonner"; 
 import { uploadImage } from "@/utils/uploadImage";
 
 export function DialogCreateHouse() {
-  const { users } = useUsers();
+  const { users, currentUser } = useUsers();
   const [agents, setAgents] = React.useState<UserData[]>([]);
   const [images, setImages] = React.useState<File[]>([]);
   const [isOpen, setIsOpen] = React.useState(false); 
@@ -34,7 +33,14 @@ export function DialogCreateHouse() {
   React.useEffect(() => {
     const filteredAgents = users.filter(user => user.role === "AGENT" && user.status === "ACTIVE");
     setAgents(filteredAgents);
-  }, [users]);
+
+    if (isOpen && currentUser) {
+      setForm(prev => ({
+        ...prev,
+        agentId: currentUser.id || "",
+      }));
+    }
+  }, [isOpen, users, currentUser]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -85,7 +91,7 @@ export function DialogCreateHouse() {
         setIsOpen(false);
         setForm({
           title: "", description: "", type: Type.APARTMENT, price: "",
-          agentId: "", address: "", city: "", zipCode: "",
+          agentId: currentUser?.id || "", address: "", city: "", zipCode: "",
           rooms: "", bathrooms: "", area: "",
         });
         setImages([]);
@@ -115,6 +121,7 @@ export function DialogCreateHouse() {
           <DialogDescription>Preencha os detalhes da casa para criar o anúncio.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
+          {/* Campos padrão */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="title" className="text-right">Título</Label>
             <Input id="title" value={form.title} onChange={handleInputChange} className="col-span-3" />
@@ -184,21 +191,20 @@ export function DialogCreateHouse() {
             />
           </div>
 
+          {/* Agente (desativado) */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="agentId" className="text-right">Agente</Label>
             <select
               id="agentId"
               value={form.agentId}
-              onChange={handleInputChange}
-              className="col-span-3 p-2 border rounded"
+              disabled
+              className="col-span-3 p-2 border rounded bg-gray-100 text-gray-600 cursor-not-allowed"
             >
-              <option value="">Selecione um agente</option>
-              {agents.map(agent => (
-                <option key={agent.id} value={agent.id}>{agent.name}</option>
-              ))}
+              <option value={currentUser?.id}>{currentUser?.name}</option>
             </select>
           </div>
         </div>
+
         <DialogFooter>
           <Button onClick={handleSubmit}>Cadastrar</Button>
           <Button variant="outline" onClick={() => setIsOpen(false)}>Cancelar</Button>
