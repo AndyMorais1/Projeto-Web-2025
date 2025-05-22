@@ -26,6 +26,7 @@ import { useUsers } from "@/contexts/UsersContext"
 import { useMemo } from "react"
 import { TrendingUp } from "lucide-react"
 
+
 // Função para gerar meses entre data inicial e atual
 function generateMonthsFrom(start = "2025-01") {
   const result: string[] = []
@@ -75,15 +76,15 @@ export function Chart1() {
   const { houses } = useHouses()
 
   const chartData = useMemo(() => {
-    const housesCounts = groupByMonth(houses);
-    console.log("📊 Contagem de casas por mês:", housesCounts);
+    const usersCounts = groupByMonth(users)
+    const housesCounts = groupByMonth(houses)
 
-    return Object.keys(housesCounts).map((monthKey) => ({
+    return Object.keys(usersCounts).map((monthKey) => ({
       month: format(new Date(monthKey + "-01"), "MMMM"),
+      usuarios: usersCounts[monthKey],
       casas: housesCounts[monthKey],
-    }));
-  }, [houses]);
-
+    }))
+  }, [users, houses])
 
   return (
     <Card>
