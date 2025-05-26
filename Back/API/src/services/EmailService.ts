@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 });
 
 export async function sendVerificationEmail(email: string, token: string) {
-    const verificationUrl = `http://localhost:3000/users/users/verify-email?token=${token}`;
+    const verificationUrl = `http://localhost:4000/users/users/verify-email?token=${token}`;
 
     await transporter.sendMail({
         from: `"SpotHome" <${process.env.EMAIL_USER}>`, // Nome ajuda a evitar spam

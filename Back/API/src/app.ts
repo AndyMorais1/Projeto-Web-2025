@@ -59,8 +59,8 @@ async function main() {
   server.register(emailRoutes, { prefix: '/email' });
 
   try {
-    await server.listen({ port: 3000, host: '0.0.0.0' });
-    console.log('Server listening on port 3000');
+    await server.listen({ port: 4000, host: '127.0.0.1' });
+    console.log('Server listening on port 4000');
   } catch (err) {
     server.log.error(err);
     process.exit(1);
