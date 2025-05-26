@@ -110,13 +110,21 @@ class UserController {
         // 1. Verificar se o usuário existe pelo email
         const user = await userService.findUserByEmail(parsedData.email);
 
-        //console.log('User found:', user);
-
         if (!user) {
             return reply.status(401).send({ message: 'Usuário não encontrado' });
         }
 
-        // 2. Verificar se a senha fornecida é correta
+        // 2. Verificar se o usuário tem um status válido
+        if (user.status === 'PENDING') {
+            return reply.status(403).send({ message: 'Acesso negado. Status do usuário é PENDING.' });
+        }
+
+        // 3. Verificar se o usuário é agente ou cliente
+        if (user.role !== 'CLIENT' && user.role !== 'AGENT') {
+            return reply.status(403).send({ message: 'Acesso negado. Apenas clientes ou agentes podem acessar.' });
+        }
+
+        // 4. Verificar se a senha fornecida é correta
         const isPasswordCorrect = verifyPassword({
             candidatePassword: parsedData.password,
             salt: user.salt,
@@ -125,14 +133,21 @@ class UserController {
 
         if (isPasswordCorrect) {
             const { password, salt, ...rest } = user;  // Remover dados sensíveis
-            // 3. Gerar o token
-            const token = request.server.jwt.sign(rest, { expiresIn: '1h' });  // Gerando o token
+            // 5. Gerar o token
+            const token = request.server.jwt.sign({
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                role: user.role,
+            }, { expiresIn: '5h' });
+
             return { token };
         }
 
-        // 4. Se a senha estiver incorreta
+        // 6. Se a senha estiver incorreta
         return reply.status(401).send({ message: 'Senha incorreta' });
     }
+
 
     //login admin
     public async loginAdmin(
@@ -166,7 +181,13 @@ class UserController {
 
         // 4. Gerar o token JWT sem os dados sensíveis (senha e salt)
         const { password, salt, ...rest } = user;
-        const token = request.server.jwt.sign(rest, { expiresIn: '5h' });
+        const token = request.server.jwt.sign({
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+        }, { expiresIn: '5h' });
+
 
         return { token };
     }

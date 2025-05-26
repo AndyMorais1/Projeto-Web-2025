@@ -30,8 +30,8 @@ export default function MapClient() {
   return (
     <div className="w-full h-full relative z-0">
       <MapContainer
-        center={[38.7169, -9.1399]}
-        zoom={12}
+        center={[39.5, -8.0]}
+        zoom={7}
         scrollWheelZoom
         style={{ width: "100%", height: "100%", zIndex: 0 }}
         className="z-0"

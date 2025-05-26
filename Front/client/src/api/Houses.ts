@@ -131,5 +131,50 @@ class HousesServices {
     }
 }
 
+async incrementView(houseId: string): Promise<void> {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Token não encontrado no localStorage');
+      return;
+    }
+
+    await this.api.post(`/houses/${houseId}/view`, null, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error: any) {
+    console.error('Erro ao incrementar visualização:', error.response?.data || error.message);
+  }
+}
+
+// Função para pegar as casas mais favoritadas
+  async getMostFavoritedHouses(limit: number = 10): Promise<HouseData[]> {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('Token não encontrado no localStorage');
+        return [];
+      }
+
+      // Faz a requisição GET para obter as casas mais favoritadas
+      const response = await this.api.get<HouseData[]>('/houses/most-favorited', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          limit, // Passa o parâmetro de limite para a query string
+        },
+      });
+
+      return response.data; // Retorna os dados das casas mais favoritadas
+    } catch (error: any) {
+      console.error('Erro ao obter as casas mais favoritadas:', error.response?.data || error.message);
+      return [];
+    }
+  }
+
+
 }
 export const housesServices = new HousesServices();

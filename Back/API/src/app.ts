@@ -7,6 +7,8 @@ import { houseRoutes } from './routes/HouseRoute';
 import cors from '@fastify/cors';
 import dotenv from 'dotenv';
 import {emailRoutes} from "./routes/EmailRoutes";
+import "./types/fastify.d.ts";
+import { favoriteRoutes } from "./routes/FavoriteRoutes";
 dotenv.config();
 
 export const server = Fastify({
@@ -57,6 +59,7 @@ async function main() {
   server.register(userRoutes, { prefix: '/users' });
   server.register(houseRoutes, { prefix: '/houses' });
   server.register(emailRoutes, { prefix: '/email' });
+  server.register(favoriteRoutes, { prefix: "/users" });
 
   try {
     await server.listen({ port: 3000, host: '0.0.0.0' });

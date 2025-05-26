@@ -192,6 +192,62 @@ class HouseService {
         });
     }
 
+    async incrementHouseViews(id: string) {
+        return prisma.house.update({
+            where: { id },
+            data: {
+                views: { increment: 1 },
+            },
+        });
+    }
+
+    async getMostViewedHouses(limit: number = 5) {
+        return prisma.house.findMany({
+            orderBy: { views: "desc" },
+            take: limit,
+        });
+    }
+
+// Método para retornar as casas mais favoritadas (top 10)
+    async getTop10MostFavoritedHouses() {
+        // 1. Contabiliza os favoritos por casa usando groupBy
+        const favoritesCount = await prisma.favorite.groupBy({
+            by: ['houseId'], // Agrupa os favoritos por houseId
+            _count: {
+                houseId: true, // Conta quantos favoritos há por casa
+            },
+            orderBy: {
+                _count: {
+                    houseId: 'desc', // Ordena pela quantidade de favoritos de forma decrescente
+                },
+            },
+            take: 10, // Limita o número de casas retornadas para 10
+        });
+
+        // 2. Extrai os houseIds para buscar as casas
+        const houseIds = favoritesCount.map(item => item.houseId);
+
+        // 3. Busca as casas com os dados relacionados (location, details)
+        const houses = await prisma.house.findMany({
+            where: {
+                id: {
+                    in: houseIds, // Busca as casas com os IDs que foram contados
+                },
+            },
+            include: {
+                location: true, // Inclui os dados da localização
+                details: true,  // Inclui os detalhes da casa
+                favorites: true // Inclui os favoritos (caso você precise de mais informações sobre os favoritos)
+            },
+        });
+
+        // 4. Combina as casas com a quantidade de favoritos
+        return houses.map(house => {
+            const count = favoritesCount.find(item => item.houseId === house.id)?._count.houseId;
+            return { ...house, favoritesCount: count || 0 }; // Adiciona a quantidade de favoritos
+        });
+    }
+
 }
 
 export const houseService = new HouseService();

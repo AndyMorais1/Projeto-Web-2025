@@ -20,6 +20,9 @@ export type UserDataOptional = Partial<UserData> & {
   newPassword?: string;
 };
 
+export type RegisterUserPayload = Pick<UserData, "name" | "email" | "phone" | "password">
+
+
 
 export interface UserAgentInfoDialogProps {
   user: {

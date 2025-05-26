@@ -88,5 +88,46 @@ class HouseController{
         }
     }
 
+    public async registerView(request: FastifyRequest, reply: FastifyReply) {
+        try {
+            const { id } = request.params as { id: string };
+
+            const updated = await houseService.incrementHouseViews(id);
+
+            if (!updated) {
+                return reply.status(404).send({ message: "Casa não encontrada" });
+            }
+
+            return reply.send({ message: "Visualização registrada com sucesso." });
+        } catch (error) {
+            console.error(error);
+            return reply.status(500).send({ message: "Erro ao registrar visualização" });
+        }
+    }
+
+    public async getTopViewed(request: FastifyRequest, reply: FastifyReply) {
+        try {
+            const top = await houseService.getMostViewedHouses();
+            return reply.send(top);
+        } catch (error) {
+            reply.status(500).send({ message: "Erro interno ao buscar casas mais vistas." });
+        }
+    }
+
+    // Método para obter as casas mais favoritas (top 10)
+    async getTop10MostFavoritedHouses(request: FastifyRequest, reply: FastifyReply) {
+        try {
+            // Chama o serviço para pegar as 10 casas mais favoritas
+            const mostFavoritedHouses = await houseService.getTop10MostFavoritedHouses();
+
+            // Retorna as casas mais favoritas com sucesso
+            return reply.send(mostFavoritedHouses);
+        } catch (error) {
+            console.error(error);
+            reply.status(500).send({ message: 'Erro ao buscar casas mais favoritas.' });
+        }
+    }
+
+
 }
 export const houseController = new HouseController();

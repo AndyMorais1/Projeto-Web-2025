@@ -8,7 +8,7 @@ export function middleware(req: NextRequest) {
 
   // Se não houver token, redireciona para a página de login
   if (!token) {
-    return NextResponse.redirect(new URL('/', req.url));  // Redireciona para a página de login
+    return NextResponse.redirect(new URL('/visitante', req.url));  // Redireciona para a página de login
   }
 
   // Caso o token exista, continua a requisição normalmente
@@ -18,6 +18,6 @@ export function middleware(req: NextRequest) {
 // Configuração do middleware, que define as rotas protegidas
 export const config = {
   matcher: [
-    
+    "/user/:path*", // Protege todas as rotas sob /user
   ], // Aqui você pode adicionar mais rotas que precisam de autenticação
 };

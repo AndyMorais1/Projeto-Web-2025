@@ -36,26 +36,30 @@ model User {
   photo                  String? //client, agent, admin
   status                 UserStatus @default(PENDING) //admin,agent,client
   salt                   String //client, agent, admin
+  favorites              Favorite[]
 
   @@map("users")
 }
 
 model House {
-  id          String       @id @default(uuid())
-  type        Type
-  agent       User         @relation(fields: [agentId], references: [id])
-  agentId     String
-  visits      Visit[]      @relation("HouseVisits")
-  location    Location     @relation(fields: [locationId], references: [id])
-  locationId  String       @unique
-  title       String
-  description String
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  images     String[]
-  details     HouseDetails @relation(fields: [detailsId], references: [id])
-  detailsId   String       @unique
-  price       Float
+  id             String       @id @default(uuid())
+  type           Type
+  agent          User         @relation(fields: [agentId], references: [id])
+  agentId        String
+  visits         Visit[]      @relation("HouseVisits")
+  location       Location     @relation(fields: [locationId], references: [id])
+  locationId     String       @unique
+  title          String
+  description    String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  images         String[]
+  details        HouseDetails @relation(fields: [detailsId], references: [id])
+  detailsId      String       @unique
+  price          Float
+  views          Int          @default(0) // <-- aqui!
+  favorites      Favorite[]
+  favoritesCount Int          @default(0) // Novo campo para contar os favoritos
 
   @@map("houses")
 }
@@ -98,8 +102,8 @@ model Location {
   longitude Float
   house     House?
 
+  @@unique([address, city, zipCode, latitude, longitude])
   @@map("locations")
-   @@unique([address, city, zipCode, latitude, longitude])
 }
 
 enum VisitStatus {
@@ -122,4 +126,16 @@ model HouseDetails {
   house     House?
 
   @@map("details")
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  house     House    @relation(fields: [houseId], references: [id])
+  houseId   String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, houseId]) // Um usuário só pode favoritar uma casa uma vez
+  @@map("favorites")
 }

@@ -10,6 +10,7 @@ export interface HouseData {
   location: LocationData;
   createdAt: string;
   updatedAt: string;
+  views?: number;
 }
 export interface DetailsData {
   id?: string;

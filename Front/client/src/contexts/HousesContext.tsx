@@ -15,6 +15,8 @@ interface HousesContextType {
   setSelectedHouse: React.Dispatch<React.SetStateAction<HouseData | null>>;
   isDialogOpen: boolean;
   setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  favorites: HouseData[];
+  toggleFavorite: (house: HouseData) => void;
 }
 
 const HousesContext = createContext<HousesContextType>({
@@ -28,6 +30,8 @@ const HousesContext = createContext<HousesContextType>({
   setSelectedHouse: () => {},
   isDialogOpen: false,
   setIsDialogOpen: () => {},
+  favorites: [],
+  toggleFavorite: () => {},
 });
 
 export const useHouses = () => useContext(HousesContext);
@@ -37,30 +41,20 @@ export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const [houses, setHouses] = useState<HouseData[]>([]);
   const [originalHouses, setOriginalHouses] = useState<HouseData[]>([]);
-
   const [selectedHouse, setSelectedHouse] = useState<HouseData | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [favorites, setFavorites] = useState<HouseData[]>([]);
 
   const fetchHouses = async () => {
     try {
-      if (!currentUser?.id) {
-        console.warn("ID do usuário não está disponível ainda.");
-        return;
-      }
+      if (!currentUser?.id) return;
 
-      console.log("🔄 Buscando casas do agente ID:", currentUser.id);
       const fetchedHouses = await housesServices.getAllHouses();
-
-      if (!fetchedHouses || fetchedHouses.length === 0) {
-        console.warn("⚠️ Nenhuma casa foi retornada.");
-        return;
-      }
-
-      console.log("✅ Casas carregadas:", fetchedHouses);
+      console.log("Casas carregadas:", fetchedHouses);
       setHouses(fetchedHouses);
       setOriginalHouses(fetchedHouses);
     } catch (error: any) {
-      console.error("Erro ao obter casas do agente:", {
+      console.error("Erro ao obter casas:", {
         message: error.message,
         response: error.response,
         request: error.request,
@@ -82,20 +76,67 @@ export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setOriginalHouses([]);
   };
 
+  const loadFavorites = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token || !currentUser?.id) return;
+
+      const res = await fetch("http://localhost:3000/users/favorites", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      setFavorites(data);
+    } catch (err) {
+      console.error("Erro ao carregar favoritos do servidor:", err);
+    }
+  };
+
+  const toggleFavorite = async (house: HouseData) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token || !currentUser?.id) return;
+
+    const res = await fetch("http://localhost:3000/users/favorites/toggle", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ houseId: house.id }),
+    });
+
+    const result = await res.json();
+
+    setFavorites((prev) => {
+      const safePrev = Array.isArray(prev) ? prev : [];
+      const isAlreadyFavorited = safePrev.some((f) => f.id === house.id);
+
+      if (result.favorited && !isAlreadyFavorited) {
+        return [...safePrev, house];
+      }
+
+      if (!result.favorited && isAlreadyFavorited) {
+        return safePrev.filter((f) => f.id !== house.id);
+      }
+
+      return safePrev;
+    });
+  } catch (error) {
+    console.error("Erro ao alternar favorito:", error);
+  }
+};
+
+
+
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      console.info("Token não encontrado, não buscando casas.");
-      return;
-    }
+    if (!token || !currentUser?.id) return;
 
-    if (!currentUser?.id) {
-      console.info("Aguardando carregamento do usuário para buscar casas...");
-      return;
-    }
-
-    console.log("🎯 currentUser.id disponível:", currentUser.id);
     initializeHouses();
+    loadFavorites();
   }, [currentUser?.id]);
 
   return (
@@ -111,6 +152,8 @@ export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setSelectedHouse,
         isDialogOpen,
         setIsDialogOpen,
+        favorites,
+        toggleFavorite,
       }}
     >
       {children}
