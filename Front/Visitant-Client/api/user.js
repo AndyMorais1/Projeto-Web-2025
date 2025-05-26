@@ -1,7 +1,9 @@
+const { use } = require("react");
+
 class UsersServices {
     constructor() {
         this.api = axios.create({
-            baseURL: 'http://localhost:3000/users',
+            baseURL: 'http://localhost:4000',
             headers: { 'Content-Type': 'application/json' },
             timeout: 5000,
         });
@@ -82,48 +84,49 @@ class UsersServices {
         }
     }
 
-    async registerUser(userData) {
-        try {
-            const response = await this.api.post("/users", userData); // no token!
-            return response.data;
-        } catch (error) {
-            console.error("Erro ao registrar usuário:", error.message);
-            throw error;
-        }
+  async registerUser(userData) {
+    try {
+        const response = await this.api.post("/users/users", userData); 
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao registrar usuário:", {
+            dadosEnviados: userData,
+            mensagem: error.message,
+            resposta: error.response?.data || "Sem resposta do servidor",
+            status: error.response?.status || "Sem status",
+        });
+        throw error;
     }
+}
 
 
-    async createUser(userData) {
+
+    // async createUser(userData) {
+    //     try {
+    //         const token = localStorage.getItem("token");
+    //         if (!token) {
+    //             console.error("Erro: Token de autenticação ausente!");
+    //             return;
+    //         }
+
+    //         const response = await this.api.post("/users", userData, {
+    //             headers: { Authorization: `Bearer ${token}` },
+    //         });
+
+    //         return response.data;
+    //     } catch (error) {
+    //         console.error("Erro ao criar usuário:", error.message);
+    //         throw error;
+    //     }
+    // }
+
+    async updateUser(userId, userData, token) {
         try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                console.error("Erro: Token de autenticação ausente!");
-                return;
-            }
-
-            const response = await this.api.post("/users", userData, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
-            return response.data;
-        } catch (error) {
-            console.error("Erro ao criar usuário:", error.message);
-            throw error;
-        }
-    }
-
-    async updateUser(userId, userData) {
-        try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                console.error("Erro: Token de autenticação ausente!");
-                return;
-            }
-
             const response = await this.api.put(`/users/${userId}`, userData, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers:{
+                    Authorization: `Bearer ${token}`,
+                },
             });
-
             return response.data;
         } catch (error) {
             console.error("Erro ao atualizar usuário:", error.message);

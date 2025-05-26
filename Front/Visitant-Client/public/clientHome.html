@@ -14,6 +14,7 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
 </head>
+
 <body class="font-sans">
   <!-- NavBar -->
   <section>
@@ -86,14 +87,85 @@
           <div class="col-12 col-md-8 col-lg-10 mb-2 mb-md-0">
             <form class="d-flex" role="search">
               <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <a href="#"> <div class="btn btn-outline-success me-2 " type="submit">Pesquisar</div> </a> 
-                <a href="#"> <div class="btn btn-outline-success" type="submit">Filtros</div> </a>
+                <a href="#"> <div class="btn btn-outline-primary me-2 " type="submit">Pesquisar</div> </a> 
+                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#filtroModal"> Filtros</button>
             </form>
           </div>
-
         </div>
       </div>
     </nav>
+  </section>
+  
+<!-- Modal de Filtros -->
+  <section>
+    <div class="modal fade" id="filtroModal" tabindex="-1" aria-labelledby="filtroModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content rounded-4 shadow">
+          <div class="modal-header">
+            <h5 class="modal-title" id="filtroModalLabel">Filtrar Propriedades</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+          <div class="modal-body">
+            <form id="filtroForm" class="row g-3">
+              <div class="col-md-6">
+                <label for="tipologia" class="form-label">Tipologia</label>
+                <select id="tipologia" class="form-select">
+                  <option value="">Escolha...</option>
+                  <option value="T1">T1</option>
+                  <option value="T2">T2</option>
+                  <option value="T3">T3</option>
+                  <option value="T4+">T4+</option>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label for="localizacao" class="form-label">Localização</label>
+                <input type="text" class="form-control" id="localizacao" placeholder="Ex: Lisboa">
+              </div>
+
+              <div class="col-md-6">
+                <label for="precoMin" class="form-label">Preço Mínimo (€)</label>
+                <input type="number" class="form-control" id="precoMin" placeholder="0">
+              </div>
+
+              <div class="col-md-6">
+                <label for="precoMax" class="form-label">Preço Máximo (€)</label>
+                <input type="number" class="form-control" id="precoMax" placeholder="1000000">
+              </div>
+
+              <div class="col-md-4">
+                <label for="wcs" class="form-label">Nº de WC's</label>
+                <input type="number" class="form-control" id="wcs">
+              </div>
+
+              <div class="col-md-4">
+                <label for="ano" class="form-label">Ano de Construção</label>
+                <input type="number" class="form-control" id="ano">
+              </div>
+
+              <div class="col-md-2">
+                <div class="form-check mt-4">
+                  <input class="form-check-input" type="checkbox" id="quintal">
+                  <label class="form-check-label" for="quintal">Quintal</label>
+                </div>
+              </div>
+
+              <div class="col-md-2">
+                <div class="form-check mt-4">
+                  <input class="form-check-input" type="checkbox" id="piscina">
+                  <label class="form-check-label" for="piscina">Piscina</label>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            <button type="button" class="btn btn-primary" onclick="aplicarFiltros()">Aplicar Filtros</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- houses examples part1 -->
@@ -106,6 +178,43 @@
 </section>
 
 <script>
+
+  function aplicarFiltros() {
+  const tipologia = document.getElementById('tipologia').value;
+  const localizacao = document.getElementById('localizacao').value.toLowerCase();
+  const precoMin = parseInt(document.getElementById('precoMin').value) || 0;
+  const precoMax = parseInt(document.getElementById('precoMax').value) || Infinity;
+  const wcs = parseInt(document.getElementById('wcs').value);
+  const ano = parseInt(document.getElementById('ano').value);
+  const quintal = document.getElementById('quintal').checked;
+  const piscina = document.getElementById('piscina').checked;
+
+  const housesFiltradas = houseList.filter(house => {
+    const precoFicticio = 300000; // você pode substituir por dados reais futuramente
+    const contemQuintal = house.description.toLowerCase().includes("quintal");
+    const contemPiscina = house.description.toLowerCase().includes("piscina");
+
+    return (
+      (!tipologia || house.title.includes(tipologia)) &&
+      (!localizacao || house.title.toLowerCase().includes(localizacao)) &&
+      (precoFicticio >= precoMin && precoFicticio <= precoMax) &&
+      (!isNaN(wcs) ? house.description.includes(`${wcs} casas de banho`) : true) &&
+      (!isNaN(ano) ? true : true) && // precisa de campo ano nos dados
+      (!quintal || contemQuintal) &&
+      (!piscina || contemPiscina)
+    );
+  });
+
+  grid.innerHTML = "";
+  housesFiltradas.forEach((house, i) => {
+    // Reuse logic to render cards (como no seu código atual)
+    // ou mova o código de renderização para uma função reutilizável
+  });
+
+  // Fechar o modal
+  const modal = bootstrap.Modal.getInstance(document.getElementById('filtroModal'));
+  modal.hide();
+}
   // Define the list of houses (title, description, and images)
   const houseList = [
     {
@@ -200,15 +309,12 @@
     grid.innerHTML += cardHTML;
   }
 </script>
-
-</script>
-
-
   
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
   <script src="./app.js"></script>
    <script src="../api/user.js"></script>
    <script src="../api/house.js"></script>
    <script src="../handle/logout.js"></script>
+
 </body>
 </html>

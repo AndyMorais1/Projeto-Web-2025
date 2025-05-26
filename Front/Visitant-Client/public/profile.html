@@ -1,84 +1,164 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SpotHome</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
 
 </head>
 <body style="font-family: sans-serif;">
-
- <div class="max-w-5xl mx-auto px-4 py-8 font-sans">
-  <!-- Profile Header -->
-  <div class="flex flex-wrap items-center bg-white rounded-2xl shadow-md p-6 gap-6">
-    <img src="../assets/images/Screenshot 2025-05-15 at 00.49.59.png" alt="User photo"
-      class="w-24 h-24 rounded-full object-cover" />
-    <div class="flex-1 min-w-[200px]">
-      <h2 class="text-xl font-semibold">Edson Manuel</h2>
-      <p class="text-gray-600">edson@example.com</p>
-      <p class="text-gray-500">Comprador ativo desde 2025</p>
+  <div class="max-w-5xl mx-auto px-4 py-8 font-sans">
+    <!-- Botão de Voltar para Home -->
+    <div class="mb-4">
+      <a href="clientHome.html"
+        class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition">
+        ＜ home
+      </a>
     </div>
-    <button
-      class="bg-white text-emerald-700 border border-emerald-700 px-4 py-2 rounded-xl hover:bg-emerald-700 hover:text-white transition">
-      Editar Perfil
-    </button>
-  </div>
 
-  <!-- Tabs -->
-  <div class="mt-8 border-b border-gray-200">
-    <nav class="flex space-x-6 text-gray-600 text-sm font-medium">
-      <button class="tab-btn border-b-2 border-emerald-600 text-emerald-600 pb-2" onclick="showTab('compras')">Compras</button>
-      <!-- <button class="tab-btn pb-2 hover:text-emerald-600" onclick="showTab('mensagens')">Mensagens</button> -->
-      <button class="tab-btn pb-2 hover:text-emerald-600" onclick="showTab('favoritos')">Favoritos</button>
-    </nav>
-  </div>
+    <!-- Profile Header -->
+    <div class="flex flex-wrap items-center bg-white rounded-2xl shadow-md p-6 gap-6">
+      <img src="../assets/images/person-circle.svg" alt="User photo"
+        class="w-20 h-20 rounded-full object-cover" />
+      <div class="flex-1 min-w-[200px]">
+        <h2 class="text-xl font-semibold" id="displayName"> </h2>
+        <p class="text-gray-600" id="displayEmail"> </p>
+        <!-- <p class="text-gray-500">Comprador ativo desde 2025</p> -->
+      </div>
+      <button id="editBtn"
+        class="bg-white text-emerald-700 border border-emerald-700 px-4 py-2 rounded-xl hover:bg-emerald-700 hover:text-white transition">
+        Editar Perfil
+      </button>
+    </div>
 
-  <!-- Tab Content -->
-  <div id="compras" class="tab-content mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div class="bg-white rounded-2xl overflow-hidden shadow-md">
-      <img src="https://via.placeholder.com/400x250" class="w-full h-48 object-cover" alt="Casa" />
-      <div class="p-4">
-        <p class="text-gray-700">Lisboa · 3 Quartos · 2 WC</p>
+    <!-- Tabs -->
+    <div class="mt-8 border-b border-gray-200">
+      <nav class="flex space-x-6 text-gray-600 text-sm font-medium">
+        <button class="tab-btn border-b-2 border-emerald-600 text-emerald-600 pb-2" onclick="showTab('compras')">Compras</button>
+        <button class="tab-btn pb-2 hover:text-emerald-600" onclick="showTab('favoritos')">Favoritos</button>
+      </nav>
+    </div>
+
+    <!-- Tab Content -->
+    <div id="compras" class="tab-content mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="bg-white rounded-2xl overflow-hidden shadow-md">
+        <img src="https://via.placeholder.com/400x250" class="w-full h-48 object-cover" alt="Casa" />
+        <div class="p-4">
+          <p class="text-gray-700">Lisboa · 3 Quartos · 2 WC</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl overflow-hidden shadow-md">
+        <img src="https://via.placeholder.com/400x250" class="w-full h-48 object-cover" alt="Casa" />
+        <div class="p-4">
+          <p class="text-gray-700">Porto · 4 Quartos · 3 WC</p>
+        </div>
       </div>
     </div>
-    <div class="bg-white rounded-2xl overflow-hidden shadow-md">
-      <img src="https://via.placeholder.com/400x250" class="w-full h-48 object-cover" alt="Casa" />
-      <div class="p-4">
-        <p class="text-gray-700">Porto · 4 Quartos · 3 WC</p>
-      </div>
+
+    <div id="favoritos" class="tab-content mt-6 hidden">
+      <p class="text-gray-600">Nenhuma propriedade salva nos favoritos.</p>
     </div>
   </div>
 
-  <!-- <div id="mensagens" class="tab-content mt-6 hidden">
-    <p class="text-gray-600">Você ainda não tem mensagens.</p>
-  </div> -->
+  <!-- Modal de Edição de Perfil -->
+  <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-2xl p-6 w-full max-w-md relative">
+      <h2 class="text-xl font-semibold mb-4">Editar Perfil</h2>
 
-  <div id="favoritos" class="tab-content mt-6 hidden">
-    <p class="text-gray-600">Nenhuma propriedade salva nos favoritos.</p>
+      <form id="editProfileForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Nome</label>
+          <input type="text" id="editName" class="mt-1 block w-full border border-gray-300 rounded-lg p-2" required>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Email</label>
+          <input type="email" id="editEmail" class="mt-1 block w-full border border-gray-300 rounded-lg p-2" required>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Senha</label>
+          <input type="password" id="editPassword" class="mt-1 block w-full border border-gray-300 rounded-lg p-2">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Foto de Perfil</label>
+          <input type="file" id="editProfilePic" accept="image/*" class="mt-1 block w-full border border-gray-300 rounded-lg p-2">
+        </div>
+
+        <div class="flex justify-end gap-4 pt-4">
+          <button type="button" onclick="closeModal()" class="px-4 py-2 border rounded-lg text-gray-600">Cancelar</button>
+          <button type="submit" class="bg-emerald-700 text-white px-4 py-2 rounded-lg hover:bg-emerald-800">Salvar</button>
+        </div>
+      </form>
+
+      <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+    </div>
   </div>
-</div>
 
-<script>
-  function showTab(tabId) {
-    const contents = document.querySelectorAll(".tab-content");
-    contents.forEach((tab) => tab.classList.add("hidden"));
+  <script>
+    function showTab(tabId) {
+      const contents = document.querySelectorAll(".tab-content");
+      contents.forEach((tab) => tab.classList.add("hidden"));
 
-    const buttons = document.querySelectorAll(".tab-btn");
-    buttons.forEach((btn) => {
-      btn.classList.remove("border-b-2", "border-emerald-600", "text-emerald-600");
+      const buttons = document.querySelectorAll(".tab-btn");
+      buttons.forEach((btn) => {
+        btn.classList.remove("border-b-2", "border-emerald-600", "text-emerald-600");
+      });
+
+      document.getElementById(tabId).classList.remove("hidden");
+      event.target.classList.add("border-b-2", "border-emerald-600", "text-emerald-600");
+    }
+
+    //name and email stored in the database
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const user = jwt_decode(token); // Contains id, name, email, role, etc.
+        console.log(user);
+
+        // For example:
+        document.getElementById('displayName').textContent = user.name;
+        document.getElementById('displayEmail').textContent = user.email;
+      }
+      
+    })
+   
+    document.getElementById('editBtn').addEventListener('click', () => {
+      const email = localStorage.getItem('email');
+      document.getElementById('editModal').classList.remove('hidden');
+      document.getElementById('editName').value = document.getElementById('displayName').textContent;
+      document.getElementById('editEmail').value = document.getElementById('displayEmail').textContent;
     });
 
-    document.getElementById(tabId).classList.remove("hidden");
-    event.target.classList.add("border-b-2", "border-emerald-600", "text-emerald-600");
-  }
-</script>
+    // Fechar o modal
+    function closeModal() {
+      document.getElementById('editModal').classList.add('hidden');
+    }
 
+    // Manipular envio do formulário
+    document.getElementById('editProfileForm').addEventListener('submit', function (e) {
+      e.preventDefault();
 
+      const name = document.getElementById('editName').value;
+      const email = document.getElementById('editEmail').value;
+      const password = document.getElementById('editPassword').value;
+      const profilePic = document.getElementById('editProfilePic').files[0];
+
+      // Atualiza visualmente na página
+      document.getElementById('displayName').textContent = name;
+      document.getElementById('displayEmail').textContent = email;
+
+      closeModal();
+    });
+
+  </script>
+  <script src="../handle/register.js"></script>
+  <script src="../handle/login.js"></script>
   <script src="../api/user.js"></script>
   <script src="../api/house.js"></script>
+
 </body>
 </html>

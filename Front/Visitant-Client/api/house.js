@@ -1,7 +1,7 @@
 // Criação da classe HousesServices
 function HousesServices() {
     this.api = axios.create({
-        baseURL: 'http://localhost:3000/houses',
+        baseURL: 'http://localhost:4000/houses',
         headers: { 'Content-Type': 'application/json' },
         timeout: 5000, // Timeout de 5 segundos
     });

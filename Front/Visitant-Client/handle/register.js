@@ -27,7 +27,7 @@ $(document).ready(()=>{
 
       try{
         const response = await window.usersServices.registerUser(userdata);
-        alert("Login realizado com sucesso");
+        alert("Registro realizado com sucesso");
         window.location.href = "/public/login.html";
       }catch (err){
         console.error("erro ao registar", err);
@@ -36,4 +36,3 @@ $(document).ready(()=>{
 
   })
 })
-// await axios.post('http://localhost:3000/users', userData)
