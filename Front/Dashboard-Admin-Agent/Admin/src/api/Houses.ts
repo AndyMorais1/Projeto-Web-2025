@@ -1,5 +1,4 @@
 import axios, { AxiosInstance } from 'axios';
-import Cookie from 'js-cookie';
 import { HouseData, DetailsData, LocationData } from '@/data/HouseData';
 
 class HousesServices {
@@ -70,7 +69,7 @@ class HousesServices {
         }
     }
 
-    async updateHouse(id: string, house: HouseData): Promise<HouseData | null> {
+    async updateHouse(id: string, house: Partial< HouseData>): Promise<HouseData | null> {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -113,7 +112,7 @@ class HousesServices {
                 console.error('Token não encontrado no localStorage');
                 return [];
             }
-            const response = await this.api.get<HouseData[]>(`/agent/${agentId}/houses`, {
+            const response = await this.api.get<HouseData[]>(`/agents/${agentId}/houses`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

@@ -75,7 +75,11 @@ export function DialogEditHouse({
       return;
     }
 
+<<<<<<< HEAD
     const updatedHouse: HouseData = {
+=======
+    const updatedHouse: Partial< HouseData> = {
+>>>>>>> main
       agentId: form.agentId,
       title: form.title,
       description: form.description,
@@ -126,9 +130,9 @@ export function DialogEditHouse({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Edit House</DialogTitle>
+          <DialogTitle>Editar Imóvel</DialogTitle>
           <DialogDescription>
-            Modify the house details and click save to update.
+            Preencha os campos abaixo para editar o imóvel.
           </DialogDescription>
         </DialogHeader>
 

@@ -8,7 +8,16 @@ export interface HouseData {
   price: number;
   details: DetailsData;
   location: LocationData;
+   createdAt: string;
+  updatedAt: string;
 }
+
+export type HouseDataOptional = Partial<HouseData> & {
+  createdAt: string;
+  updatedAt: string;
+};
+
+
 export interface DetailsData {
   id?: string;
   rooms: number;

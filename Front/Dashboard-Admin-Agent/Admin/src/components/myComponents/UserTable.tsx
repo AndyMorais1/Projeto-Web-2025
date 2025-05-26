@@ -20,19 +20,34 @@ import { UserData } from "@/data/UserData";
 import { useUsers } from "@/contexts/UsersContext";
 import { toast } from "sonner";
 
-// Função auxiliar para cor do status
-const getStatusTextColor = (status: string) => {
-  switch (status.toUpperCase()) {
+// Função para renderizar o status do usuário
+export const renderUserStatus = (status?: string) => {
+  switch (status?.toUpperCase()) {
     case "ACTIVE":
-      return "text-green-600 font-semibold";
+      return <span className="text-green-600 font-semibold">Ativo</span>;
     case "INACTIVE":
-      return "text-red-600 font-semibold";
+      return <span className="text-red-600 font-semibold">Inativo</span>;
     case "PENDING":
-      return "text-yellow-600 font-semibold";
+      return <span className="text-yellow-600 font-semibold">Pendente</span>;
     default:
-      return "text-gray-600 font-semibold";
+      return <span className="text-gray-600 font-semibold">Desconhecido</span>;
   }
 };
+
+// Função para renderizar o tipo de usuário
+const renderUserRole = (role?: string) => {
+  switch (role?.toUpperCase()) {
+    case "ADMIN":
+      return <span className="text-red-600 font-semibold">Administrador</span>;
+    case "AGENT":
+      return <span className="text-blue-600 font-semibold">Agente</span>;
+    case "CLIENT":
+      return <span className="text-green-600 font-semibold">Cliente</span>;
+    default:
+      return <span className="text-gray-600 font-semibold">Desconhecido</span>;
+  }
+};
+
 
 export function UserTable() {
   const { users, setUsers } = useUsers();
@@ -93,37 +108,35 @@ export function UserTable() {
       <div className="w-full max-w-5xl overflow-x-auto">
         <Table className="w-full border">
           <TableCaption className="mt-10">
-            A list of users / It is not possible to edit or delete users with ADMIN role
+            Lista de usuários cadastrados no sistema. / Não é possível executar ações de edição e exclusão em usuários do tipo administrador.
           </TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-center">Role</TableHead>
-              <TableHead className="text-center">Name</TableHead>
+              <TableHead className="text-center">Tipo</TableHead>
+              <TableHead className="text-center">Nome</TableHead>
               <TableHead className="text-center">Email</TableHead>
-              <TableHead className="text-center">Phone</TableHead>
-              <TableHead className="text-center">Status</TableHead>
-              <TableHead className="text-center">Action</TableHead>
+              <TableHead className="text-center">Telefone</TableHead>
+              <TableHead className="text-center">Estado</TableHead>
+              <TableHead className="text-center">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {users.length > 0 ? (
               users.map((user) => (
                 <TableRow key={String(user.id)}>
-                  <TableCell className="text-center font-medium">
-                    {user.role}
+                  <TableCell className="text-center">
+                    {renderUserRole(user.role)}
                   </TableCell>
+
                   <TableCell className="text-center">{user.name}</TableCell>
                   <TableCell className="text-center">
                     {user.email || "-"}
                   </TableCell>
-                  <TableCell className="text-center">{user.phone}</TableCell>
-                  <TableCell
-                    className={`text-center ${getStatusTextColor(
-                      user.status || ""
-                    )}`}
-                  >
-                    {user.status}
+                  <TableCell className="text-center">{user.phone || "---"}</TableCell>
+                  <TableCell className="text-center">
+                    {renderUserStatus(user.status)}
                   </TableCell>
+
                   <TableCell className="flex justify-center gap-4">
                     <DialogEditUser
                       user={user}

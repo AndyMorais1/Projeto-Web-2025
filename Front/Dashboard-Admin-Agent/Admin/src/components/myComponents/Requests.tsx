@@ -21,6 +21,7 @@ import { UserData } from "@/data/UserData";
 import { usersServices } from "@/api/Users";
 import { EmailDialog } from "./EmailDialog";
 import { toast } from "sonner";
+import { renderUserStatus } from "./UserTable";
 
 export function Requests() {
   const { users, setUsers } = useUsers();
@@ -149,7 +150,7 @@ export function Requests() {
                   <strong>Telefone:</strong> {selectedAgent.phone}
                 </p>
                 <p>
-                  <strong>Status:</strong> {selectedAgent.status}
+                  <strong>Status:</strong>  {renderUserStatus(selectedAgent.status)}
                 </p>
               </div>
             </div>

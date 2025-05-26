@@ -1,6 +1,8 @@
-import { LayoutDashboard, Home, MessageCircle, NotebookPen } from "lucide-react";
+"use client";
+import { LayoutDashboard, User, Home, Check, NotebookText, MessageCircle, Rss } from "lucide-react";
 import { Separator } from "../ui/separator";
-import { UserSidebar } from "./UserSideBar";
+import { UserSidebar } from "./UserSidebar";
+import { useUsers } from "@/contexts/UsersContext"; // Importa o contexto de usuários
 import {
   Sidebar,
   SidebarContent,
@@ -13,38 +15,40 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
 // Menu items.
 const items = [
   {
-    title: "Dashboard",
+    title: "Painel",
     url: "/dashboard",
     icon: LayoutDashboard,
   },
   {
-    title: "My Houses",
+    title: "Minhas Casas",
     url: "/dashboard/houses",
     icon: Home,
   },
   {
-    title: "My Visits",
+    title: "Minhas Visitas",
     url: "/dashboard/visits",
-    icon: NotebookPen,
+    icon: NotebookText,
+  },
+   {
+    title: "Minha Rede",
+    url: "#",
+    icon: Rss,
   },
   {
-    title: "Support",
+    title: "Suporte",
     url: "/dashboard/support",
     icon: MessageCircle,
   },
 ];
 
-const data = {
-  user: {
-    name: "José Morais",
-    avatar: "https://avatars.githubusercontent.com/u/34351007?v=4",
-  },
-};
-
 export function AppSidebar() {
+  const { currentUser, users } = useUsers();
+
+
   return (
     <Sidebar>
       <SidebarHeader className="flex mx-auto p-6">
@@ -53,26 +57,27 @@ export function AppSidebar() {
       <Separator />
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="mb-2">Application</SidebarGroupLabel>
+          <SidebarGroupLabel className="mb-2">Applicação</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
+
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
       <Separator />
       <SidebarFooter className="p-4">
-        <UserSidebar user={data.user} />
+        <UserSidebar />
       </SidebarFooter>
     </Sidebar>
   );

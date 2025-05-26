@@ -15,25 +15,26 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
 // Menu items.
 const items = [
   {
-    title: "Dashboard",
+    title: "Painel",
     url: "/dashboard",
     icon: LayoutDashboard,
   },
   {
-    title: "Users",
+    title: "Usuários",
     url: "/dashboard/users",
     icon: User,
   },
   {
-    title: "Houses",
+    title: "Imóveis",
     url: "/dashboard/houses",
     icon: Home,
   },
   {
-    title: "Agents Requests",
+    title: "Requisições de Agentes",
     url: "/dashboard/requests",
     icon: Check,
   },
@@ -41,10 +42,6 @@ const items = [
 
 export function AppSidebar() {
   const { currentUser, users } = useUsers();
-
-  if (!currentUser) {
-    return <div>Carregando usuário...</div>; 
-  }
 
   return (
     <Sidebar>
@@ -54,16 +51,16 @@ export function AppSidebar() {
       <Separator />
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="mb-2">Application</SidebarGroupLabel>
+          <SidebarGroupLabel className="mb-2">Applicação</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -73,10 +70,7 @@ export function AppSidebar() {
       </SidebarContent>
       <Separator />
       <SidebarFooter className="p-4">
-        <UserSidebar user={{
-          name: currentUser.name,
-          avatar: "https://avatars.githubusercontent.com/u/34351007?v=4"
-        }} />
+        <UserSidebar />
       </SidebarFooter>
     </Sidebar>
   );

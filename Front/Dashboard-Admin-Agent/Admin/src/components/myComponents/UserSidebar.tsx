@@ -18,17 +18,12 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { usersServices } from "@/api/Users";
+import { useUsers } from "@/contexts/UsersContext";
 
-export function UserSidebar({
-  user,
-}: {
-  user: {
-    name: string;
-    avatar: string;
-  };
-}) {
+export function UserSidebar() {
   const { isMobile } = useSidebar();
   const router = useRouter();
+  const { currentUser } = useUsers();
 
   function handleLogout() {
     usersServices.logout()
@@ -52,11 +47,11 @@ export function UserSidebar({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarImage src={currentUser?.photo} alt={currentUser?.name[0]} />
+                <AvatarFallback className="rounded-lg">{currentUser?.name[0]}</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
+                <span className="truncate font-semibold">{currentUser?.name}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -70,11 +65,11 @@ export function UserSidebar({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarImage src={currentUser?.photo || "https://avatars.githubusercontent.com/u/34351007?v=4"} alt={currentUser?.name[0]} />
+                  <AvatarFallback className="rounded-lg">{currentUser?.name[0]}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
+                  <span className="truncate font-semibold">{currentUser?.name}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -82,14 +77,18 @@ export function UserSidebar({
               <a href="/dashboard/profile">
                 <DropdownMenuItem>
                   <User />
+<<<<<<< HEAD
                   Profile
+=======
+                  Perfil
+>>>>>>> main
                 </DropdownMenuItem>
               </a>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut className="text-red-600" />
-              <p className="text-red-600">Log Out</p>
+              <p className="text-red-600">Sair</p>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -1,11 +1,17 @@
+// DashboardPage.tsx
 import { Cards } from "@/components/myComponents/Cards";
+<<<<<<< HEAD
 import { Component1 } from "@/components/myComponents/chart1";
 import { Component2 } from "@/components/myComponents/chart2";
 import { Component3 } from "@/components/myComponents/chart3";
+=======
+import { Chart1 } from "@/components/myComponents/chart1";
+>>>>>>> main
 
 export default function DashboardPage() {
   return (
     <div className="w-full">
+<<<<<<< HEAD
       <h1 className="p-2.5 text-2xl font-medium mb-5">Dashboard</h1>
       <Cards />
 
@@ -20,6 +26,23 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+=======
+      <header>
+        <h1 className="p-2.5 text-2xl font-medium mb-5">Painel</h1>
+      </header>
+
+      <main>
+        <Cards />
+
+        {/* Chart1 em toda a largura com padding */}
+        <div className="w-full px-6 pb-6">
+          <div className="w-full h-[300px]">
+            <Chart1 />
+          </div>
+        </div>
+
+      </main>
+>>>>>>> main
     </div>
   );
 }

@@ -1,9 +1,25 @@
-import { Cards } from "@/components/myComponents/DashCards";
-export default function Dashboard() {
+// DashboardPage.tsx
+import { Cards } from "@/components/myComponents/Cards";
+import { Chart1 } from "@/components/myComponents/chart1";
+
+export default function DashboardPage() {
   return (
-    <div className="p-4">
-      <h1 className="text-4xl font-bold">Dashboard</h1>
-      <p className="mt-4 text-lg">This is the Dashboard page.</p>
+    <div className="w-full">
+      <header>
+        <h1 className="p-2.5 text-2xl font-medium mb-5">Painel</h1>
+      </header>
+
+      <main>
+        <Cards />
+
+        {/* Chart1 em toda a largura com padding */}
+        <div className="w-full px-6 pb-6">
+          <div className="w-full h-[300px]">
+            <Chart1 />
+          </div>
+        </div>
+
+      </main>
     </div>
   );
 }

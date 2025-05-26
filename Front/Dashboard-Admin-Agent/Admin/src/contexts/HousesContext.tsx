@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { HouseData } from "@/data/HouseData";
 import { housesServices } from "@/api/Houses";
+import { useUsers } from "@/contexts/UsersContext";
 
 interface HousesContextType {
   houses: HouseData[];
@@ -9,6 +10,7 @@ interface HousesContextType {
   originalHouses: HouseData[];
   initializeHouses: () => Promise<void>;
   refreshHouses: () => Promise<void>;
+  resetHouses: () => void;
 }
 
 const HousesContext = createContext<HousesContextType>({
@@ -17,25 +19,46 @@ const HousesContext = createContext<HousesContextType>({
   originalHouses: [],
   initializeHouses: async () => {},
   refreshHouses: async () => {},
+  resetHouses: () => {},
 });
 
 export const useHouses = () => useContext(HousesContext);
 
 export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { currentUser } = useUsers();
   const [houses, setHouses] = useState<HouseData[]>([]);
   const [originalHouses, setOriginalHouses] = useState<HouseData[]>([]);
 
   const fetchHouses = async () => {
     try {
-      const fetchedHouses = await housesServices.getAllHouses();
-      if (!fetchedHouses) {
-        console.error("Erro ao buscar casas");
+      if (!currentUser?.id) {
+        console.warn("ID do usuário não está disponível ainda.");
         return;
       }
+
+      console.log("ID do agente usado:", currentUser?.id);
+
+      const fetchedHouses = await housesServices.getAllHouses();
+      if (!fetchedHouses || fetchedHouses.length === 0) {
+        console.warn("Nenhuma casa foi retornada.");
+        return;
+      }
+
       setHouses(fetchedHouses);
+<<<<<<< HEAD
       setOriginalHouses(fetchedHouses); // Armazena uma cópia original
     } catch (error) {
       console.error("Erro ao buscar casas:", error);
+=======
+      setOriginalHouses(fetchedHouses);
+    } catch (error: any) {
+      console.error('Erro ao obter casas do agente:', {
+        message: error.message,
+        response: error.response,
+        request: error.request,
+        stack: error.stack,
+      });
+>>>>>>> main
     }
   };
 
@@ -47,13 +70,34 @@ export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     await fetchHouses();
   };
 
+  const resetHouses = () => {
+    setHouses([]);
+    setOriginalHouses([]);
+  };
+
   useEffect(() => {
-    initializeHouses();
-  }, []);
+    const token = localStorage.getItem("token");
+    if (token && currentUser?.id) {
+      initializeHouses();
+    } else if (!token) {
+      console.info("Token não encontrado, não buscando casas ainda.");
+    }
+  }, [currentUser]);
 
   return (
     <HousesContext.Provider
+<<<<<<< HEAD
       value={{ houses, setHouses, originalHouses, initializeHouses, refreshHouses }}
+=======
+      value={{
+        houses,
+        setHouses,
+        originalHouses,
+        initializeHouses,
+        refreshHouses,
+        resetHouses,
+      }}
+>>>>>>> main
     >
       {children}
     </HousesContext.Provider>

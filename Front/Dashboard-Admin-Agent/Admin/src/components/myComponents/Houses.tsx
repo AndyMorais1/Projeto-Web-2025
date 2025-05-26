@@ -88,7 +88,7 @@ export function Houses() {
   return (
     <div className="p-6">
       <div className="flex justify-end gap-2 mb-6">
-        <DialogFilterHouses onFilter={refreshHouses} />
+        <DialogFilterHouses />
         <DialogCreateHouse />
       </div>
 
@@ -97,37 +97,55 @@ export function Houses() {
           Nenhuma casa disponível no momento.
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {houses.map((house) => (
-            <Card
-              key={house.id}
-              className="w-full sm:w-72 bg-gray-100 shadow-md rounded-xl border border-gray-300"
-            >
-              <CardHeader className="p-3 flex justify-center">
-                <img
-                  src={house.images[0]}
-                  alt={house.title}
-                  className="w-full h-40 object-cover rounded-lg"
-                />
-              </CardHeader>
+            <Card key={house.id} className="bg-white shadow-md rounded-xl p-4">
+              <div className="p-3"> {/* Adiciona padding ao redor da imagem */}
+                <div className="relative rounded-lg overflow-hidden">
+                  <img
+                    src={house.images[0]}
+                    alt={house.title}
+                    className="w-full h-52 object-cover rounded-lg"
+                  />
+                  <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1">
+                    {house.images.slice(0, 5).map((_, index) => (
+                      <div
+                        key={index}
+                        className={`w-2 h-2 rounded-full ${index === 0 ? "bg-gray-800" : "bg-gray-400"
+                          }`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
 
-              <CardContent className="p-4">
-                <CardTitle className="text-lg text-gray-800">
+              <div className="px-4 pb-4 space-y-2"> 
+               <div className="text-lg font-semibold text-gray-800">
                   {house.title}
-                </CardTitle>
-                <CardDescription className="text-sm text-gray-600">
-                  {house.location.address}
-                </CardDescription>
+                </div>
+                <div className="text-xl font-semibold text-gray-900">
+                  {priceFormatter.format(house.price)}
+                </div>
 
-                <div className="flex items-center gap-2 text-gray-700 mt-3">
-                  <User size={18} className="text-gray-500" />
-                  <span className="text-sm">
+                <div className="text-gray-700 text-sm">
+                  {house.details.rooms} quartos | {house.details.bathrooms} banheiros |{" "}
+                  <span className="font-medium">{house.details.area} m²</span> -{" "}
+                  {house.type}
+                </div>
+
+                <div className="text-sm text-gray-600">
+                  {house.location.address}, {house.location.city}
+                </div>
+
+                <div className="text-sm text-gray-600">
+                  Agente:{" "}
+                  <span className="font-medium">
                     {users.find((user) => user.id === house.agentId)?.name ||
                       "Agente desconhecido"}
                   </span>
                 </div>
 
-                <div className="flex justify-end gap-2 mt-4">
+                <div className="flex justify-end gap-2 pt-2">
                   <DialogEditHouse house={house} onSave={handleEditHouse} />
                   <Button
                     variant="outline"
@@ -144,12 +162,9 @@ export function Houses() {
                     <Info className="text-black" size={18} />
                   </Button>
                 </div>
-              </CardContent>
-
-              <CardFooter className="p-4 text-lg font-semibold text-right text-gray-800">
-                {priceFormatter.format(house.price)}
-              </CardFooter>
+              </div>
             </Card>
+
           ))}
         </div>
       )}
@@ -158,46 +173,46 @@ export function Houses() {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>House Information</DialogTitle>
+              <DialogTitle>Informações da Casa</DialogTitle>
               <DialogDescription>
-                Details about {selectedHouse.title}
+                Detalhes sobre {selectedHouse.title}
               </DialogDescription>
             </DialogHeader>
 
             <div className="grid gap-4 py-4">
               <div className="flex flex-col space-y-1.5">
                 <p>
-                  <strong>Title:</strong> {selectedHouse.title}
+                  <strong>Título:</strong> {selectedHouse.title}
                 </p>
                 <p>
-                  <strong>Address:</strong> {selectedHouse.location.address}
+                  <strong>Endereço:</strong> {selectedHouse.location.address}
                 </p>
                 <p>
-                  <strong>City:</strong> {selectedHouse.location.city}
+                  <strong>Cidade:</strong> {selectedHouse.location.city}
                 </p>
                 <p>
-                  <strong>Price:</strong>{" "}
+                  <strong>Preço:</strong>{" "}
                   {priceFormatter.format(selectedHouse.price)}
                 </p>
                 <p>
-                  <strong>Agent:</strong>{" "}
+                  <strong>Agente:</strong>{" "}
                   {users.find((user) => user.id === selectedHouse.agentId)
                     ?.name || "Agente desconhecido"}
                 </p>
                 <p>
-                  <strong>Rooms:</strong> {selectedHouse.details.rooms}
+                  <strong>Quartos:</strong> {selectedHouse.details.rooms}
                 </p>
                 <p>
-                  <strong>Bathrooms:</strong> {selectedHouse.details.bathrooms}
+                  <strong>Banheiros:</strong> {selectedHouse.details.bathrooms}
                 </p>
                 <p>
-                  <strong>Area:</strong> {selectedHouse.details.area} m²
+                  <strong>Área:</strong> {selectedHouse.details.area} m²
                 </p>
                 <p>
-                  <strong>Type:</strong> {selectedHouse.type}
+                  <strong>Tipo:</strong> {selectedHouse.type}
                 </p>
                 <p>
-                  <strong>Description:</strong> {selectedHouse.description}
+                  <strong>Descrição:</strong> {selectedHouse.description}
                 </p>
 
                 <div className="w-full h-60 overflow-hidden mt-4 relative">
@@ -224,7 +239,7 @@ export function Houses() {
 
             <DialogFooter>
               <Button variant="outline" onClick={handleCloseDialog}>
-                Close
+                Fechar
               </Button>
             </DialogFooter>
           </DialogContent>

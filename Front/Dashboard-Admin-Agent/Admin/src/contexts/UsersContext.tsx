@@ -10,7 +10,8 @@ interface UsersContextType {
   currentUser: UserData | null;
   setUsers: React.Dispatch<React.SetStateAction<UserData[]>>;
   setCurrentUser: React.Dispatch<React.SetStateAction<UserData | null>>;
-  initializeUsersData: () => Promise<void>; // <- nova função exposta
+  initializeUsersData: () => Promise<void>;
+  resetUsers: () => void;
 }
 
 // Criando o contexto
@@ -21,21 +22,18 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [users, setUsers] = useState<UserData[]>([]);
   const [currentUser, setCurrentUser] = useState<UserData | null>(null);
 
-  // Função para ser chamada após o login
   const initializeUsersData = async () => {
     try {
       const token = localStorage.getItem("token");
 
       if (token) {
         try {
-          // Decodificando o token e definindo o usuário atual
           const decoded = jwtDecode<Omit<UserData, "password">>(token);
           setCurrentUser(decoded);
         } catch (err) {
           console.error("Erro ao decodificar o token:", err);
         }
 
-        // Carregar os dados dos usuários
         const data = await usersServices.getAllUsers();
         console.log("Usuários carregados após login:", data);
         setUsers(data);
@@ -47,14 +45,25 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     }
   };
 
-  // Chamada para inicializar os dados do usuário quando o componente for montado
+  const resetUsers = () => {
+    setUsers([]);
+    setCurrentUser(null);
+  };
+
   useEffect(() => {
     initializeUsersData();
   }, []);
 
   return (
     <UsersContext.Provider
-      value={{ users, currentUser, setUsers, setCurrentUser, initializeUsersData }}
+      value={{
+        users,
+        currentUser,
+        setUsers,
+        setCurrentUser,
+        initializeUsersData,
+        resetUsers,
+      }}
     >
       {children}
     </UsersContext.Provider>
