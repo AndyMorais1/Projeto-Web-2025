@@ -20,7 +20,7 @@ export function NavbarPublic() {
       <div className="flex items-center space-x-6">
 
         {/* Botão Seja um Agente */}
-        <a href="/visitante/seja-agente">
+        <a href="/visitante/sejagente">
           <Button className="bg-blue-600 text-white font-semibold px-5 py-2 rounded-lg shadow hover:bg-blue-700 transition-all">
             Seja um Agente
           </Button>
