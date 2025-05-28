@@ -15,6 +15,8 @@ interface HousesContextType {
   setSelectedHouse: React.Dispatch<React.SetStateAction<HouseData | null>>;
   isDialogOpen: boolean;
   setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedDistrict: string | null;
+  setSelectedDistrict: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const HousesContext = createContext<HousesContextType>({
@@ -28,6 +30,8 @@ const HousesContext = createContext<HousesContextType>({
   setSelectedHouse: () => {},
   isDialogOpen: false,
   setIsDialogOpen: () => {},
+  selectedDistrict: null,
+  setSelectedDistrict: () => {},
 });
 
 export const useHouses = () => useContext(HousesContext);
@@ -37,9 +41,9 @@ export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const [houses, setHouses] = useState<HouseData[]>([]);
   const [originalHouses, setOriginalHouses] = useState<HouseData[]>([]);
-
   const [selectedHouse, setSelectedHouse] = useState<HouseData | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
 
   const fetchHouses = async () => {
     try {
@@ -48,7 +52,6 @@ export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         return;
       }
 
-      console.log("🔄 Buscando casas do agente ID:", currentUser.id);
       const fetchedHouses = await housesServices.getHouseByAgentId(currentUser.id);
 
       if (!fetchedHouses || fetchedHouses.length === 0) {
@@ -56,7 +59,6 @@ export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         return;
       }
 
-      console.log("✅ Casas carregadas:", fetchedHouses);
       setHouses(fetchedHouses);
       setOriginalHouses(fetchedHouses);
     } catch (error: any) {
@@ -94,7 +96,6 @@ export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       return;
     }
 
-    console.log("🎯 currentUser.id disponível:", currentUser.id);
     initializeHouses();
   }, [currentUser?.id]);
 
@@ -111,6 +112,8 @@ export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setSelectedHouse,
         isDialogOpen,
         setIsDialogOpen,
+        selectedDistrict,
+        setSelectedDistrict,
       }}
     >
       {children}

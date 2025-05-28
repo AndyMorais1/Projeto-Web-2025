@@ -14,10 +14,10 @@ export default function AjudaPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 px-6 py-12">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto ">
         <h1 className="text-4xl font-bold text-center mb-10">Como Funciona a Plataforma</h1>
 
-        <div className="space-y-8">
+        <div className="space-y-8 mt-12" >
           {/* Passo 1 */}
           <div className="bg-white shadow rounded-xl border">
             <button
@@ -35,7 +35,7 @@ export default function AjudaPage() {
               </div>
             </button>
             {activeStep === 1 && (
-              <div className="p-6 bg-gray-50">
+             <div className="p-6 bg-white shadow rounded-xl ">
                 <p className="text-gray-600">
                   Use os filtros de localização, tipo, preço e mais para encontrar imóveis que
                   atendam às suas preferências.
@@ -61,7 +61,7 @@ export default function AjudaPage() {
               </div>
             </button>
             {activeStep === 2 && (
-              <div className="p-6 bg-gray-50">
+              <div className="p-6 bg-white shadow rounded-xl ">
                 <p className="text-gray-600">
                   Clique no ícone de coração para salvar imóveis que você gostou. Eles aparecerão na
                   sua lista pessoal.
@@ -87,7 +87,7 @@ export default function AjudaPage() {
               </div>
             </button>
             {activeStep === 3 && (
-              <div className="p-6 bg-gray-50">
+             <div className="p-6 bg-white shadow rounded-xl ">
                 <p className="text-gray-600">
                   Clique em um imóvel para visualizar mais informações, fotos, localização e detalhes
                   do agente responsável.
@@ -113,7 +113,7 @@ export default function AjudaPage() {
               </div>
             </button>
             {activeStep === 4 && (
-              <div className="p-6 bg-gray-50">
+              <div className="p-6 bg-white shadow rounded-xl ">
                 <p className="text-gray-600">
                   Leia as perguntas frequentes para tirar dúvidas comuns sobre o funcionamento da
                   plataforma.

@@ -19,17 +19,22 @@ import {
 } from "@/components/ui/sidebar";
 import { usersServices } from "@/api/Users";
 import { useUsers } from "@/contexts/UsersContext";
+import { useHouses } from "@/contexts/HousesContext";
 
 export function UserSidebar() {
   const { isMobile } = useSidebar();
   const router = useRouter();
-  const { currentUser } = useUsers();
+  const { currentUser, resetUsers } = useUsers();
+  const { resetHouses } = useHouses();
 
   function handleLogout() {
     usersServices.logout()
       .then(() => {
         // Redireciona o usuário para a página de login após o logout
         router.replace("/"); // O replace impede que o usuário volte à página anterior após o logout
+        resetHouses(); // Reseta as casas após o logout
+        resetUsers(); // Reseta os usuários após o logout
+        
       })
       .catch((error) => {
         console.error("Erro ao fazer logout:", error);
@@ -46,7 +51,7 @@ export function UserSidebar() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
+              <Avatar className="h-8 w-8 rounded-full border border-blue-600">
                 <AvatarImage src={currentUser?.photo} alt={currentUser?.name[0]} />
                 <AvatarFallback className="rounded-lg">{currentUser?.name[0]}</AvatarFallback>
               </Avatar>
@@ -64,8 +69,8 @@ export function UserSidebar() {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={currentUser?.photo || "https://avatars.githubusercontent.com/u/34351007?v=4"} alt={currentUser?.name[0]} />
+                <Avatar className="h-8 w-8 rounded-full border border-blue-600">
+                  <AvatarImage src={currentUser?.photo} alt={currentUser?.name[0]} />
                   <AvatarFallback className="rounded-lg">{currentUser?.name[0]}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">

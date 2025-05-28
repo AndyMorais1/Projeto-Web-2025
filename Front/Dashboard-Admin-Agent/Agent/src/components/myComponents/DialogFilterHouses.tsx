@@ -24,24 +24,36 @@ export enum Type {
   DUPLEX = 'DUPLEX',
 }
 
+const distritosDePortugal = [
+  "Aveiro", "Beja", "Braga", "Bragança", "Castelo Branco", "Coimbra",
+  "Évora", "Faro", "Guarda", "Leiria", "Lisboa", "Madeira",
+  "Portalegre", "Porto", "Santarém", "Setúbal", "Viana do Castelo",
+  "Vila Real", "Viseu", "Açores"
+];
+
+
 export function DialogFilterHouses() {
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedType, setSelectedType] = React.useState<string>("");
+  const [selectedDistrict, setSelectedDistrict] = React.useState<string>("");
 
   const { houses, setHouses, originalHouses } = useHouses();
 
   const handleFilter = () => {
-    if (!selectedType || selectedType === "ALL") {
-      setHouses(originalHouses);
-      toast.success("Filtro removido. Listando todas as casas.");
-      setIsOpen(false);
-      return;
+    let filtered = originalHouses;
+
+    if (selectedType && selectedType !== "ALL") {
+      filtered = filtered.filter(house => house.type === selectedType);
     }
 
-    const filtered = originalHouses.filter(house => house.type === selectedType);
+    if (selectedDistrict && selectedDistrict !== "ALL") {
+      filtered = filtered.filter(house => house.location.city === selectedDistrict);
+    }
 
     if (filtered.length === 0) {
-      toast.error("Não há casas do tipo selecionado.");
+      toast.error("Nenhuma casa encontrada com os filtros selecionados.");
+    } else {
+      toast.success("Filtro aplicado com sucesso.");
     }
 
     setHouses(filtered);
@@ -62,19 +74,17 @@ export function DialogFilterHouses() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[400px] max-h-[70vh] overflow-y-auto p-4">
         <DialogHeader>
-          <DialogTitle className="text-lg">Filtrar Casas por Tipo</DialogTitle>
+          <DialogTitle className="text-lg">Filtrar Casas</DialogTitle>
           <DialogDescription className="text-sm">
-            Selecione um tipo para filtrar as casas.
+            Selecione os filtros desejados para visualizar resultados.
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-3 py-4">
+          {/* Tipo */}
           <div className="grid grid-cols-4 items-center gap-3">
             <Label htmlFor="type" className="text-right">Tipo</Label>
-            <Select
-              value={selectedType}
-              onValueChange={setSelectedType}
-            >
+            <Select value={selectedType} onValueChange={setSelectedType}>
               <SelectTrigger className="col-span-3">
                 <SelectValue placeholder="Selecione o tipo" />
               </SelectTrigger>
@@ -83,6 +93,24 @@ export function DialogFilterHouses() {
                 {Object.values(Type).map((type) => (
                   <SelectItem key={type} value={type}>
                     {type.charAt(0) + type.slice(1).toLowerCase()}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Distrito */}
+          <div className="grid grid-cols-4 items-center gap-3">
+            <Label htmlFor="district" className="text-right">Distrito</Label>
+            <Select value={selectedDistrict} onValueChange={setSelectedDistrict}>
+              <SelectTrigger className="col-span-3">
+                <SelectValue placeholder="Selecione o distrito" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ALL">Todos os Distritos</SelectItem>
+                {distritosDePortugal.map((distrito) => (
+                  <SelectItem key={distrito} value={distrito}>
+                    {distrito}
                   </SelectItem>
                 ))}
               </SelectContent>

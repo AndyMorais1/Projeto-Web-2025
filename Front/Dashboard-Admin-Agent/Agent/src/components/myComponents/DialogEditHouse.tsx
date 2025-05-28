@@ -44,6 +44,14 @@ export function DialogEditHouse({
   const [agents, setAgents] = React.useState<UserData[]>([]);
   const { refreshHouses } = useHouses();
 
+ const distritosDePortugal = [
+  "Aveiro", "Beja", "Braga", "Bragança", "Castelo Branco", "Coimbra",
+  "Évora", "Faro", "Guarda", "Leiria", "Lisboa", "Madeira",
+  "Portalegre", "Porto", "Santarém", "Setúbal", "Viana do Castelo",
+  "Vila Real", "Viseu", "Açores"
+];
+
+
   React.useEffect(() => {
     const filteredAgents = users.filter(user => user.role === "AGENT");
     setAgents(filteredAgents);
@@ -82,7 +90,7 @@ export function DialogEditHouse({
       return;
     }
 
-   const updatedHouse: Partial< HouseData> = {
+    const updatedHouse: Partial<HouseData> = {
       agentId: form.agentId,
       title: form.title,
       description: form.description,
@@ -148,7 +156,6 @@ export function DialogEditHouse({
             { id: "bathrooms", label: "Banheiros" },
             { id: "area", label: "Área (m²)" },
             { id: "address", label: "Endereço" },
-            { id: "city", label: "Cidade" },
             { id: "zipCode", label: "CEP" },
           ].map(({ id, label }) => (
             <React.Fragment key={id}>
@@ -163,6 +170,20 @@ export function DialogEditHouse({
               />
             </React.Fragment>
           ))}
+
+          {/* Cidade (distrito) */}
+          <Label htmlFor="city" className="text-right col-span-1">Cidade</Label>
+          <select
+            id="city"
+            value={form.city}
+            onChange={handleChange}
+            className="col-span-3 p-2 border rounded"
+          >
+            <option value="">Selecione um distrito</option>
+            {distritosDePortugal.map((distrito) => (
+              <option key={distrito} value={distrito}>{distrito}</option>
+            ))}
+          </select>
 
           {/* Agente */}
           <Label htmlFor="agentId" className="text-right col-span-1">Agente</Label>

@@ -91,8 +91,13 @@ export function Chart1() {
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey="month" />
             <YAxis />
-            <Tooltip />
-            <Bar dataKey="casas" fill="#60a5fa" radius={[4, 4, 0, 0]} />
+            <Tooltip cursor={{ fill: "transparent" }} />
+            <Bar
+              dataKey="casas"
+              fill="#60a5fa"
+              radius={[4, 4, 0, 0]}
+              isAnimationActive={false}
+            />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

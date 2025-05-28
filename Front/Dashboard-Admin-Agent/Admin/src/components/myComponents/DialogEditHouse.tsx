@@ -4,7 +4,7 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog, DialogContent, DialogDescription,
-  DialogFooter, DialogHeader, DialogTitle, DialogTrigger
+  DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,6 +15,13 @@ import { UserData } from "@/data/UserData";
 import { useUsers } from "@/contexts/UsersContext";
 import { useHouses } from "@/contexts/HousesContext";
 import { housesServices } from "@/api/Houses";
+
+const distritosDePortugal = [
+  "Aveiro", "Beja", "Braga", "Bragança", "Castelo Branco", "Coimbra",
+  "Évora", "Faro", "Guarda", "Leiria", "Lisboa", "Madeira",
+  "Portalegre", "Porto", "Santarém", "Setúbal", "Viana do Castelo",
+  "Vila Real", "Viseu", "Açores"
+];
 
 export function DialogEditHouse({
   house,
@@ -75,7 +82,7 @@ export function DialogEditHouse({
       return;
     }
 
-    const updatedHouse: Partial< HouseData> = {
+    const updatedHouse: Partial<HouseData> = {
       agentId: form.agentId,
       title: form.title,
       description: form.description,
@@ -133,7 +140,8 @@ export function DialogEditHouse({
         </DialogHeader>
 
         <div className="grid grid-cols-4 gap-4 py-4">
-          {["title", "description", "price", "rooms", "bathrooms", "area", "address", "city", "zipCode"].map(field => (
+          {/* Campos padrão */}
+          {["title", "description", "price", "rooms", "bathrooms", "area", "address", "zipCode"].map(field => (
             <React.Fragment key={field}>
               <Label htmlFor={field} className="text-right col-span-1">
                 {field.charAt(0).toUpperCase() + field.slice(1)}
@@ -149,15 +157,29 @@ export function DialogEditHouse({
             </React.Fragment>
           ))}
 
-          {/* Agent */}
-          <Label htmlFor="agentId" className="text-right col-span-1">Agent</Label>
+          {/* Cidade como distrito */}
+          <Label htmlFor="city" className="text-right col-span-1">Distrito</Label>
+          <select
+            id="city"
+            value={form.city}
+            onChange={handleChange}
+            className="col-span-3 p-2 border rounded"
+          >
+            <option value="">Selecione um distrito</option>
+            {distritosDePortugal.map((distrito) => (
+              <option key={distrito} value={distrito}>{distrito}</option>
+            ))}
+          </select>
+
+          {/* Agente */}
+          <Label htmlFor="agentId" className="text-right col-span-1">Agente</Label>
           <select
             id="agentId"
             value={form.agentId}
             onChange={handleChange}
             className="col-span-3 p-2 border rounded"
           >
-            <option value="">Select Agent</option>
+            <option value="">Selecione um agente</option>
             {agents.map(agent => (
               <option key={agent.id} value={agent.id}>
                 {agent.name}
@@ -165,8 +187,8 @@ export function DialogEditHouse({
             ))}
           </select>
 
-          {/* Type */}
-          <Label htmlFor="type" className="text-right col-span-1">Type</Label>
+          {/* Tipo */}
+          <Label htmlFor="type" className="text-right col-span-1">Tipo</Label>
           <select
             id="type"
             value={form.type}
@@ -178,8 +200,8 @@ export function DialogEditHouse({
             ))}
           </select>
 
-          {/* Upload Photos */}
-          <Label htmlFor="images" className="text-right col-span-1">Upload Photos</Label>
+          {/* Upload de imagens */}
+          <Label htmlFor="images" className="text-right col-span-1">Fotos</Label>
           <Input
             id="images"
             type="file"
@@ -189,10 +211,10 @@ export function DialogEditHouse({
             className="col-span-3"
           />
 
-          {/* Preview Images */}
+          {/* Preview das imagens */}
           {images.length > 0 && (
             <>
-              <Label className="text-right col-span-1">Preview</Label>
+              <Label className="text-right col-span-1">Pré-visualização</Label>
               <div className="col-span-3 grid grid-cols-2 gap-2">
                 {images.map((img, index) => (
                   <img
@@ -208,8 +230,8 @@ export function DialogEditHouse({
         </div>
 
         <DialogFooter>
-          <Button type="button" onClick={handleSubmit}>Save Changes</Button>
-          <Button type="button" variant="outline" onClick={handleCloseDialog}>Cancel</Button>
+          <Button type="button" onClick={handleSubmit}>Salvar</Button>
+          <Button type="button" variant="outline" onClick={handleCloseDialog}>Cancelar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

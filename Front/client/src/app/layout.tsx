@@ -6,7 +6,7 @@ import "leaflet/dist/leaflet.css";
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="min-h-screen flex flex-col">
+      <body className="min-h-screen flex flex-col bg-gray-100">
         <UsersProvider>
           <HousesProvider>
             {children}

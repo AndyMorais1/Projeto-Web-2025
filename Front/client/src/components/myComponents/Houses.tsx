@@ -28,6 +28,8 @@ export function Houses() {
     setIsDialogOpen,
     favorites,
     toggleFavorite,
+    selectedDistrict,
+    setSelectedDistrict,
   } = useHouses();
 
   const { users } = useUsers();
@@ -69,15 +71,34 @@ export function Houses() {
     }
   };
 
+  // ✅ Filtragem por distrito (usando location.district, não city)
+  const filteredHouses = selectedDistrict
+    ? houses.filter((house) =>
+        house.location.city?.toLowerCase() === selectedDistrict.toLowerCase()
+      )
+    : houses;
+
   return (
     <div className="flex flex-col gap-4 items-center justify-center">
-      {houses.length === 0 ? (
+
+      {selectedDistrict && (
+        <div className="flex justify-between items-center bg-white px-4 py-2 rounded shadow text-sm w-full sm:w-96">
+          <span>
+            Filtrando por distrito: <strong>{selectedDistrict}</strong>
+          </span>
+          <Button variant="ghost" onClick={() => setSelectedDistrict(null)}>
+            Limpar filtro
+          </Button>
+        </div>
+      )}
+
+      {filteredHouses.length === 0 ? (
         <div className="text-center text-gray-500 text-lg mt-20">
           Nenhuma casa disponível no momento.
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-4 auto-rows-fr">
-          {houses.map((house) => {
+          {filteredHouses.map((house) => {
             const isFavorited = favorites.some((fav) => fav.id === house.id);
 
             return (

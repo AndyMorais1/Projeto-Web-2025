@@ -9,7 +9,7 @@ export default function ProfilePage() {
         <div className="flex flex-col min-h-screen w-full">
             <div className="flex flex-col items-center justify-center w-full p-6 mt-8">
                 {/* Imagem do usuário */}
-                <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-grey-500 mb-4">
+                <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-blue-600 mb-4">
                     <img
                         src={currentUser?.photo}
                         alt="User Avatar"

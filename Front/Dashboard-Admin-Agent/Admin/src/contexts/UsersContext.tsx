@@ -27,16 +27,12 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       const token = localStorage.getItem("token");
 
       if (token) {
-        try {
-          const decoded = jwtDecode<Omit<UserData, "password">>(token);
-          setCurrentUser(decoded);
-        } catch (err) {
-          console.error("Erro ao decodificar o token:", err);
-        }
+        const decoded = jwtDecode<{ id: string }>(token);
+        const updatedUser = await usersServices.getUserById(decoded.id);
+        setCurrentUser(updatedUser);
 
-        const data = await usersServices.getAllUsers();
-        console.log("Usuários carregados após login:", data);
-        setUsers(data);
+        const allUsers = await usersServices.getAllUsers();
+        setUsers(allUsers);
       } else {
         console.log("Token não encontrado no localStorage.");
       }
@@ -51,7 +47,10 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   };
 
   useEffect(() => {
-    initializeUsersData();
+    const token = localStorage.getItem("token");
+    if (token) {
+      initializeUsersData();
+    }
   }, []);
 
   return (
@@ -70,7 +69,6 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   );
 };
 
-// Hook customizado
 export const useUsers = (): UsersContextType => {
   const context = useContext(UsersContext);
   if (!context) {

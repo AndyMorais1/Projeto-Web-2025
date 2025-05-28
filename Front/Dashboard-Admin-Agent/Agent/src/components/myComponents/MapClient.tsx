@@ -1,9 +1,12 @@
-"use client";
+'use client';
 
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from "react-leaflet";
 import { useHouses } from "@/contexts/HousesContext";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { useEffect, useState } from "react";
+import { GeoJsonObject, Feature, Geometry } from "geojson";
+import { Layer } from "leaflet";
 
 // Ícone customizado para os pinos
 const customIcon = L.icon({
@@ -17,7 +20,14 @@ const customIcon = L.icon({
 });
 
 export default function MapClient() {
-  const { houses, setSelectedHouse, setIsDialogOpen } = useHouses();
+  const { houses, setSelectedHouse, setIsDialogOpen, setSelectedDistrict } = useHouses();
+  const [geoData, setGeoData] = useState<GeoJsonObject | null>(null);
+
+  useEffect(() => {
+    fetch('/portugal-distrito.geojson')
+      .then((res) => res.json())
+      .then((data) => setGeoData(data));
+  }, []);
 
   const handleMarkerClick = (houseId: string) => {
     const house = houses.find(h => h.id === houseId);
@@ -25,6 +35,31 @@ export default function MapClient() {
       setSelectedHouse(house);
       setIsDialogOpen(true);
     }
+  };
+
+  const onEachDistrict = (feature: Feature<Geometry, any>, layer: Layer) => {
+    const name = feature.properties?.dis_name || "Distrito desconhecido";
+
+    layer.bindPopup(`<strong>${name}</strong>`);
+    (layer as any).setStyle({
+      color: "#2563EB",
+      weight: 2,
+      fillOpacity: 0.1,
+    });
+
+    layer.on({
+      mouseover: (e: any) => {
+        e.target.setStyle({ fillOpacity: 0.4 });
+      },
+      mouseout: (e: any) => {
+        e.target.setStyle({ fillOpacity: 0.1 });
+      },
+      click: () => {
+        if (name !== "Distrito desconhecido") {
+          setSelectedDistrict(name); // ✅ Aplica o filtro
+        }
+      },
+    });
   };
 
   return (
@@ -41,8 +76,17 @@ export default function MapClient() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
+        {/* Polígonos dos Distritos */}
+        {geoData && typeof geoData === "object" && "features" in geoData && (
+          <GeoJSON
+            data={geoData}
+            onEachFeature={onEachDistrict}
+          />
+        )}
+
+        {/* Marcadores das Casas */}
         {houses
-          .filter(h => h.location.latitude !== undefined && h.location.longitude !== undefined)
+          .filter(h => typeof h.location.latitude === "number" && typeof h.location.longitude === "number")
           .map((house) => (
             <Marker
               key={house.id}

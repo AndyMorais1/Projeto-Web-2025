@@ -33,6 +33,10 @@ class HouseService {
                 throw new Error(`Agente com ID ${data.agentId} não encontrado.`);
             }
 
+            if (agentExists.status!="ACTIVE"){
+                throw new Error(`O Agente com ID ${data.agentId} não possui estado activo.`);
+            }
+
             // Verificar se já existe uma localização com esses dados
             const existingLocation = await prisma.location.findFirst({
                 where: {

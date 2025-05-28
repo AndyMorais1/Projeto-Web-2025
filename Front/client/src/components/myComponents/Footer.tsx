@@ -1,6 +1,6 @@
 export function Footer() {
   return (
-    <footer className="bg-white border-t mt-12">
+    <footer className="bg-white border-t ">
       <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
         <p>© {new Date().getFullYear()} Spot Home. Todos os direitos reservados.</p>
 

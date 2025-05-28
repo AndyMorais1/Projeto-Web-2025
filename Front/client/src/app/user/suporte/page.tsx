@@ -51,70 +51,65 @@ export default function Support() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="px-6 py-4 bg-white border-b border-gray-200 justify-center items-center flex">
-        <h1 className="text-2xl font-bold ">Suporte</h1>
-      </div>
+    <div className="flex flex-col min-h-screen w-full bg-gray-100 p-6">
+      {/* Título movido para dentro do container principal */}
+      <h1 className="text-3xl font-bold mb-6">Suporte</h1>
 
-      {/* Main content */}
-      <div className="flex-1 px-6 py-8 overflow-y-auto">
-        {/* Introdução */}
-        <section className="mb-8">
-          <p className="text-gray-700 text-lg">
-            Precisa de ajuda? Envie uma mensagem ou veja as perguntas frequentes abaixo.
-          </p>
-        </section>
+      {/* Introdução */}
+      <section className="mb-8">
+        <p className="text-gray-700 text-lg">
+          Precisa de ajuda? Envie uma mensagem ou veja as perguntas frequentes abaixo.
+        </p>
+      </section>
 
-        {/* Contato */}
-        <section className="bg-white p-6 rounded-xl shadow border mb-10 space-y-2">
-          <h2 className="text-xl font-semibold">Contato</h2>
-          <p><strong>Email:</strong> spothome8@gmail.com</p>
-          <p><strong>Telefone:</strong> +351 931 414 252</p>
-          <p><strong>Atendimento:</strong> Segunda a Sexta, 9h às 18h</p>
-        </section>
+      {/* Contato */}
+      <section className="bg-white p-6 rounded-xl shadow border mb-10 space-y-2">
+        <h2 className="text-xl font-semibold">Contato</h2>
+        <p><strong>Email:</strong> spothome8@gmail.com</p>
+        <p><strong>Telefone:</strong> +351 931 414 252</p>
+        <p><strong>Atendimento:</strong> Segunda a Sexta, 9h às 18h</p>
+      </section>
 
-        {/* Formulário */}
-        <section className="bg-white p-6 rounded-xl shadow border mb-10 space-y-4">
-          <h2 className="text-xl font-semibold">Envie uma mensagem</h2>
-          <Input placeholder="Seu nome" value={name} readOnly />
-          <Input placeholder="Seu email" type="email" value={email} readOnly />
-          <Textarea
-            placeholder="Escreva sua mensagem..."
-            rows={5}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <Button onClick={handleSubmit} disabled={loading}>
-            {loading ? "Enviando..." : "Enviar"}
-          </Button>
-        </section>
+      {/* Formulário */}
+      <section className="bg-white p-6 rounded-xl shadow border mb-10 space-y-4">
+        <h2 className="text-xl font-semibold">Envie uma mensagem</h2>
+        <Input placeholder="Seu nome" value={name} readOnly />
+        <Input placeholder="Seu email" type="email" value={email} readOnly />
+        <Textarea
+          placeholder="Escreva sua mensagem..."
+          rows={5}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+        <Button onClick={handleSubmit} disabled={loading}>
+          {loading ? "Enviando..." : "Enviar"}
+        </Button>
+      </section>
 
-        {/* FAQ */}
-        <section className="bg-white p-6 rounded-xl shadow border space-y-6">
-          <h2 className="text-xl font-semibold mb-2">Perguntas Frequentes</h2>
-          <div className="space-y-4 text-sm text-gray-700">
-            <div>
-              <p className="font-medium">❓ Como posso me tornar um agente?</p>
-              <p className="text-gray-600">
-                Acesse a seção "Requisições de Agentes" no menu lateral e envie sua solicitação.
-              </p>
-            </div>
-            <div>
-              <p className="font-medium">❓ Posso editar uma casa depois de cadastrá-la?</p>
-              <p className="text-gray-600">
-                Sim! Vá até "Imóveis" e clique em "Editar" no imóvel desejado.
-              </p>
-            </div>
-            <div>
-              <p className="font-medium">❓ Onde vejo as mensagens recebidas?</p>
-              <p className="text-gray-600">
-                Na aba "Usuários", selecione um perfil para visualizar as mensagens vinculadas.
-              </p>
-            </div>
+      {/* FAQ */}
+      <section className="bg-white p-6 rounded-xl shadow border space-y-6">
+        <h2 className="text-xl font-semibold mb-2">Perguntas Frequentes</h2>
+        <div className="space-y-4 text-sm text-gray-700">
+          <div>
+            <p className="font-medium">❓ Como posso me tornar um agente?</p>
+            <p className="text-gray-600">
+              Acesse a seção "Requisições de Agentes" no menu lateral e envie sua solicitação.
+            </p>
           </div>
-        </section>
-      </div>
+          <div>
+            <p className="font-medium">❓ Posso editar uma casa depois de cadastrá-la?</p>
+            <p className="text-gray-600">
+              Sim! Vá até "Imóveis" e clique em "Editar" no imóvel desejado.
+            </p>
+          </div>
+          <div>
+            <p className="font-medium">❓ Onde vejo as mensagens recebidas?</p>
+            <p className="text-gray-600">
+              Na aba "Usuários", selecione um perfil para visualizar as mensagens vinculadas.
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

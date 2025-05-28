@@ -5,7 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 
 export function SearchFiltersBar() {
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-center p-4">
       <div className="flex flex-wrap justify-center items-center gap-2 max-w-7xl w-full">
         {/* Input de busca */}
         <div className="relative w-full sm:w-72">
@@ -14,7 +14,7 @@ export function SearchFiltersBar() {
             placeholder="Address, neighborhood, city, ZIP"
             className="w-full pl-4 pr-10 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+          <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500"/>
         </div>
 
         {/* Filtros */}

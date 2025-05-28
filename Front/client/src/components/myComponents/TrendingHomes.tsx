@@ -11,9 +11,11 @@ export default function TrendingHomes() {
   const { houses, toggleFavorite, favorites, refreshHouses } = useHouses();
 
   const scrollRefViewed = useRef<HTMLDivElement>(null);
-  const scrollRefSaved = useRef<HTMLDivElement>(null);
 
-  const scroll = (ref: React.RefObject<HTMLDivElement>, direction: "left" | "right") => {
+  const scroll = (
+    ref: React.RefObject<HTMLDivElement>,
+    direction: "left" | "right"
+  ) => {
     if (ref.current) {
       const amount = ref.current.clientWidth * 0.9;
       ref.current.scrollBy({
@@ -23,23 +25,28 @@ export default function TrendingHomes() {
     }
   };
 
-  const customTopValue = 10; // Defina aqui o valor personalizado para o "top"
+  const customTopValue = 10;
 
-  const topViewed = getTopViewedHouses(houses, 10);
-  const topCount = Math.max(5, customTopValue); // Onde customTopValue é o número que você deseja passar para o "top"
-const topSaved = Array.isArray(favorites) ? favorites.slice(0, topCount) : [];
+  const topViewed = getTopViewedHouses(houses, customTopValue);
+  const topCount = Math.max(5, customTopValue);
+  const topSaved = Array.isArray(favorites)
+    ? favorites.slice(0, topCount)
+    : [];
 
-
-  // Usamos Set para performance em .has()
-  const favoritedIds = new Set(favorites.map((f) => f.id));
+  // Safe check: ensure favorites is an array before mapping
+  const favoritedIds = new Set(
+    Array.isArray(favorites) ? favorites.map((f) => f.id) : []
+  );
 
   const renderHouseCard = (house: any) => {
+    if (!house) return null;
+
     const isFavorited = favoritedIds.has(house.id);
 
     const handleFavoriteClick = async (e: React.MouseEvent) => {
       e.preventDefault();
       await toggleFavorite(house);
-      await refreshHouses(); // Atualiza casas
+      await refreshHouses();
       toast.success(
         isFavorited
           ? "Casa removida dos favoritos 💔"
@@ -54,10 +61,10 @@ const topSaved = Array.isArray(favorites) ? favorites.slice(0, topCount) : [];
             <Link href={`/user/comprar/${house.id}`}>
               <img
                 src={house.images?.[0] || "/placeholder.jpg"}
-                alt={house.title}
+                alt={house.title || "Casa"}
                 className="h-48 w-full object-cover"
               />
-              {house.type && (
+              {house?.type && (
                 <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded">
                   {house.type}
                 </span>
@@ -67,40 +74,29 @@ const topSaved = Array.isArray(favorites) ? favorites.slice(0, topCount) : [];
             <Button
               className="absolute top-2 right-2 bg-white text-red-500 hover:bg-red-50 shadow-sm z-10 border border-red-500"
               size="icon"
-              onClick={async (e) => {
-                e.preventDefault();
-
-                const wasFavorited = favorites.some((fav) => fav.id === house.id);
-
-                await toggleFavorite(house); // muda a UI primeiro
-                toast.success(
-                  wasFavorited
-                    ? "Casa removida dos favoritos 💔"
-                    : "Casa adicionada aos favoritos ❤️"
-                );
-
-                await refreshHouses(); // sincroniza depois
-              }}
+              onClick={handleFavoriteClick}
             >
-
-
-              <Heart className={`w-4 h-4 ${isFavorited ? "fill-red-500" : "fill-none"}`} />
+              <Heart
+                className={`w-4 h-4 ${
+                  isFavorited ? "fill-red-500" : "fill-none"
+                }`}
+              />
             </Button>
           </div>
 
           <div className="p-4">
             <h3 className="text-lg font-bold">
-              {house.price.toLocaleString("pt-PT", {
+              {house.price?.toLocaleString("pt-PT", {
                 style: "currency",
                 currency: "EUR",
               })}
             </h3>
             <p className="text-sm text-gray-600">
-              {house.details.rooms} quartos · {house.details.bathrooms} banheiros ·{" "}
-              {house.details.area} m² · Ativo
+              {house.details?.rooms} quartos · {house.details?.bathrooms} banheiros ·{" "}
+              {house.details?.area} m² · Ativo
             </p>
             <p className="text-sm text-gray-500 mt-1">
-              {house.location.address}, {house.location.city}
+              {house.location?.address}, {house.location?.city}
             </p>
           </div>
         </div>
@@ -118,10 +114,18 @@ const topSaved = Array.isArray(favorites) ? favorites.slice(0, topCount) : [];
             <p className="text-gray-500 text-sm">Casas que mais despertaram interesse</p>
           </div>
           <div className="flex space-x-2">
-            <Button variant="outline" size="icon" onClick={() => scroll(scrollRefViewed, "left")}>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => scroll(scrollRefViewed, "left")}
+            >
               <ChevronLeft />
             </Button>
-            <Button variant="outline" size="icon" onClick={() => scroll(scrollRefViewed, "right")}>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => scroll(scrollRefViewed, "right")}
+            >
               <ChevronRight />
             </Button>
           </div>

@@ -10,13 +10,13 @@ export default function Page() {
   const { favorites, toggleFavorite } = useHouses();
 
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen bg-gray-100 px-4 py-12">
-      <h1 className="text-4xl font-bold mb-8">Minha Lista</h1>
+    <div className="flex flex-col items-center justify-start min-h-screen bg-gray-100 w-full min-h-screen py-12">
+      <h1 className="text-4xl font-bold mb-8 ">Minha Lista</h1>
 
       {favorites.length === 0 ? (
         <p className="text-gray-600 text-lg">Você ainda não adicionou casas aos favoritos.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-6xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-6xl mt-12">
           {favorites.map((house) => (
             <div
               key={house.id}

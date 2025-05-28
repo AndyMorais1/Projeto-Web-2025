@@ -32,6 +32,8 @@ export function Houses() {
     setSelectedHouse,
     isDialogOpen,
     setIsDialogOpen,
+    selectedDistrict,
+    setSelectedDistrict,
   } = useHouses();
 
   const { users } = useUsers();
@@ -79,15 +81,33 @@ export function Houses() {
     }
   };
 
+  const filteredHouses = selectedDistrict
+    ? houses.filter((house) =>
+        house.location.city?.toLowerCase() === selectedDistrict.toLowerCase()
+      )
+    : houses;
+
   return (
     <div className="flex flex-col gap-4 items-center justify-center">
-      {houses.length === 0 ? (
+
+      {selectedDistrict && (
+        <div className="flex justify-between items-center bg-white px-4 py-2 rounded shadow text-sm w-full sm:w-96">
+          <span>
+            Filtrando por distrito: <strong>{selectedDistrict}</strong>
+          </span>
+          <Button variant="ghost" onClick={() => setSelectedDistrict(null)}>
+            Limpar filtro
+          </Button>
+        </div>
+      )}
+
+      {filteredHouses.length === 0 ? (
         <div className="text-center text-gray-500 text-lg mt-20">
           Nenhuma casa disponível no momento.
         </div>
       ) : (
         <div className="flex flex-col gap-4 px-2">
-          {houses.map((house) => (
+          {filteredHouses.map((house) => (
             <Card key={house.id} className="w-full sm:w-96">
               <div className="p-3">
                 <div className="relative">
