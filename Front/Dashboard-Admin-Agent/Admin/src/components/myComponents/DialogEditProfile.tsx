@@ -21,16 +21,13 @@ import { toast } from "sonner";
 import { uploadImage } from "@/utils/uploadImage";
 
 export function DialogEditProfile() {
-  const { currentUser, setCurrentUser } = useUsers();
+  const { currentUser, setCurrentUser, initializeUsersData } = useUsers();
 
   const [name, setName] = React.useState<string>("");
   const [email, setEmail] = React.useState<string>("");
   const [image, setImage] = React.useState<File | null>(null);
-
-  // Campos para senha
   const [currentPassword, setCurrentPassword] = React.useState<string>("");
   const [newPassword, setNewPassword] = React.useState<string>("");
-
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
   React.useEffect(() => {
@@ -63,7 +60,9 @@ export function DialogEditProfile() {
       };
 
       const response = await usersServices.updateUser(currentUser.id, updatedUser);
-      setCurrentUser(response);
+
+      setCurrentUser(response); // resposta rápida
+      await initializeUsersData(); // dados consistentes
 
       toast.success("Usuário atualizado com sucesso!");
       setIsOpen(false);
@@ -81,7 +80,7 @@ export function DialogEditProfile() {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button onClick={() => setIsOpen(true)}>
-          <Pencil /> Editar o perfil
+          <Pencil className="mr-2 h-4 w-4" /> Editar o perfil
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -91,7 +90,6 @@ export function DialogEditProfile() {
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
-          {/* Nome */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-right">Nome</Label>
             <Input
@@ -103,7 +101,6 @@ export function DialogEditProfile() {
             />
           </div>
 
-          {/* Email */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="email" className="text-right">E-mail</Label>
             <Input
@@ -115,7 +112,6 @@ export function DialogEditProfile() {
             />
           </div>
 
-          {/* Imagem */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="photo" className="text-right">Imagem</Label>
             <Input
@@ -127,7 +123,6 @@ export function DialogEditProfile() {
             />
           </div>
 
-          {/* Senha atual */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="currentPassword" className="text-right">Senha atual</Label>
             <Input
@@ -139,7 +134,6 @@ export function DialogEditProfile() {
             />
           </div>
 
-          {/* Nova senha */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="newPassword" className="text-right">Nova senha</Label>
             <Input
@@ -153,18 +147,10 @@ export function DialogEditProfile() {
         </div>
 
         <DialogFooter>
-          <Button
-            type="button"
-            onClick={handleUpdateUser}
-            disabled={!name || !email}
-          >
+          <Button type="button" onClick={handleUpdateUser} disabled={!name || !email}>
             Salvar
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setIsOpen(false)}
-          >
+          <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
             Cancelar
           </Button>
         </DialogFooter>

@@ -17,6 +17,8 @@ interface HousesContextType {
   setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   favorites: HouseData[];
   toggleFavorite: (house: HouseData) => void;
+  selectedDistrict: string | null;
+  setSelectedDistrict: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const HousesContext = createContext<HousesContextType>({
@@ -32,6 +34,8 @@ const HousesContext = createContext<HousesContextType>({
   setIsDialogOpen: () => {},
   favorites: [],
   toggleFavorite: () => {},
+  selectedDistrict: null,
+  setSelectedDistrict: () => {}
 });
 
 export const useHouses = () => useContext(HousesContext);
@@ -44,6 +48,7 @@ export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [selectedHouse, setSelectedHouse] = useState<HouseData | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [favorites, setFavorites] = useState<HouseData[]>([]);
+  const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
 
   const fetchHouses = async () => {
     try {
@@ -154,6 +159,8 @@ export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setIsDialogOpen,
         favorites,
         toggleFavorite,
+         selectedDistrict,
+        setSelectedDistrict,
       }}
     >
       {children}

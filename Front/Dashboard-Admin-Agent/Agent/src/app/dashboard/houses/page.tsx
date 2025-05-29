@@ -33,7 +33,8 @@ export default function MyHouses() {
 
 
         {/* Listagem */}
-        <div className="w-full md:w-[35%] h-full bg-white border-l border-gray-200 flex flex-col">
+        <div className="w-full md:w-[35%] h-full bg-white border-l border-gray-200 flex flex-col ">
+          
           <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
             <Houses />
           </div>

@@ -22,11 +22,14 @@ export function incrementHouseSave(houseId: string) {
 }
 
 export function getTopViewedHouses(houses: any[], top = 5) {
+  if (typeof window === "undefined") return [];
+
   const views = JSON.parse(localStorage.getItem("viewCounts") || "{}");
   return [...houses]
     .sort((a, b) => (views[b.id] || 0) - (views[a.id] || 0))
     .slice(0, top);
 }
+
 
 export function getTopSavedHouses(houses: any[], top = 5) {
   const saves = JSON.parse(localStorage.getItem("saveCounts") || "{}");

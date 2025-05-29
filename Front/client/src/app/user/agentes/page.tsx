@@ -5,6 +5,7 @@ import { useUsers } from "@/contexts/UsersContext"; // Importa o contexto para a
 import { UserData } from "@/data/UserData"; // Tipagem para UserData
 import { useRouter } from "next/navigation"; // Para navegação
 import { Search } from "lucide-react"; // Importando o ícone de lupa
+import { AgentCard } from "@/components/myComponents/AgentCard";
 
 export default function AgentsPage() {
   // Acessando os usuários do contexto
@@ -43,11 +44,10 @@ export default function AgentsPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-6">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-12">
       <h1 className="text-4xl font-bold mb-6">Fale com Agentes</h1>
 
-      {/* Botões de pesquisa e filtragem colocados entre o título e os cards */}
-      <div className="flex justify-center gap-4 mb-12">
+      <div className="w-full max-w-7xl flex justify-end gap-4 px-8 mb-12 mt-12">
         {/* Campo de pesquisa com ícone de lupa clicável */}
         <div className="relative flex items-center">
           <input
@@ -74,6 +74,7 @@ export default function AgentsPage() {
         </button>
       </div>
 
+
       {/* Verificando se há agentes */}
       {agents.length === 0 ? (
         <p>Nenhum agente encontrado.</p>
@@ -85,15 +86,7 @@ export default function AgentsPage() {
               className="max-w-sm rounded-lg overflow-hidden shadow-lg bg-white cursor-pointer transform hover:scale-105 transition duration-300 ease-in-out"
               onClick={() => handleCardClick(agent)} // Torna o card clicável
             >
-              <img
-                className="w-full h-48 object-cover"
-                src={agent.photo || "/default-avatar.jpg"} // Foto do agente (ou avatar padrão)
-                alt={agent.name}
-              />
-              <div className="px-6 py-4">
-                <h2 className="font-bold text-xl mb-2">{agent.name}</h2>
-                <p className="text-gray-700 text-base">{agent.email}</p>
-              </div>
+              <AgentCard agent={agent} />
             </div>
           ))}
         </div>

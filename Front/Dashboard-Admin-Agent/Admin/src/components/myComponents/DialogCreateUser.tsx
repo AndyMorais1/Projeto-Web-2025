@@ -52,6 +52,8 @@ export function DialogCreateUser({
         password,
         status: "PENDING",
         photo,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
 
       usersServices

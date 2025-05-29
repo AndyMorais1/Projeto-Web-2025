@@ -30,6 +30,14 @@ export function DialogCreateHouse() {
     rooms: "", bathrooms: "", area: "",
   });
 
+  const distritosDePortugal = [
+  "Aveiro", "Beja", "Braga", "Bragança", "Castelo Branco", "Coimbra",
+  "Évora", "Faro", "Guarda", "Leiria", "Lisboa", "Madeira",
+  "Portalegre", "Porto", "Santarém", "Setúbal", "Viana do Castelo",
+  "Vila Real", "Viseu", "Açores"
+];
+
+
   React.useEffect(() => {
     const filteredAgents = users.filter(user => user.role === "AGENT" && user.status === "ACTIVE");
     setAgents(filteredAgents);
@@ -62,6 +70,8 @@ export function DialogCreateHouse() {
     try {
       const imageUrls = await Promise.all(images.map(uploadImage));
 
+      const now = new Date().toISOString();
+
       const payload: HouseData = {
         title: form.title,
         description: form.description,
@@ -79,6 +89,8 @@ export function DialogCreateHouse() {
           bathrooms: Number(form.bathrooms),
           area: Number(form.area),
         },
+        createdAt: now,
+        updatedAt: now,
       };
 
       const created = await housesServices.createHouse(payload);
@@ -163,21 +175,43 @@ export function DialogCreateHouse() {
             </div>
           ))}
 
-          {["address", "city", "zipCode"].map((field) => (
-            <div key={field} className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor={field} className="text-right">
-                {field === "address" && "Endereço"}
-                {field === "city" && "Cidade"}
-                {field === "zipCode" && "CEP"}
-              </Label>
-              <Input
-                id={field}
-                value={(form as any)[field]}
-                onChange={handleInputChange}
-                className="col-span-3"
-              />
-            </div>
-          ))}
+          {/* Endereço */}
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="address" className="text-right">Endereço</Label>
+            <Input
+              id="address"
+              value={form.address}
+              onChange={handleInputChange}
+              className="col-span-3"
+            />
+          </div>
+
+          {/* Cidade como select */}
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="city" className="text-right">Distrito</Label>
+            <select
+              id="city"
+              value={form.city}
+              onChange={handleInputChange}
+              className="col-span-3 p-2 border rounded"
+            >
+              <option value="">Selecione um distrito</option>
+              {distritosDePortugal.map((distrito) => (
+                <option key={distrito} value={distrito}>{distrito}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* CEP */}
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="zipCode" className="text-right">CEP</Label>
+            <Input
+              id="zipCode"
+              value={form.zipCode}
+              onChange={handleInputChange}
+              className="col-span-3"
+            />
+          </div>
 
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="images" className="text-right">Fotos</Label>

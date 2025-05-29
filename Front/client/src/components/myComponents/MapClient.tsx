@@ -1,12 +1,14 @@
-"use client";
+'use client';
 
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from "react-leaflet";
 import { useHouses } from "@/contexts/HousesContext";
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-import Link from "next/link";
+import L, { Marker as LeafletMarker } from "leaflet";
+import { useEffect, useState, useRef } from "react";
+import { GeoJsonObject, Feature, Geometry } from "geojson";
+import { Layer } from "leaflet";
+import { useRouter } from "next/navigation";
 
-// Ícone customizado
 const customIcon = L.icon({
   iconUrl: "/marker-icon.png",
   iconRetinaUrl: "/marker-icon-2x.png",
@@ -18,7 +20,43 @@ const customIcon = L.icon({
 });
 
 export default function MapClient() {
-  const { houses } = useHouses();
+  const { houses, setSelectedDistrict } = useHouses();
+  const [geoData, setGeoData] = useState<GeoJsonObject | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch('/portugal-distrito.geojson')
+      .then((res) => res.json())
+      .then((data) => setGeoData(data));
+  }, []);
+
+  const handleMarkerClick = (houseId: string, marker: LeafletMarker) => {
+    marker.openPopup(); // ✅ Abre o popup
+    setTimeout(() => {
+      router.push(`/user/comprar/${houseId}`); // ✅ Redireciona após 300ms
+    }, 300);
+  };
+
+  const onEachDistrict = (feature: Feature<Geometry, any>, layer: Layer) => {
+    const name = feature.properties?.dis_name || "Distrito desconhecido";
+
+    layer.bindPopup(`<strong>${name}</strong>`);
+    (layer as any).setStyle({
+      color: "#2563EB",
+      weight: 2,
+      fillOpacity: 0.1,
+    });
+
+    layer.on({
+      mouseover: (e: any) => e.target.setStyle({ fillOpacity: 0.4 }),
+      mouseout: (e: any) => e.target.setStyle({ fillOpacity: 0.1 }),
+      click: () => {
+        if (name !== "Distrito desconhecido") {
+          setSelectedDistrict(name);
+        }
+      },
+    });
+  };
 
   return (
     <div className="w-full h-full relative z-0">
@@ -26,49 +64,46 @@ export default function MapClient() {
         center={[39.5, -8.0]}
         zoom={7}
         scrollWheelZoom
-        className="w-full h-full z-0"
+        style={{ width: "100%", height: "100%", zIndex: 0 }}
+        className="z-0"
       >
         <TileLayer
           attribution='&copy; OpenStreetMap contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {houses
-          .filter(h => h.location.latitude && h.location.longitude)
-          .map(house => (
-            <Marker
-              key={house.id}
-              position={[house.location.latitude!, house.location.longitude!]}
-              icon={customIcon}
-            >
-              <Popup minWidth={260} maxWidth={260} className="!p-0">
-                <Link href={`/user/comprar/${house.id}`}>
-                  <div className="cursor-pointer rounded-xl overflow-hidden shadow-md hover:shadow-lg transition duration-200 bg-white">
-                    <img
-                      src={house.images[0]}
-                      alt={house.title}
-                      className="w-full h-28 object-cover"
-                    />
-                    <div className="p-3 space-y-1">
-                      <h3 className="text-sm font-bold leading-tight line-clamp-2">{house.title}</h3>
-                      <p className="text-xs text-gray-600">
-                        {house.details.rooms} quartos · {house.details.bathrooms} banheiros ·{" "}
-                        {house.details.area} m²
-                      </p>
-                      <p className="text-xs text-gray-500">{house.location.city}</p>
-                      <p className="text-sm font-semibold text-green-600 mt-1">
-                        {new Intl.NumberFormat("pt-PT", {
-                          style: "currency",
-                          currency: "EUR",
-                        }).format(house.price)}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              </Popup>
+        {/* Polígonos dos Distritos */}
+        {geoData && typeof geoData === "object" && "features" in geoData && (
+          <GeoJSON data={geoData} onEachFeature={onEachDistrict} />
+        )}
 
-            </Marker>
-          ))}
+        {/* Marcadores das Casas */}
+        {houses
+          .filter(h => typeof h.location.latitude === "number" && typeof h.location.longitude === "number")
+          .map((house) => {
+            const markerRef = useRef<LeafletMarker>(null);
+
+            return (
+              <Marker
+                key={house.id}
+                position={[house.location.latitude!, house.location.longitude!]}
+                icon={customIcon}
+                ref={markerRef}
+                eventHandlers={{
+                  click: () => {
+                    if (markerRef.current) {
+                      handleMarkerClick(house.id!, markerRef.current);
+                    }
+                  },
+                }}
+              >
+                <Popup>
+                  <strong>{house.title}</strong><br />
+                  {house.location.address}, {house.location.city}
+                </Popup>
+              </Marker>
+            );
+          })}
       </MapContainer>
     </div>
   );
