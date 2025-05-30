@@ -2,9 +2,6 @@
 CREATE TYPE "Role" AS ENUM ('CLIENT', 'ADMIN', 'AGENT');
 
 -- CreateEnum
-CREATE TYPE "Type" AS ENUM ('APARTMENT', 'HOUSE', 'PENTHOUSE', 'DUPLEX', 'STUDIO');
-
--- CreateEnum
 CREATE TYPE "VisitStatus" AS ENUM ('PENDING', 'CONFIRMED', 'REJECTED');
 
 -- CreateEnum
@@ -33,7 +30,7 @@ CREATE TABLE "users" (
 -- CreateTable
 CREATE TABLE "houses" (
     "id" TEXT NOT NULL,
-    "type" "Type" NOT NULL,
+    "typeId" TEXT NOT NULL,
     "agentId" TEXT NOT NULL,
     "locationId" TEXT NOT NULL,
     "title" TEXT NOT NULL,
@@ -43,6 +40,8 @@ CREATE TABLE "houses" (
     "images" TEXT[],
     "detailsId" TEXT NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
+    "views" INTEGER NOT NULL DEFAULT 0,
+    "favoritesCount" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "houses_pkey" PRIMARY KEY ("id")
 );
@@ -58,6 +57,14 @@ CREATE TABLE "visits" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "visits_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "houseType" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+
+    CONSTRAINT "houseType_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -90,6 +97,16 @@ CREATE TABLE "details" (
     CONSTRAINT "details_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "favorites" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "houseId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "favorites_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
@@ -100,7 +117,16 @@ CREATE UNIQUE INDEX "houses_locationId_key" ON "houses"("locationId");
 CREATE UNIQUE INDEX "houses_detailsId_key" ON "houses"("detailsId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "houseType_name_key" ON "houseType"("name");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "locations_address_city_zipCode_latitude_longitude_key" ON "locations"("address", "city", "zipCode", "latitude", "longitude");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "favorites_userId_houseId_key" ON "favorites"("userId", "houseId");
+
+-- AddForeignKey
+ALTER TABLE "houses" ADD CONSTRAINT "houses_typeId_fkey" FOREIGN KEY ("typeId") REFERENCES "houseType"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "houses" ADD CONSTRAINT "houses_agentId_fkey" FOREIGN KEY ("agentId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -116,3 +142,9 @@ ALTER TABLE "visits" ADD CONSTRAINT "visits_clientId_fkey" FOREIGN KEY ("clientI
 
 -- AddForeignKey
 ALTER TABLE "visits" ADD CONSTRAINT "visits_houseId_fkey" FOREIGN KEY ("houseId") REFERENCES "houses"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "favorites" ADD CONSTRAINT "favorites_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "favorites" ADD CONSTRAINT "favorites_houseId_fkey" FOREIGN KEY ("houseId") REFERENCES "houses"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

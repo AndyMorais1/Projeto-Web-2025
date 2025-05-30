@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Trash, Filter, User, Info } from "lucide-react";
+import { Trash, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -27,6 +27,7 @@ import { useHouses } from "@/contexts/HousesContext";
 import { useUsers } from "@/contexts/UsersContext";
 import { housesServices } from "@/api/Houses";
 import { DialogFilterHouses } from "./DialogFilterHouses";
+import { DialogCreateHouseType } from "./DialogCreateTypeHouse";
 
 export function Houses() {
   const { houses, refreshHouses } = useHouses();
@@ -68,7 +69,7 @@ export function Houses() {
   };
 
   const handleEditHouse = (updatedHouse: HouseData) => {
-    // Se necessário, usar refreshHouses aqui depois da edição
+    // Use refreshHouses() se desejar forçar a atualização
   };
 
   const handleDeleteHouse = async (houseId: string) => {
@@ -90,6 +91,7 @@ export function Houses() {
       <div className="flex justify-end gap-2 mb-6">
         <DialogFilterHouses />
         <DialogCreateHouse />
+        <DialogCreateHouseType />
       </div>
 
       {houses.length === 0 ? (
@@ -100,7 +102,7 @@ export function Houses() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {houses.map((house) => (
             <Card key={house.id} className="bg-white shadow-md rounded-xl p-4">
-              <div className="p-3"> {/* Adiciona padding ao redor da imagem */}
+              <div className="p-3">
                 <div className="relative rounded-lg overflow-hidden">
                   <img
                     src={house.images[0]}
@@ -119,8 +121,8 @@ export function Houses() {
                 </div>
               </div>
 
-              <div className="px-4 pb-4 space-y-2"> 
-               <div className="text-lg font-semibold text-gray-800">
+              <div className="px-4 pb-4 space-y-2">
+                <div className="text-lg font-semibold text-gray-800">
                   {house.title}
                 </div>
                 <div className="text-xl font-semibold text-gray-900">
@@ -130,7 +132,7 @@ export function Houses() {
                 <div className="text-gray-700 text-sm">
                   {house.details.rooms} quartos | {house.details.bathrooms} banheiros |{" "}
                   <span className="font-medium">{house.details.area} m²</span> -{" "}
-                  {house.type}
+                  {house.type?.name ?? "Tipo não especificado"}
                 </div>
 
                 <div className="text-sm text-gray-600">
@@ -164,7 +166,6 @@ export function Houses() {
                 </div>
               </div>
             </Card>
-
           ))}
         </div>
       )}
@@ -181,39 +182,16 @@ export function Houses() {
 
             <div className="grid gap-4 py-4">
               <div className="flex flex-col space-y-1.5">
-                <p>
-                  <strong>Título:</strong> {selectedHouse.title}
-                </p>
-                <p>
-                  <strong>Endereço:</strong> {selectedHouse.location.address}
-                </p>
-                <p>
-                  <strong>Cidade:</strong> {selectedHouse.location.city}
-                </p>
-                <p>
-                  <strong>Preço:</strong>{" "}
-                  {priceFormatter.format(selectedHouse.price)}
-                </p>
-                <p>
-                  <strong>Agente:</strong>{" "}
-                  {users.find((user) => user.id === selectedHouse.agentId)
-                    ?.name || "Agente desconhecido"}
-                </p>
-                <p>
-                  <strong>Quartos:</strong> {selectedHouse.details.rooms}
-                </p>
-                <p>
-                  <strong>Banheiros:</strong> {selectedHouse.details.bathrooms}
-                </p>
-                <p>
-                  <strong>Área:</strong> {selectedHouse.details.area} m²
-                </p>
-                <p>
-                  <strong>Tipo:</strong> {selectedHouse.type}
-                </p>
-                <p>
-                  <strong>Descrição:</strong> {selectedHouse.description}
-                </p>
+                <p><strong>Título:</strong> {selectedHouse.title}</p>
+                <p><strong>Endereço:</strong> {selectedHouse.location.address}</p>
+                <p><strong>Cidade:</strong> {selectedHouse.location.city}</p>
+                <p><strong>Preço:</strong> {priceFormatter.format(selectedHouse.price)}</p>
+                <p><strong>Agente:</strong> {users.find(user => user.id === selectedHouse.agentId)?.name || "Agente desconhecido"}</p>
+                <p><strong>Quartos:</strong> {selectedHouse.details.rooms}</p>
+                <p><strong>Banheiros:</strong> {selectedHouse.details.bathrooms}</p>
+                <p><strong>Área:</strong> {selectedHouse.details.area} m²</p>
+                <p><strong>Tipo:</strong> {selectedHouse.type?.name ?? "Tipo não especificado"}</p>
+                <p><strong>Descrição:</strong> {selectedHouse.description}</p>
 
                 <div className="w-full h-60 overflow-hidden mt-4 relative">
                   <img

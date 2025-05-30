@@ -44,7 +44,7 @@ export default function AgentsPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-12">
+    <div className="flex flex-col items-center  min-h-screen bg-gray-100 py-12">
       <h1 className="text-4xl font-bold mb-6">Fale com Agentes</h1>
 
       <div className="w-full max-w-7xl flex justify-end gap-4 px-8 mb-12 mt-12">

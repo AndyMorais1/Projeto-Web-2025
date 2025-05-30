@@ -13,16 +13,8 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useHouses } from "@/contexts/HousesContext";
+import { useHouseTypes } from "@/contexts/HouseTypesContext";
 import { Filter } from "lucide-react";
-
-// Enum dos tipos de casas
-export enum Type {
-  APARTMENT = 'APARTMENT',
-  HOUSE = 'HOUSE',
-  PENTHOUSE = 'PENTHOUSE',
-  STUDIO = 'STUDIO',
-  DUPLEX = 'DUPLEX',
-}
 
 const distritosDePortugal = [
   "Aveiro", "Beja", "Braga", "Bragança", "Castelo Branco", "Coimbra",
@@ -31,19 +23,23 @@ const distritosDePortugal = [
   "Vila Real", "Viseu", "Açores"
 ];
 
-
 export function DialogFilterHouses() {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [selectedType, setSelectedType] = React.useState<string>("");
+  const [selectedTypeId, setSelectedTypeId] = React.useState<string>("");
   const [selectedDistrict, setSelectedDistrict] = React.useState<string>("");
 
   const { houses, setHouses, originalHouses } = useHouses();
+  const { types, refreshTypes } = useHouseTypes();
+
+  React.useEffect(() => {
+    refreshTypes();
+  }, []);
 
   const handleFilter = () => {
     let filtered = originalHouses;
 
-    if (selectedType && selectedType !== "ALL") {
-      filtered = filtered.filter(house => house.type === selectedType);
+    if (selectedTypeId && selectedTypeId !== "ALL") {
+      filtered = filtered.filter(house => house.typeId === selectedTypeId);
     }
 
     if (selectedDistrict && selectedDistrict !== "ALL") {
@@ -81,18 +77,18 @@ export function DialogFilterHouses() {
         </DialogHeader>
 
         <div className="grid gap-3 py-4">
-          {/* Tipo */}
+          {/* Tipo de casa */}
           <div className="grid grid-cols-4 items-center gap-3">
-            <Label htmlFor="type" className="text-right">Tipo</Label>
-            <Select value={selectedType} onValueChange={setSelectedType}>
+            <Label htmlFor="typeId" className="text-right">Tipo</Label>
+            <Select value={selectedTypeId} onValueChange={setSelectedTypeId}>
               <SelectTrigger className="col-span-3">
                 <SelectValue placeholder="Selecione o tipo" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="ALL">Todos os Tipos</SelectItem>
-                {Object.values(Type).map((type) => (
-                  <SelectItem key={type} value={type}>
-                    {type.charAt(0) + type.slice(1).toLowerCase()}
+                {types.map((type) => (
+                  <SelectItem key={type.id} value={type.id}>
+                    {type.name}
                   </SelectItem>
                 ))}
               </SelectContent>

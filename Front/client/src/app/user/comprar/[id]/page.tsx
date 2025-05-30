@@ -1,9 +1,10 @@
 "use client";
-//teste apenas
+
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import { useHouses } from "@/contexts/HousesContext";
 import { useUsers } from "@/contexts/UsersContext";
+import { useHouseTypes } from "@/contexts/HouseTypesContext"; // ✅ Novo
 import { incrementHouseView } from "@/utils/stats";
 import {
   Dialog,
@@ -23,6 +24,7 @@ export default function HouseDetailPage() {
   const { id } = useParams();
   const { houses } = useHouses();
   const { users } = useUsers();
+  const { types } = useHouseTypes(); // ✅ Contexto de tipos
   const hasIncremented = useRef(false);
 
   const [visitorName, setVisitorName] = useState("");
@@ -54,6 +56,8 @@ export default function HouseDetailPage() {
       <div className="p-6 text-center text-gray-600">Casa não encontrada.</div>
     );
   }
+
+  const typeName = types.find((t) => t.id === house.typeId)?.name || "Tipo desconhecido"; // ✅
 
   const handleScheduleVisit = () => {
     alert("Visita marcada com sucesso!");
@@ -101,7 +105,6 @@ export default function HouseDetailPage() {
           </>
         )}
       </div>
-
 
       <h1 className="text-3xl font-bold text-gray-800">
         {house.title}
@@ -163,7 +166,7 @@ export default function HouseDetailPage() {
 
       {/* Detalhes técnicos */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-700">
-        <div><strong>Tipo:</strong> {house.type}</div>
+        <div><strong>Tipo:</strong> {typeName}</div>
         <div><strong>Área:</strong> {house.details.area} m²</div>
         <div><strong>Quartos:</strong> {house.details.rooms}</div>
         <div><strong>Banheiros:</strong> {house.details.bathrooms}</div>

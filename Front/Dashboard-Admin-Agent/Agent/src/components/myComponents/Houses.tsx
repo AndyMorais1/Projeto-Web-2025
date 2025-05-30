@@ -23,6 +23,7 @@ import { HouseData } from "@/data/HouseData";
 import { useHouses } from "@/contexts/HousesContext";
 import { useUsers } from "@/contexts/UsersContext";
 import { housesServices } from "@/api/Houses";
+import { useHouseTypes } from "@/contexts/HouseTypesContext";
 
 export function Houses() {
   const {
@@ -37,6 +38,7 @@ export function Houses() {
   } = useHouses();
 
   const { users } = useUsers();
+  const { types } = useHouseTypes(); // ← usando contexto de tipos
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const priceFormatter = new Intl.NumberFormat("pt-PT", {
@@ -89,7 +91,6 @@ export function Houses() {
 
   return (
     <div className="flex flex-col gap-4 items-center justify-center">
-
       {selectedDistrict && (
         <div className="flex justify-between items-center bg-white px-4 py-2 rounded shadow text-sm w-full sm:w-96">
           <span>
@@ -125,7 +126,8 @@ export function Houses() {
                 </div>
                 <div className="text-sm text-gray-700">
                   {house.details.rooms} quartos · {house.details.bathrooms} banheiros ·{" "}
-                  {house.details.area} m² - {house.type}
+                  {house.details.area} m² -{" "}
+                  {types.find((t) => t.id === house.typeId)?.name || "Tipo desconhecido"}
                 </div>
                 <div className="text-sm text-gray-600">
                   {house.location.address}, {house.location.city}
@@ -177,7 +179,7 @@ export function Houses() {
                 <p><strong>Quartos:</strong> {selectedHouse.details.rooms}</p>
                 <p><strong>Banheiros:</strong> {selectedHouse.details.bathrooms}</p>
                 <p><strong>Área:</strong> {selectedHouse.details.area} m²</p>
-                <p><strong>Tipo:</strong> {selectedHouse.type}</p>
+                <p><strong>Tipo:</strong> {types.find((t) => t.id === selectedHouse.typeId)?.name || "Tipo desconhecido"}</p>
                 <p><strong>Descrição:</strong> {selectedHouse.description}</p>
 
                 <div className="w-full h-60 overflow-hidden mt-4 relative">

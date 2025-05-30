@@ -72,7 +72,7 @@ class HouseService {
             // Criar a casa
             const house = await prisma.house.create({
                 data: {
-                    type: data.type,
+                    typeId: data.typeId,
                     agentId: data.agentId,
                     locationId: location.id,
                     title: data.title,
@@ -100,6 +100,7 @@ class HouseService {
             include: {
                 location: true,
                 details: true,
+                type:true
             },
         });
     }
@@ -110,6 +111,7 @@ class HouseService {
             include: {
                 location: true,
                 details: true,
+                type:true
             },
         });
     }
@@ -147,7 +149,7 @@ class HouseService {
                 id,
             },
             data: {
-                type: data.type,
+                typeId: data.typeId,
                 agentId: data.agentId,
                 locationId: location.id,
                 title: data.title,
@@ -191,6 +193,7 @@ class HouseService {
             include: {
                 location: true,
                 details: true,
+                type:true
             },
             //select:{},
         });
@@ -241,7 +244,8 @@ class HouseService {
             include: {
                 location: true, // Inclui os dados da localização
                 details: true,  // Inclui os detalhes da casa
-                favorites: true // Inclui os favoritos (caso você precise de mais informações sobre os favoritos)
+                favorites: true, // Inclui os favoritos (caso você precise de mais informações sobre os favoritos)
+                type: true,
             },
         });
 

@@ -4,32 +4,23 @@ import { useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { HouseData } from "@/data/HouseData";
 import { useHouses } from "@/contexts/HousesContext";
+import { useHouseTypes } from "@/contexts/HouseTypesContext";
 
 export function Houses({ searchQuery }: { searchQuery: string }) {
   const {
     houses,
-    refreshHouses,
-    selectedHouse,
-    setSelectedHouse,
-    isDialogOpen,
-    setIsDialogOpen,
     favorites,
     toggleFavorite,
     selectedDistrict,
     setSelectedDistrict,
   } = useHouses();
+
+  const { types } = useHouseTypes(); // ✅ Usando o contexto
 
   const [carouselIndexes, setCarouselIndexes] = useState<Record<string, number>>({});
 
@@ -45,15 +36,15 @@ export function Houses({ searchQuery }: { searchQuery: string }) {
 
     const matchesSearch = searchQuery
       ? [
-          house.title,
-          house.location.address,
-          house.location.city,
-          house.location.zipCode,
-        ]
-          .filter(Boolean)
-          .some((field) =>
-            field.toLowerCase().includes(searchQuery.toLowerCase())
-          )
+        house.title,
+        house.location.address,
+        house.location.city,
+        house.location.zipCode,
+      ]
+        .filter(Boolean)
+        .some((field) =>
+          field.toLowerCase().includes(searchQuery.toLowerCase())
+        )
       : true;
 
     return matchesDistrict && matchesSearch;
@@ -84,6 +75,7 @@ export function Houses({ searchQuery }: { searchQuery: string }) {
             const isFavorited = favorites.find((fav) => fav.id === house.id);
             const totalImages = house.images.length;
             const currentIndex = carouselIndexes[house.id!] ?? 0;
+            const houseTypeName = types.find(t => t.id === house.typeId)?.name || "Tipo desconhecido";
 
             return (
               <Link href={`/user/comprar/${house.id}`} key={house.id} className="w-full h-full">
@@ -151,7 +143,8 @@ export function Houses({ searchQuery }: { searchQuery: string }) {
                       {priceFormatter.format(house.price)}
                     </div>
                     <div className="text-sm text-gray-700">
-                      {house.details.rooms} quartos · {house.details.bathrooms} banheiros · {house.details.area} m² - {house.type}
+                      {house.details.rooms} quartos · {house.details.bathrooms} banheiros ·{" "}
+                      {house.details.area} m² - {houseTypeName}
                     </div>
                     <div className="text-sm text-gray-600">
                       {house.location.address}, {house.location.city}

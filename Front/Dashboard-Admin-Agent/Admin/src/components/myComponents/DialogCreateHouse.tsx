@@ -3,8 +3,13 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog, DialogContent, DialogDescription,
-  DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,11 +17,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { CirclePlus } from "lucide-react";
 import { housesServices } from "@/api/Houses";
 import { useUsers } from "@/contexts/UsersContext";
-import { UserData } from "@/data/UserData";
-import { HouseData, Type } from "@/data/HouseData";
 import { useHouses } from "@/contexts/HousesContext";
 import { toast } from "sonner";
 import { uploadImage } from "@/utils/uploadImage";
+import { UserData } from "@/data/UserData";
+import { HouseData } from "@/data/HouseData";
+import { useHouseTypes } from "@/contexts/HouseTypesContext";
 
 const distritosDePortugal = [
   "Aveiro", "Beja", "Braga", "Bragança", "Castelo Branco", "Coimbra",
@@ -25,24 +31,34 @@ const distritosDePortugal = [
   "Vila Real", "Viseu", "Açores"
 ];
 
-
 export function DialogCreateHouse() {
   const { users } = useUsers();
+  const { refreshHouses } = useHouses();
+  const { types, refreshTypes } = useHouseTypes();
+
   const [agents, setAgents] = React.useState<UserData[]>([]);
   const [images, setImages] = React.useState<File[]>([]);
   const [isOpen, setIsOpen] = React.useState(false);
-  const { refreshHouses } = useHouses();
 
   const [form, setForm] = React.useState({
-    title: "", description: "", type: Type.APARTMENT, price: "",
-    agentId: "", address: "", city: "", zipCode: "",
-    rooms: "", bathrooms: "", area: "",
+    title: "",
+    description: "",
+    typeId: "",
+    price: "",
+    agentId: "",
+    address: "",
+    city: "",
+    zipCode: "",
+    rooms: "",
+    bathrooms: "",
+    area: "",
   });
 
   React.useEffect(() => {
     const filteredAgents = users.filter(user => user.role === "AGENT" && user.status === "ACTIVE");
     setAgents(filteredAgents);
-  }, [users]);
+    refreshTypes(); // Atualiza os tipos ao abrir
+  }, [users, refreshTypes]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -63,13 +79,12 @@ export function DialogCreateHouse() {
   const handleSubmit = async () => {
     try {
       const imageUrls = await Promise.all(images.map(uploadImage));
-
       const now = new Date().toISOString();
 
       const payload: HouseData = {
         title: form.title,
         description: form.description,
-        type: form.type as Type,
+        typeId: form.typeId,
         price: Number(form.price),
         agentId: form.agentId,
         images: imageUrls,
@@ -96,7 +111,7 @@ export function DialogCreateHouse() {
         await refreshHouses();
         setIsOpen(false);
         setForm({
-          title: "", description: "", type: Type.APARTMENT, price: "",
+          title: "", description: "", typeId: "", price: "",
           agentId: "", address: "", city: "", zipCode: "",
           rooms: "", bathrooms: "", area: "",
         });
@@ -130,30 +145,43 @@ export function DialogCreateHouse() {
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
+          {/* Título */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="title" className="text-right">Título</Label>
             <Input id="title" value={form.title} onChange={handleInputChange} className="col-span-3" />
           </div>
 
+          {/* Descrição */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="description" className="text-right">Descrição</Label>
             <Textarea id="description" value={form.description} onChange={handleInputChange} className="col-span-3" />
           </div>
 
+          {/* Tipo */}
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="type" className="text-right">Tipo</Label>
-            <select id="type" value={form.type} onChange={handleInputChange} className="col-span-3 p-2 border rounded">
-              {Object.values(Type).map((type) => (
-                <option key={type} value={type}>{type}</option>
+            <Label htmlFor="typeId" className="text-right">Tipo</Label>
+            <select
+              id="typeId"
+              value={form.typeId}
+              onChange={handleInputChange}
+              className="col-span-3 p-2 border rounded"
+            >
+              <option value="">Selecione um tipo</option>
+              {types.map((type) => (
+                <option key={type.id} value={type.id}>
+                  {type.name}
+                </option>
               ))}
             </select>
           </div>
 
+          {/* Preço */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="price" className="text-right">Preço</Label>
             <Input id="price" type="number" value={form.price} onChange={handleInputChange} className="col-span-3" min={0} />
           </div>
 
+          {/* Detalhes */}
           {["rooms", "bathrooms", "area"].map((field) => (
             <div key={field} className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor={field} className="text-right">
@@ -174,23 +202,13 @@ export function DialogCreateHouse() {
           {/* Endereço */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="address" className="text-right">Endereço</Label>
-            <Input
-              id="address"
-              value={form.address}
-              onChange={handleInputChange}
-              className="col-span-3"
-            />
+            <Input id="address" value={form.address} onChange={handleInputChange} className="col-span-3" />
           </div>
 
-          {/* Cidade (como distrito) */}
+          {/* Cidade */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="city" className="text-right">Distrito</Label>
-            <select
-              id="city"
-              value={form.city}
-              onChange={handleInputChange}
-              className="col-span-3 p-2 border rounded"
-            >
+            <select id="city" value={form.city} onChange={handleInputChange} className="col-span-3 p-2 border rounded">
               <option value="">Selecione um distrito</option>
               {distritosDePortugal.map((distrito) => (
                 <option key={distrito} value={distrito}>
@@ -203,39 +221,24 @@ export function DialogCreateHouse() {
           {/* CEP */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="zipCode" className="text-right">CEP</Label>
-            <Input
-              id="zipCode"
-              value={form.zipCode}
-              onChange={handleInputChange}
-              className="col-span-3"
-            />
+            <Input id="zipCode" value={form.zipCode} onChange={handleInputChange} className="col-span-3" />
           </div>
 
-          {/* Fotos */}
+          {/* Imagens */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="images" className="text-right">Fotos</Label>
-            <Input
-              id="images"
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="col-span-3"
-            />
+            <Input id="images" type="file" multiple accept="image/*" onChange={handleImageUpload} className="col-span-3" />
           </div>
 
           {/* Agente */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="agentId" className="text-right">Agente</Label>
-            <select
-              id="agentId"
-              value={form.agentId}
-              onChange={handleInputChange}
-              className="col-span-3 p-2 border rounded"
-            >
+            <select id="agentId" value={form.agentId} onChange={handleInputChange} className="col-span-3 p-2 border rounded">
               <option value="">Selecione um agente</option>
               {agents.map(agent => (
-                <option key={agent.id} value={agent.id}>{agent.name}</option>
+                <option key={agent.id} value={agent.id}>
+                  {agent.name}
+                </option>
               ))}
             </select>
           </div>

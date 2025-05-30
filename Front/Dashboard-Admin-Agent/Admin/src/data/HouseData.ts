@@ -1,16 +1,18 @@
 export interface HouseData {
   id?: string;
   title: string;
-  type: string;
+  typeId: string; // ← novo campo obrigatório para envio
+  type?: HouseType; // usado na leitura (opcional, retornado do backend)
   description: string;
   agentId: string;
   images: string[];
   price: number;
   details: DetailsData;
   location: LocationData;
-   createdAt: string;
+  createdAt: string;
   updatedAt: string;
 }
+
 
 export type HouseDataOptional = Partial<HouseData> & {
   createdAt: string;
@@ -33,10 +35,7 @@ export interface LocationData {
   city: string;
 }
 
-export enum Type {
-  APARTMENT = 'APARTMENT',
-  HOUSE = 'HOUSE',
-  PENTHOUSE = 'PENTHOUSE',
-  STUDIO = 'STUDIO',
-  DUPLEX = 'DUPLEX',
+export interface HouseType {
+  id: string;
+  name: string;
 }
