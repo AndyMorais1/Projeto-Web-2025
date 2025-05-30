@@ -24,8 +24,8 @@ export function UserDropdown() {
     usersServices.logout()
       .then(() => {
         router.replace("/visitante");
-        resetHouses();
-        resetUsers();
+        //resetHouses();
+        //resetUsers();
       })
       .catch((error) => {
         console.error("Erro ao fazer logout:", error);

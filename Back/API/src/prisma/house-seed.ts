@@ -46,8 +46,12 @@ function getRandomDateIn2025(): Date {
 
 async function main() {
     const agents = await prisma.user.findMany({
-        where: { role: Role.AGENT },
+        where: {
+            role: Role.AGENT,
+            status: "ACTIVE", // <-- só agentes ativos
+        },
     });
+
 
     if (agents.length === 0) {
         throw new Error("Nenhum agente encontrado para associar casas.");

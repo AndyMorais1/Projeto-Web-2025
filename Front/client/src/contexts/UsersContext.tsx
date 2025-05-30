@@ -24,17 +24,14 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   const initializeUsersData = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const allUsers = await usersServices.getAllUsers();
+      setUsers(allUsers);
 
+      const token = localStorage.getItem("token");
       if (token) {
         const decoded = jwtDecode<{ id: string }>(token);
         const updatedUser = await usersServices.getUserById(decoded.id);
         setCurrentUser(updatedUser);
-
-        const allUsers = await usersServices.getAllUsers();
-        setUsers(allUsers);
-      } else {
-        console.log("Token não encontrado no localStorage.");
       }
     } catch (error) {
       console.error("Erro ao inicializar dados dos usuários:", error);

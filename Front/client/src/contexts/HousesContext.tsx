@@ -23,19 +23,19 @@ interface HousesContextType {
 
 const HousesContext = createContext<HousesContextType>({
   houses: [],
-  setHouses: () => {},
+  setHouses: () => { },
   originalHouses: [],
-  initializeHouses: async () => {},
-  refreshHouses: async () => {},
-  resetHouses: () => {},
+  initializeHouses: async () => { },
+  refreshHouses: async () => { },
+  resetHouses: () => { },
   selectedHouse: null,
-  setSelectedHouse: () => {},
+  setSelectedHouse: () => { },
   isDialogOpen: false,
-  setIsDialogOpen: () => {},
+  setIsDialogOpen: () => { },
   favorites: [],
-  toggleFavorite: () => {},
+  toggleFavorite: () => { },
   selectedDistrict: null,
-  setSelectedDistrict: () => {}
+  setSelectedDistrict: () => { }
 });
 
 export const useHouses = () => useContext(HousesContext);
@@ -52,10 +52,7 @@ export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const fetchHouses = async () => {
     try {
-      if (!currentUser?.id) return;
-
-      const fetchedHouses = await housesServices.getAllHouses();
-      console.log("Casas carregadas:", fetchedHouses);
+      const fetchedHouses = await housesServices.getAllHouses(); // ❌ sem depender de currentUser
       setHouses(fetchedHouses);
       setOriginalHouses(fetchedHouses);
     } catch (error: any) {
@@ -67,6 +64,7 @@ export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       });
     }
   };
+
 
   const initializeHouses = async () => {
     await fetchHouses();
@@ -99,26 +97,26 @@ export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   };
 
- const toggleFavorite = async (house: HouseData) => {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token || !currentUser?.id) return;
+  const toggleFavorite = async (house: HouseData) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token || !currentUser?.id) return;
 
-    await fetch("http://localhost:3000/users/favorites/toggle", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ houseId: house.id }),
-    });
+      await fetch("http://localhost:3000/users/favorites/toggle", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ houseId: house.id }),
+      });
 
-    // Recarrega favoritos do servidor após qualquer mudança
-    await loadFavorites();
-  } catch (error) {
-    console.error("Erro ao alternar favorito:", error);
-  }
-};
+      // Recarrega favoritos do servidor após qualquer mudança
+      await loadFavorites();
+    } catch (error) {
+      console.error("Erro ao alternar favorito:", error);
+    }
+  };
 
 
 
@@ -145,7 +143,7 @@ export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setIsDialogOpen,
         favorites,
         toggleFavorite,
-         selectedDistrict,
+        selectedDistrict,
         setSelectedDistrict,
       }}
     >
