@@ -75,29 +75,19 @@ class UsersServices {
 
     // Método para obter todos os usuários
     async getAllUsers(): Promise<any[]> {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      console.error("Erro: Token de autenticação ausente!");
-      return [];
+        try {
+            const response = await this.api.get("/users");
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao obter usuários:", {
+                message: error instanceof Error ? error.message : "Erro desconhecido",
+                response: (error as any)?.response?.data ?? "Sem resposta do servidor",
+                status: (error as any)?.response?.status ?? "Sem status",
+            });
+            return [];
+        }
     }
 
-    const response = await this.api.get("/users", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    return response.data;
-  } catch (error) {
-    console.error("Erro ao obter usuários:", {
-      message: error instanceof Error ? error.message : "Erro desconhecido",
-      response: (error as any)?.response?.data ?? "Sem resposta do servidor",
-      status: (error as any)?.response?.status ?? "Sem status",
-    });
-
-    // ✅ Garante que sempre retorne um array
-    return [];
-  }
-}
 
 
     // Método para excluir um usuário
@@ -119,26 +109,26 @@ class UsersServices {
     }
 
     // Método para criar um usuário
-   async createUser(userData: UserData | Partial<UserData>): Promise<any> {
-    try {
-        // A verificação do token foi removida
+    async createUser(userData: UserData | Partial<UserData>): Promise<any> {
+        try {
+            // A verificação do token foi removida
 
-        const response = await this.api.post("/users", userData, {
-            // Aqui você pode passar diretamente os headers que precisar
-            // Se o token não for necessário para a requisição, remova a linha abaixo
-            // headers: { Authorization: `Bearer ${token}` },
-        });
+            const response = await this.api.post("/users", userData, {
+                // Aqui você pode passar diretamente os headers que precisar
+                // Se o token não for necessário para a requisição, remova a linha abaixo
+                // headers: { Authorization: `Bearer ${token}` },
+            });
 
-        return response.data;
-    } catch (error: any) {
-        console.error("Erro ao criar usuário:", error.message);
-        throw error;
+            return response.data;
+        } catch (error: any) {
+            console.error("Erro ao criar usuário:", error.message);
+            throw error;
+        }
     }
-}
 
 
     // Método para atualizar um usuário
-    async updateUser(userId: string, userData: UserDataOptional): Promise<any> {
+    async updateUser(userId: string, userData: Partial< UserDataOptional>): Promise<any> {
         try {
             const token = localStorage.getItem("token");
             if (!token) {

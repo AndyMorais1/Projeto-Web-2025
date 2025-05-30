@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from "react-leaflet";
 import { useHouses } from "@/contexts/HousesContext";
@@ -8,6 +8,8 @@ import { useEffect, useState, useRef } from "react";
 import { GeoJsonObject, Feature, Geometry } from "geojson";
 import { Layer } from "leaflet";
 import { useRouter } from "next/navigation";
+import Cookie from "js-cookie";
+import { toast } from "sonner";
 
 const customIcon = L.icon({
   iconUrl: "/marker-icon.png",
@@ -31,9 +33,17 @@ export default function MapClient() {
   }, []);
 
   const handleMarkerClick = (houseId: string, marker: LeafletMarker) => {
-    marker.openPopup(); // ✅ Abre o popup
+    const token = Cookie.get("token");
+
+    if (!token) {
+      toast.warning("Você precisa estar logado para ver os detalhes do imóvel.");
+      router.push("/login");
+      return;
+    }
+
+    marker.openPopup();
     setTimeout(() => {
-      router.push(`/user/comprar/${houseId}`); // ✅ Redireciona após 300ms
+      router.push(`/user/comprar/${houseId}`);
     }, 300);
   };
 

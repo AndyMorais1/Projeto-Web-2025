@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import Cookie from "js-cookie";
 import { toast } from "sonner";
 import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { HouseData } from "@/data/HouseData";
@@ -20,9 +21,11 @@ export function Houses({ searchQuery }: { searchQuery: string }) {
     setSelectedDistrict,
   } = useHouses();
 
-  const { types } = useHouseTypes(); // ✅ Usando o contexto
-
+  const { types } = useHouseTypes();
   const [carouselIndexes, setCarouselIndexes] = useState<Record<string, number>>({});
+  const router = useRouter();
+
+  const token = Cookie.get("token");
 
   const priceFormatter = new Intl.NumberFormat("pt-PT", {
     style: "currency",
@@ -36,21 +39,31 @@ export function Houses({ searchQuery }: { searchQuery: string }) {
 
     const matchesSearch = searchQuery
       ? [
-        house.title,
-        house.location.address,
-        house.location.city,
-        house.location.zipCode,
-      ]
-        .filter(Boolean)
-        .some((field) =>
-          field.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+          house.title,
+          house.location.address,
+          house.location.city,
+          house.location.zipCode,
+        ]
+          .filter(Boolean)
+          .some((field) =>
+            field.toLowerCase().includes(searchQuery.toLowerCase())
+          )
       : true;
 
     return matchesDistrict && matchesSearch;
   };
 
   const filteredHouses = houses.filter(filterHouses);
+
+  const handleCardClick = (houseId: string) => {
+    if (!token) {
+      toast.warning("Você precisa estar logado para ver detalhes.");
+      router.push("/login");
+      return;
+    }
+
+    router.push(`/visitante/comprar/${houseId}`);
+  };
 
   return (
     <div className="flex flex-col gap-4 items-center justify-center">
@@ -78,26 +91,33 @@ export function Houses({ searchQuery }: { searchQuery: string }) {
             const houseTypeName = types.find(t => t.id === house.typeId)?.name || "Tipo desconhecido";
 
             return (
-              <Link href={`/user/comprar/${house.id}`} key={house.id} className="w-full h-full">
-                <Card className="w-full h-full flex flex-col hover:shadow-lg transition-shadow cursor-pointer relative ">
-                  <Button
-                    className="absolute top-5 right-5 bg-white text-red-500 hover:bg-red-50 shadow-sm z-10 border border-red-500"
-                    size={"icon"}
-                    onClick={async (e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      await toggleFavorite(house);
-                      toast.success(
-                        isFavorited
-                          ? "Removido dos favoritos 💔"
-                          : "Adicionado aos favoritos ❤️"
-                      );
-                    }}
-                  >
-                    <Heart
-                      className={`w-4 h-4 ${isFavorited ? "fill-red-500" : "fill-none"}`}
-                    />
-                  </Button>
+              <div
+                key={house.id}
+                className="w-full h-full"
+                onClick={() => handleCardClick(house.id!)}
+              >
+                <Card className="w-full h-full flex flex-col hover:shadow-lg transition-shadow cursor-pointer relative">
+                  
+                  {token && (
+                    <Button
+                      className="absolute top-5 right-5 bg-white text-red-500 hover:bg-red-50 shadow-sm z-10 border border-red-500"
+                      size={"icon"}
+                      onClick={async (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        await toggleFavorite(house);
+                        toast.success(
+                          isFavorited
+                            ? "Removido dos favoritos 💔"
+                            : "Adicionado aos favoritos ❤️"
+                        );
+                      }}
+                    >
+                      <Heart
+                        className={`w-4 h-4 ${isFavorited ? "fill-red-500" : "fill-none"}`}
+                      />
+                    </Button>
+                  )}
 
                   <div className="relative w-full h-52 p-4">
                     <img
@@ -151,7 +171,7 @@ export function Houses({ searchQuery }: { searchQuery: string }) {
                     </div>
                   </div>
                 </Card>
-              </Link>
+              </div>
             );
           })}
         </div>

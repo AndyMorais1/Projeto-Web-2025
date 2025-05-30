@@ -136,7 +136,7 @@ class UsersServices {
     }
 
     // Método para atualizar um usuário
-    async updateUser(userId: string, userData: UserDataOptional): Promise<any> {
+    async updateUser(userId: string, userData: Partial< UserDataOptional>): Promise<any> {
         try {
             const token = localStorage.getItem("token");
             if (!token) {
