@@ -46,7 +46,7 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="flex mx-auto p-6">
-        <h1 className="text-2xl font-extralight">SpotHome</h1>
+        <h1 className="text-2xl font-bold text-blue-600">SpotHome</h1>
       </SidebarHeader>
       <Separator />
       <SidebarContent>

@@ -38,7 +38,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({ agent }) => {
             <div className="flex items-center gap-6">
               <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-blue-600">
                 <img
-                  src={agent?.photo || "/profilepic.png"}
+                  src={agent?.photo}
                   alt={agent.name[0]}
                   className="w-full h-full object-cover"
                 />

@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
 import { useHouses } from "@/contexts/HousesContext";
@@ -11,6 +11,8 @@ export default function TrendingHomes() {
   const { houses, toggleFavorite, favorites, refreshHouses } = useHouses();
 
   const scrollRefViewed = useRef<HTMLDivElement>(null);
+
+  const [carouselIndexes, setCarouselIndexes] = useState<Record<string, number>>({});
 
   const scroll = (
     ref: React.RefObject<HTMLDivElement>,
@@ -25,23 +27,35 @@ export default function TrendingHomes() {
     }
   };
 
-  const customTopValue = 10;
+  const handlePrevImage = (houseId: string, total: number) => {
+    setCarouselIndexes((prev) => ({
+      ...prev,
+      [houseId]: (prev[houseId] ?? 0) === 0 ? total - 1 : (prev[houseId] ?? 0) - 1,
+    }));
+  };
 
+  const handleNextImage = (houseId: string, total: number) => {
+    setCarouselIndexes((prev) => ({
+      ...prev,
+      [houseId]: (prev[houseId] ?? 0) === total - 1 ? 0 : (prev[houseId] ?? 0) + 1,
+    }));
+  };
+
+  const customTopValue = 10;
   const topViewed = getTopViewedHouses(houses, customTopValue);
   const topCount = Math.max(5, customTopValue);
-  const topSaved = Array.isArray(favorites)
-    ? favorites.slice(0, topCount)
-    : [];
+  const topSaved = Array.isArray(favorites) ? favorites.slice(0, topCount) : [];
 
-  // Safe check: ensure favorites is an array before mapping
   const favoritedIds = new Set(
     Array.isArray(favorites) ? favorites.map((f) => f.id) : []
   );
 
   const renderHouseCard = (house: any) => {
-    if (!house) return null;
+    if (!house || !house.id) return null;
 
     const isFavorited = favoritedIds.has(house.id);
+    const currentIndex = carouselIndexes[house.id] ?? 0;
+    const totalImages = house.images?.length || 1;
 
     const handleFavoriteClick = async (e: React.MouseEvent) => {
       e.preventDefault();
@@ -57,19 +71,44 @@ export default function TrendingHomes() {
     return (
       <div key={house.id} className="min-w-[20%] max-w-[20%] flex-none">
         <div className="h-full rounded-xl bg-white shadow-md overflow-hidden hover:shadow-lg transition cursor-pointer flex flex-col justify-between">
-          <div className="relative">
+          <div className="relative h-48 w-full overflow-hidden">
             <Link href={`/user/comprar/${house.id}`}>
               <img
-                src={house.images?.[0] || "/placeholder.jpg"}
+                src={house.images?.[currentIndex] || "/placeholder.jpg"}
                 alt={house.title || "Casa"}
                 className="h-48 w-full object-cover"
               />
               {house?.type && (
-                <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded">
+                <span className="absolute top-2 left-2 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded">
                   {house.type}
                 </span>
               )}
             </Link>
+
+            {totalImages > 1 && (
+              <>
+                <button
+                  className="absolute top-1/2 left-2 -translate-y-1/2 bg-white bg-opacity-70 hover:bg-opacity-100 text-gray-800 p-1 rounded-full shadow-md"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handlePrevImage(house.id, totalImages);
+                  }}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  className="absolute top-1/2 right-2 -translate-y-1/2 bg-white bg-opacity-70 hover:bg-opacity-100 text-gray-800 p-1 rounded-full shadow-md"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleNextImage(house.id, totalImages);
+                  }}
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </>
+            )}
 
             <Button
               className="absolute top-2 right-2 bg-white text-red-500 hover:bg-red-50 shadow-sm z-10 border border-red-500"
@@ -105,13 +144,15 @@ export default function TrendingHomes() {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-6 py-12">
+    <section className="max-w-7xl mx-auto px-6 py-12 ">
       {/* MAIS VISUALIZADAS */}
       <div className="mb-10">
         <div className="flex justify-between items-center mb-4">
           <div>
             <h2 className="text-2xl font-bold">As Casas Mais Visualizadas</h2>
-            <p className="text-gray-500 text-sm">Casas que mais despertaram interesse</p>
+            <p className="text-gray-500 text-sm">
+              As casas que mais despertaram o interesse dos nossos usuários
+            </p>
           </div>
           <div className="flex space-x-2">
             <Button

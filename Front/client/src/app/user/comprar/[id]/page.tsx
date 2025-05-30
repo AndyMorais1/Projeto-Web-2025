@@ -1,5 +1,5 @@
 "use client";
-
+//teste apenas
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import { useHouses } from "@/contexts/HousesContext";
@@ -76,27 +76,25 @@ export default function HouseDetailPage() {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">{house.title}</h1>
-
+    <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
       {/* Carrossel de imagens */}
-      <div className="relative w-full h-96 overflow-hidden rounded-lg mb-6">
+      <div className="relative w-[840px] h-[440px] mx-auto rounded-lg overflow-hidden">
         <img
           src={house.images[currentIndex]}
           alt={`Imagem ${currentIndex + 1}`}
-          className="object-cover w-full h-full transition-all duration-300"
+          className="w-full h-full object-cover"
         />
         {house.images.length > 1 && (
           <>
             <button
               onClick={handlePrevImage}
-              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-40 p-2 rounded-full text-white"
+              className="absolute left-3 top-1/2 -translate-y-1/2 bg-white hover:bg-gray-100 p-2 rounded-full shadow"
             >
               <ChevronLeft />
             </button>
             <button
               onClick={handleNextImage}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-40 p-2 rounded-full text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 bg-white hover:bg-gray-100 p-2 rounded-full shadow"
             >
               <ChevronRight />
             </button>
@@ -104,89 +102,75 @@ export default function HouseDetailPage() {
         )}
       </div>
 
-      {/* Descrição */}
-      <p className="text-lg text-gray-700 mb-6">{house.description}</p>
 
-      {/* Informações detalhadas */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-800 mb-6">
-        <div><strong>Tipo:</strong> {house.type}</div>
-        <div><strong>Preço:</strong> {priceFormatter.format(house.price)}</div>
-        <div><strong>Quartos:</strong> {house.details.rooms}</div>
-        <div><strong>Banheiros:</strong> {house.details.bathrooms}</div>
-        <div><strong>Área:</strong> {house.details.area} m²</div>
-        <div><strong>Endereço:</strong> {house.location.address}</div>
-        <div><strong>Cidade:</strong> {house.location.city}</div>
-        <div><strong>CEP:</strong> {house.location.zipCode}</div>
-        <div><strong>Visualizações:</strong> {house.views ?? 0}</div>
+      <h1 className="text-3xl font-bold text-gray-800">
+        {house.title}
+      </h1>
+
+      {/* Cabeçalho de informações */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-6">
+
         <div>
-          <strong>Publicado em:</strong>{" "}
-          {format(new Date(house.createdAt), "dd 'de' MMMM yyyy", { locale: pt })}
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+            {priceFormatter.format(house.price)}
+          </h1>
+          <p className="text-gray-600 mb-1">{house.location.address}, {house.location.city}</p>
+          <p className="text-sm text-gray-500">
+            {house.details.rooms} quartos · {house.details.bathrooms} banheiros · {house.details.area} m²
+          </p>
         </div>
-        <div>
-          <strong>Agente:</strong> {agent?.name || "Desconhecido"}
+
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="w-full sm:w-auto">Agendar visita</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Agendar Visita</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 mt-4">
+                <Input placeholder="Seu nome" value={visitorName} onChange={(e) => setVisitorName(e.target.value)} />
+                <Input placeholder="Telefone" value={visitorPhone} onChange={(e) => setVisitorPhone(e.target.value)} />
+                <Textarea placeholder="Mensagem" rows={4} value={visitMessage} onChange={(e) => setVisitMessage(e.target.value)} />
+                <Button onClick={handleScheduleVisit}>Enviar Pedido</Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="w-full sm:w-auto">Falar com o agente</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Enviar Mensagem ao Agente</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 mt-4">
+                <Input placeholder="Assunto" value={contactSubject} onChange={(e) => setContactSubject(e.target.value)} />
+                <Textarea placeholder="Mensagem" rows={4} value={contactMessage} onChange={(e) => setContactMessage(e.target.value)} />
+                <Button onClick={handleContactAgent}>Enviar Email</Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
-      {/* Botões */}
-      <div className="flex justify-center gap-4 mt-6 flex-wrap">
-        {/* Marcar Visita */}
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>Marcar Visita</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Agendar Visita</DialogTitle>
-            </DialogHeader>
+      {/* Descrição */}
+      <div className="text-gray-700 text-base leading-relaxed">
+        {house.description}
+      </div>
 
-            <div className="flex flex-col gap-4 mt-4">
-              <Input
-                placeholder="Seu nome"
-                value={visitorName}
-                onChange={(e) => setVisitorName(e.target.value)}
-              />
-              <Input
-                placeholder="Telefone"
-                value={visitorPhone}
-                onChange={(e) => setVisitorPhone(e.target.value)}
-              />
-              <Textarea
-                placeholder="Mensagem"
-                rows={4}
-                value={visitMessage}
-                onChange={(e) => setVisitMessage(e.target.value)}
-              />
-              <Button onClick={handleScheduleVisit}>Enviar Pedido</Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* Falar com o Agente */}
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="outline">Falar com o Agente</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Enviar Mensagem ao Agente</DialogTitle>
-            </DialogHeader>
-
-            <div className="flex flex-col gap-4 mt-4">
-              <Input
-                placeholder="Assunto"
-                value={contactSubject}
-                onChange={(e) => setContactSubject(e.target.value)}
-              />
-              <Textarea
-                placeholder="Mensagem"
-                rows={4}
-                value={contactMessage}
-                onChange={(e) => setContactMessage(e.target.value)}
-              />
-              <Button onClick={handleContactAgent}>Enviar Email</Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+      {/* Detalhes técnicos */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-700">
+        <div><strong>Tipo:</strong> {house.type}</div>
+        <div><strong>Área:</strong> {house.details.area} m²</div>
+        <div><strong>Quartos:</strong> {house.details.rooms}</div>
+        <div><strong>Banheiros:</strong> {house.details.bathrooms}</div>
+        <div><strong>CEP:</strong> {house.location.zipCode}</div>
+        <div><strong>Visualizações:</strong> {house.views ?? 0}</div>
+        <div><strong>Publicado em:</strong> {format(new Date(house.createdAt), "dd 'de' MMMM yyyy", { locale: pt })}</div>
+        <div><strong>Agente:</strong> {agent?.name || "Desconhecido"}</div>
       </div>
     </div>
   );
