@@ -64,14 +64,6 @@ export default function AgentsPage() {
             <Search size={20} />
           </button>
         </div>
-
-        {/* Botão de filtragem */}
-        <button
-          onClick={() => alert("Abrir filtro")}
-          className="px-4 py-2 border border-blue-600 bg-blue-600 text-white rounded-lg"
-        >
-          Filtrar
-        </button>
       </div>
 
 

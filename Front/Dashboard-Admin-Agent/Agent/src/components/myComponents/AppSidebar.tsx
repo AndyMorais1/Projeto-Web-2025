@@ -1,7 +1,7 @@
 "use client";
 import { LayoutDashboard, User, Home, Check, NotebookText, MessageCircle, Rss } from "lucide-react";
 import { Separator } from "../ui/separator";
-import { UserSidebar } from "./UserSidebar";
+import { UserSidebar } from "./UserSideBar";
 import { useUsers } from "@/contexts/UsersContext"; // Importa o contexto de usuários
 import {
   Sidebar,

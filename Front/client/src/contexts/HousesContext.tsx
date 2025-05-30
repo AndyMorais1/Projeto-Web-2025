@@ -99,12 +99,12 @@ export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   };
 
-  const toggleFavorite = async (house: HouseData) => {
+ const toggleFavorite = async (house: HouseData) => {
   try {
     const token = localStorage.getItem("token");
     if (!token || !currentUser?.id) return;
 
-    const res = await fetch("http://localhost:3000/users/favorites/toggle", {
+    await fetch("http://localhost:3000/users/favorites/toggle", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -113,22 +113,8 @@ export const HousesProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       body: JSON.stringify({ houseId: house.id }),
     });
 
-    const result = await res.json();
-
-    setFavorites((prev) => {
-      const safePrev = Array.isArray(prev) ? prev : [];
-      const isAlreadyFavorited = safePrev.some((f) => f.id === house.id);
-
-      if (result.favorited && !isAlreadyFavorited) {
-        return [...safePrev, house];
-      }
-
-      if (!result.favorited && isAlreadyFavorited) {
-        return safePrev.filter((f) => f.id !== house.id);
-      }
-
-      return safePrev;
-    });
+    // Recarrega favoritos do servidor após qualquer mudança
+    await loadFavorites();
   } catch (error) {
     console.error("Erro ao alternar favorito:", error);
   }
