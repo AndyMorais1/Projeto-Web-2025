@@ -9,12 +9,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Pencil } from "lucide-react";
-import { HouseData, Type } from "@/data/HouseData";
+import { HouseData } from "@/data/HouseData";
 import { toast } from "sonner";
 import { UserData } from "@/data/UserData";
 import { useUsers } from "@/contexts/UsersContext";
 import { useHouses } from "@/contexts/HousesContext";
 import { housesServices } from "@/api/Houses";
+import { useHouseTypes } from "@/contexts/HouseTypesContext";
 
 export function DialogEditHouse({
   house,
@@ -25,10 +26,14 @@ export function DialogEditHouse({
 }) {
   const [isOpen, setIsOpen] = React.useState(false);
 
+  const { types, refreshTypes } = useHouseTypes();
+  const { users, currentUser } = useUsers();
+  const { refreshHouses } = useHouses();
+
   const [form, setForm] = React.useState({
     title: house.title || "",
     description: house.description || "",
-    type: house.type || Type.APARTMENT,
+    typeId: house.typeId || "",
     price: house.price || "",
     address: house.location.address || "",
     city: house.location.city || "",
@@ -39,18 +44,19 @@ export function DialogEditHouse({
     agentId: house.agentId || "",
   });
 
-  const { users, currentUser } = useUsers();
   const [images, setImages] = React.useState<string[]>(house.images || []);
   const [agents, setAgents] = React.useState<UserData[]>([]);
-  const { refreshHouses } = useHouses();
 
- const distritosDePortugal = [
-  "Aveiro", "Beja", "Braga", "Bragança", "Castelo Branco", "Coimbra",
-  "Évora", "Faro", "Guarda", "Leiria", "Lisboa", "Madeira",
-  "Portalegre", "Porto", "Santarém", "Setúbal", "Viana do Castelo",
-  "Vila Real", "Viseu", "Açores"
-];
+  const distritosDePortugal = [
+    "Aveiro", "Beja", "Braga", "Bragança", "Castelo Branco", "Coimbra",
+    "Évora", "Faro", "Guarda", "Leiria", "Lisboa", "Madeira",
+    "Portalegre", "Porto", "Santarém", "Setúbal", "Viana do Castelo",
+    "Vila Real", "Viseu", "Açores"
+  ];
 
+  React.useEffect(() => {
+    refreshTypes();
+  }, []);
 
   React.useEffect(() => {
     const filteredAgents = users.filter(user => user.role === "AGENT");
@@ -80,7 +86,7 @@ export function DialogEditHouse({
   };
 
   const handleSubmit = async () => {
-    if (!form.title || !form.address || !form.price || !form.agentId) {
+    if (!form.title || !form.address || !form.price || !form.agentId || !form.typeId) {
       toast.error("Preencha todos os campos obrigatórios.");
       return;
     }
@@ -94,7 +100,7 @@ export function DialogEditHouse({
       agentId: form.agentId,
       title: form.title,
       description: form.description,
-      type: form.type,
+      typeId: form.typeId,
       price: Number(form.price),
       location: {
         address: form.address,
@@ -106,7 +112,7 @@ export function DialogEditHouse({
         bathrooms: Number(form.bathrooms),
         area: Number(form.area),
       },
-      images: images,
+      images,
     };
 
     try {
@@ -126,10 +132,6 @@ export function DialogEditHouse({
     } catch (error) {
       toast.error("Erro ao atualizar a casa.");
     }
-  };
-
-  const handleCloseDialog = () => {
-    setIsOpen(false);
   };
 
   return (
@@ -197,15 +199,16 @@ export function DialogEditHouse({
           </select>
 
           {/* Tipo */}
-          <Label htmlFor="type" className="text-right col-span-1">Tipo</Label>
+          <Label htmlFor="typeId" className="text-right col-span-1">Tipo</Label>
           <select
-            id="type"
-            value={form.type}
+            id="typeId"
+            value={form.typeId}
             onChange={handleChange}
             className="col-span-3 p-2 border rounded"
           >
-            {Object.values(Type).map((type) => (
-              <option key={type} value={type}>{type}</option>
+            <option value="">Selecione o tipo</option>
+            {types.map((type) => (
+              <option key={type.id} value={type.id}>{type.name}</option>
             ))}
           </select>
 
@@ -240,7 +243,7 @@ export function DialogEditHouse({
 
         <DialogFooter>
           <Button type="button" onClick={handleSubmit}>Salvar Alterações</Button>
-          <Button type="button" variant="outline" onClick={handleCloseDialog}>Cancelar</Button>
+          <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>Cancelar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

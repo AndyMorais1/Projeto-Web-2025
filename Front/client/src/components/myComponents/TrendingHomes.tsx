@@ -1,4 +1,5 @@
 "use client";
+
 import { useRef, useState } from "react";
 import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
@@ -6,12 +7,13 @@ import { useHouses } from "@/contexts/HousesContext";
 import { toast } from "sonner";
 import Link from "next/link";
 import { getTopViewedHouses, getTopSavedHouses } from "@/utils/stats";
+import { useHouseTypes } from "@/contexts/HouseTypesContext";
 
 export default function TrendingHomes() {
   const { houses, toggleFavorite, favorites, refreshHouses } = useHouses();
+  const { types } = useHouseTypes(); // ✅ Usar contexto
 
   const scrollRefViewed = useRef<HTMLDivElement>(null);
-
   const [carouselIndexes, setCarouselIndexes] = useState<Record<string, number>>({});
 
   const scroll = (
@@ -56,6 +58,7 @@ export default function TrendingHomes() {
     const isFavorited = favoritedIds.has(house.id);
     const currentIndex = carouselIndexes[house.id] ?? 0;
     const totalImages = house.images?.length || 1;
+    const typeName = types.find(t => t.id === house.typeId)?.name || "Tipo desconhecido"; // ✅ aqui
 
     const handleFavoriteClick = async (e: React.MouseEvent) => {
       e.preventDefault();
@@ -78,11 +81,9 @@ export default function TrendingHomes() {
                 alt={house.title || "Casa"}
                 className="h-48 w-full object-cover"
               />
-              {house?.type && (
-                <span className="absolute top-2 left-2 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded">
-                  {house.type}
-                </span>
-              )}
+              <span className="absolute top-2 left-2 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded">
+                {typeName}
+              </span>
             </Link>
 
             {totalImages > 1 && (
@@ -116,9 +117,7 @@ export default function TrendingHomes() {
               onClick={handleFavoriteClick}
             >
               <Heart
-                className={`w-4 h-4 ${
-                  isFavorited ? "fill-red-500" : "fill-none"
-                }`}
+                className={`w-4 h-4 ${isFavorited ? "fill-red-500" : "fill-none"}`}
               />
             </Button>
           </div>
@@ -144,8 +143,7 @@ export default function TrendingHomes() {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-6 py-12 ">
-      {/* MAIS VISUALIZADAS */}
+    <section className="max-w-7xl mx-auto px-6 py-12">
       <div className="mb-10">
         <div className="flex justify-between items-center mb-4">
           <div>

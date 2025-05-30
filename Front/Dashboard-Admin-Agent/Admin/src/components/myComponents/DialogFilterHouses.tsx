@@ -15,14 +15,8 @@ import { toast } from "sonner";
 import { useHouses } from "@/contexts/HousesContext";
 import { useUsers } from "@/contexts/UsersContext";
 import { Filter } from "lucide-react";
-
-export enum Type {
-  APARTMENT = 'APARTMENT',
-  HOUSE = 'HOUSE',
-  PENTHOUSE = 'PENTHOUSE',
-  STUDIO = 'STUDIO',
-  DUPLEX = 'DUPLEX',
-}
+import { HouseData } from "@/data/HouseData";
+import { useHouseTypes } from "@/contexts/HouseTypesContext";
 
 const distritosDePortugal = [
   "Aveiro", "Beja", "Braga", "Bragança", "Castelo Branco", "Coimbra",
@@ -33,20 +27,25 @@ const distritosDePortugal = [
 
 export function DialogFilterHouses() {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [selectedType, setSelectedType] = React.useState<string>("");
+  const [selectedTypeId, setSelectedTypeId] = React.useState<string>("");
   const [selectedDistrict, setSelectedDistrict] = React.useState<string>("");
   const [selectedAgentId, setSelectedAgentId] = React.useState<string>("");
 
   const { houses, setHouses, originalHouses } = useHouses();
   const { users } = useUsers();
+  const { types, refreshTypes } = useHouseTypes();
+
+  React.useEffect(() => {
+    refreshTypes();
+  }, [refreshTypes]);
 
   const agents = users.filter(user => user.role === "AGENT" && user.status === "ACTIVE");
 
   const handleFilter = () => {
-    let filtered = originalHouses;
+    let filtered: HouseData[] = originalHouses;
 
-    if (selectedType && selectedType !== "ALL") {
-      filtered = filtered.filter(house => house.type === selectedType);
+    if (selectedTypeId && selectedTypeId !== "ALL") {
+      filtered = filtered.filter(house => house.typeId === selectedTypeId);
     }
 
     if (selectedDistrict && selectedDistrict !== "ALL") {
@@ -90,16 +89,16 @@ export function DialogFilterHouses() {
         <div className="grid gap-3 py-4">
           {/* Tipo */}
           <div className="grid grid-cols-4 items-center gap-3">
-            <Label htmlFor="type" className="text-right">Tipo</Label>
-            <Select value={selectedType} onValueChange={setSelectedType}>
+            <Label htmlFor="typeId" className="text-right">Tipo</Label>
+            <Select value={selectedTypeId} onValueChange={setSelectedTypeId}>
               <SelectTrigger className="col-span-3">
                 <SelectValue placeholder="Selecione o tipo" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="ALL">Todos os Tipos</SelectItem>
-                {Object.values(Type).map((type) => (
-                  <SelectItem key={type} value={type}>
-                    {type.charAt(0) + type.slice(1).toLowerCase()}
+                {types.map((type) => (
+                  <SelectItem key={type.id} value={type.id}>
+                    {type.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -126,7 +125,7 @@ export function DialogFilterHouses() {
 
           {/* Agente */}
           <div className="grid grid-cols-4 items-center gap-3">
-            <Label htmlFor="agent" className="text-right">Agente</Label>
+            <Label htmlFor="agentId" className="text-right">Agente</Label>
             <Select value={selectedAgentId} onValueChange={setSelectedAgentId}>
               <SelectTrigger className="col-span-3">
                 <SelectValue placeholder="Selecione o agente" />
@@ -134,7 +133,7 @@ export function DialogFilterHouses() {
               <SelectContent>
                 <SelectItem value="ALL">Todos os Agentes</SelectItem>
                 {agents.map((agent) => (
-                  <SelectItem key={agent.id} value={agent.id|| ""}>
+                  <SelectItem key={agent.id} value={agent.id!}>
                     {agent.name}
                   </SelectItem>
                 ))}

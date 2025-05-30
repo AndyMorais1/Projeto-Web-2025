@@ -5,7 +5,7 @@ import{ CreateVisitSchema } from './VisitSchema';
 import { title } from 'process';
 
 export const CreateHouseSchema = z.object({
-  type: z.enum(["APARTMENT", "HOUSE","PENTHOUSE","DUPLEX","STUDIO"]),
+  typeId: z.string().uuid(),
   agentId: z.string().uuid(),
   location: CreateLocationSchema,
   title: z.string().min(5).max(100),

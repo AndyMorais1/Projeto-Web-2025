@@ -12,31 +12,36 @@ import { CirclePlus } from "lucide-react";
 import { housesServices } from "@/api/Houses";
 import { useUsers } from "@/contexts/UsersContext";
 import { UserData } from "@/data/UserData";
-import { HouseData, Type } from "@/data/HouseData";
+import { HouseData } from "@/data/HouseData";
 import { useHouses } from "@/contexts/HousesContext";
 import { toast } from "sonner"; 
 import { uploadImage } from "@/utils/uploadImage";
+import { useHouseTypes } from "@/contexts/HouseTypesContext";
 
 export function DialogCreateHouse() {
   const { users, currentUser } = useUsers();
+  const { types, refreshTypes } = useHouseTypes();
   const [agents, setAgents] = React.useState<UserData[]>([]);
   const [images, setImages] = React.useState<File[]>([]);
   const [isOpen, setIsOpen] = React.useState(false); 
   const { refreshHouses } = useHouses();
 
   const [form, setForm] = React.useState({
-    title: "", description: "", type: Type.APARTMENT, price: "",
+    title: "", description: "", typeId: "", price: "",
     agentId: "", address: "", city: "", zipCode: "",
     rooms: "", bathrooms: "", area: "",
   });
 
   const distritosDePortugal = [
-  "Aveiro", "Beja", "Braga", "Bragança", "Castelo Branco", "Coimbra",
-  "Évora", "Faro", "Guarda", "Leiria", "Lisboa", "Madeira",
-  "Portalegre", "Porto", "Santarém", "Setúbal", "Viana do Castelo",
-  "Vila Real", "Viseu", "Açores"
-];
+    "Aveiro", "Beja", "Braga", "Bragança", "Castelo Branco", "Coimbra",
+    "Évora", "Faro", "Guarda", "Leiria", "Lisboa", "Madeira",
+    "Portalegre", "Porto", "Santarém", "Setúbal", "Viana do Castelo",
+    "Vila Real", "Viseu", "Açores"
+  ];
 
+  React.useEffect(() => {
+    refreshTypes(); // carregar tipos ao abrir
+  }, []);
 
   React.useEffect(() => {
     const filteredAgents = users.filter(user => user.role === "AGENT" && user.status === "ACTIVE");
@@ -69,13 +74,17 @@ export function DialogCreateHouse() {
   const handleSubmit = async () => {
     try {
       const imageUrls = await Promise.all(images.map(uploadImage));
-
       const now = new Date().toISOString();
+
+      if (!form.typeId) {
+        toast.error("Selecione um tipo de imóvel.");
+        return;
+      }
 
       const payload: HouseData = {
         title: form.title,
         description: form.description,
-        type: form.type as Type,
+        typeId: form.typeId,
         price: Number(form.price),
         agentId: form.agentId,
         images: imageUrls,
@@ -102,7 +111,7 @@ export function DialogCreateHouse() {
         await refreshHouses();
         setIsOpen(false);
         setForm({
-          title: "", description: "", type: Type.APARTMENT, price: "",
+          title: "", description: "", typeId: "", price: "",
           agentId: currentUser?.id || "", address: "", city: "", zipCode: "",
           rooms: "", bathrooms: "", area: "",
         });
@@ -145,10 +154,11 @@ export function DialogCreateHouse() {
           </div>
 
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="type" className="text-right">Tipo</Label>
-            <select id="type" value={form.type} onChange={handleInputChange} className="col-span-3 p-2 border rounded">
-              {Object.values(Type).map((type) => (
-                <option key={type} value={type}>{type}</option>
+            <Label htmlFor="typeId" className="text-right">Tipo</Label>
+            <select id="typeId" value={form.typeId} onChange={handleInputChange} className="col-span-3 p-2 border rounded">
+              <option value="">Selecione o tipo</option>
+              {types.map((type) => (
+                <option key={type.id} value={type.id}>{type.name}</option>
               ))}
             </select>
           </div>
@@ -175,18 +185,11 @@ export function DialogCreateHouse() {
             </div>
           ))}
 
-          {/* Endereço */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="address" className="text-right">Endereço</Label>
-            <Input
-              id="address"
-              value={form.address}
-              onChange={handleInputChange}
-              className="col-span-3"
-            />
+            <Input id="address" value={form.address} onChange={handleInputChange} className="col-span-3" />
           </div>
 
-          {/* Cidade como select */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="city" className="text-right">Distrito</Label>
             <select
@@ -202,30 +205,16 @@ export function DialogCreateHouse() {
             </select>
           </div>
 
-          {/* CEP */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="zipCode" className="text-right">CEP</Label>
-            <Input
-              id="zipCode"
-              value={form.zipCode}
-              onChange={handleInputChange}
-              className="col-span-3"
-            />
+            <Input id="zipCode" value={form.zipCode} onChange={handleInputChange} className="col-span-3" />
           </div>
 
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="images" className="text-right">Fotos</Label>
-            <Input
-              id="images"
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="col-span-3"
-            />
+            <Input id="images" type="file" multiple accept="image/*" onChange={handleImageUpload} className="col-span-3" />
           </div>
 
-          {/* Agente (desativado) */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="agentId" className="text-right">Agente</Label>
             <select
