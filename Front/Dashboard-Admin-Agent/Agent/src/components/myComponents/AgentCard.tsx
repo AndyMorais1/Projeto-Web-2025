@@ -13,6 +13,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { UserData } from "@/data/UserData";
+import { toast } from "sonner";
+import { useUsers } from "@/contexts/UsersContext";
 
 interface AgentCardProps {
   agent: UserData;
@@ -22,12 +24,45 @@ export const AgentCard: React.FC<AgentCardProps> = ({ agent }) => {
   const [open, setOpen] = useState(false);
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { currentUser } = useUsers();
 
-  const handleSendEmail = () => {
-    const mailtoLink = `mailto:${agent.email}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(message)}`;
-    window.open(mailtoLink, "_blank");
+  const handleSendEmail = async () => {
+    if (!subject || !message) {
+      toast.error("Preencha o assunto e a mensagem.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch("http://localhost:3000/email/contact-agent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: agent.email,
+          from: currentUser?.email || "",
+          fromName: currentUser?.name || "Usuário",
+          subject,
+          message,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success("E-mail enviado com sucesso!");
+        setSubject("");
+        setMessage("");
+        setOpen(false);
+      } else {
+        toast.error(data.error || "Erro ao enviar e-mail.");
+      }
+    } catch (error) {
+      console.error("Erro ao enviar e-mail:", error);
+      toast.error("Erro inesperado ao enviar.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -58,7 +93,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({ agent }) => {
         </DialogHeader>
 
         {/* Dados do agente */}
-        <div className="flex flex-col items-center gap-2 text-center">
+        <div className="flex flex-col items-center gap-2 text-center mb-4">
           <img
             src={agent?.photo || "/profilepic.png"}
             alt={agent.name}
@@ -67,6 +102,24 @@ export const AgentCard: React.FC<AgentCardProps> = ({ agent }) => {
           <p className="text-lg font-semibold">{agent.name}</p>
           <p className="text-sm text-muted-foreground">{agent.email}</p>
           <p className="text-sm">{agent.phone}</p>
+        </div>
+
+        {/* Formulário para envio de e-mail */}
+        <div className="flex flex-col gap-3">
+          <Input
+            placeholder="Assunto"
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+          />
+          <Textarea
+            placeholder="Mensagem"
+            rows={4}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+          <Button onClick={handleSendEmail} disabled={loading}>
+            {loading ? "Enviando..." : "Enviar Email"}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

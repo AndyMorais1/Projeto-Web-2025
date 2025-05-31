@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useUsers } from "@/contexts/UsersContext";
@@ -22,7 +23,7 @@ import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 
 export default function AgentDetails() {
-  const { users } = useUsers();
+  const { users, currentUser } = useUsers();
   const { houses } = useHouses();
   const [agent, setAgent] = useState<any>(null);
   const [agentHouses, setAgentHouses] = useState<any[]>([]);
@@ -40,23 +41,43 @@ export default function AgentDetails() {
 
     const initialIndexes: { [key: string]: number } = {};
     filteredHouses.forEach((house) => {
-      if (house.id !== undefined && house.id !== null) {
-        initialIndexes[house.id as string] = 0;
+      if (house.id) {
+        initialIndexes[house.id] = 0;
       }
     });
     setCarouselIndexes(initialIndexes);
   }, [id, users, houses]);
 
-  const handleSendEmail = () => {
-    const mailtoLink = `mailto:${agent.email}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(message)}`;
-    window.open(mailtoLink, "_blank");
+  const handleSendEmail = async () => {
+    if (!subject || !message) {
+      toast.error("Assunto e mensagem são obrigatórios.");
+      return;
+    }
+
+    if (!currentUser) {
+      toast.error("Usuário não autenticado.");
+      return;
+    }
+
+    try {
+      await axios.post("http://localhost:3000/email/contact-agent", {
+        from: currentUser.email,
+        fromName: currentUser.name,
+        to: agent.email,
+        subject,
+        message,
+      });
+
+      toast.success("E-mail enviado ao agente com sucesso!");
+      setSubject("");
+      setMessage("");
+    } catch (error: any) {
+      console.error("Erro ao enviar e-mail:", error.response?.data || error.message);
+      toast.error("Erro ao enviar e-mail.");
+    }
   };
 
-  if (!agent) {
-    return <div className="p-6">Carregando detalhes do agente...</div>;
-  }
+  if (!agent) return <div className="p-6">Carregando detalhes do agente...</div>;
 
   return (
     <div className="bg-gray-100 min-h-screen w-full p-4">
@@ -77,9 +98,7 @@ export default function AgentDetails() {
           </p>
           <p className="text-gray-600 text-sm mt-1">
             Membro desde:{" "}
-            {format(new Date(agent.createdAt), "dd 'de' MMMM yyyy", {
-              locale: pt,
-            })}
+            {format(new Date(agent.createdAt), "dd 'de' MMMM yyyy", { locale: pt })}
           </p>
 
           <div className="mt-6">
@@ -91,7 +110,6 @@ export default function AgentDetails() {
                 <DialogHeader>
                   <DialogTitle>Enviar Email para {agent.name}</DialogTitle>
                 </DialogHeader>
-
                 <div className="flex flex-col gap-4 mt-4">
                   <Input
                     placeholder="Assunto"
@@ -143,9 +161,7 @@ export default function AgentDetails() {
                           );
                         }}
                       >
-                        <Heart
-                          className={`w-4 h-4 ${isFavorited ? "fill-red-500" : "fill-none"}`}
-                        />
+                        <Heart className={`w-4 h-4 ${isFavorited ? "fill-red-500" : "fill-none"}`} />
                       </Button>
 
                       <div className="relative w-full h-52">
@@ -190,7 +206,8 @@ export default function AgentDetails() {
                         <div className="space-y-1">
                           <div className="text-lg font-semibold text-gray-900">{house.title}</div>
                           <div className="text-sm text-gray-700">
-                            {house.details.rooms} quartos · {house.details.bathrooms} banheiros · {house.details.area} m² - {houseTypeName}
+                            {house.details.rooms} quartos · {house.details.bathrooms} banheiros ·{" "}
+                            {house.details.area} m² - {houseTypeName}
                           </div>
                           <div className="text-sm text-gray-600">
                             {house.location.address}, {house.location.city}

@@ -93,9 +93,42 @@ export default function HouseDetailPage() {
     }
   };
 
-  const handleContactAgent = () => {
-    toast.success("Mensagem enviada ao agente!");
-  };
+  const handleContactAgent = async () => {
+  if (!contactSubject || !contactMessage || !currentUser || !agent?.email) {
+    toast.error("Preencha todos os campos para enviar a mensagem.");
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:3000/email/contact-agent", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: currentUser.email,
+        fromName: currentUser.name,
+        to: agent.email,
+        subject: contactSubject,
+        message: contactMessage,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      toast.success("Mensagem enviada com sucesso!");
+      setContactSubject("");
+      setContactMessage("");
+    } else {
+      toast.error(data.error || "Erro ao enviar mensagem.");
+    }
+  } catch (error: any) {
+    console.error("Erro ao enviar e-mail:", error.message);
+    toast.error("Erro ao enviar e-mail.");
+  }
+};
+
 
   const handlePrevImage = () => {
     setCurrentIndex((prev) =>
