@@ -39,19 +39,7 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-gray-300 pt-6 mt-4 flex flex-col md:flex-row justify-between items-center text-gray-600 text-sm gap-4 flex-wrap">
-        <div className="flex flex-wrap justify-center gap-5 font-medium">
-          <a href="/visitante/sejagente" className="hover:underline">Seja um Agente</a>
-          <a href="/visitante/comprar" className="hover:underline">Comprar</a>
-          <a href="/visitante/agentes" className="hover:underline">Buscar Agentes</a>
-          <a href="/visitante/sobre" className="hover:underline">Sobre nós</a>
-          <a href="/login" className="hover:underline">Login</a>
-          <a href="/cadastro" className="hover:underline">Cadastrar</a>
-        </div>
-        <p className="text-center mt-4 md:mt-0">
-          © {new Date().getFullYear()} Spot Home. Todos os direitos reservados.
-        </p>
-      </div>
+     
     </footer>
   );
 }

@@ -74,3 +74,80 @@ export async function sendApprovedAgentEmail(email: string) {
 
     console.log('E-mail de aprovação enviado com sucesso!');
 }
+
+export async function sendVisitConfirmationToClient(email: string, houseTitle: string, date: Date) {
+    await transporter.sendMail({
+        from: `"SpotHome" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: 'Sua visita foi agendada com sucesso!',
+        html: `
+      <p>Olá!</p>
+      <p>Sua solicitação de visita ao imóvel <strong>${houseTitle}</strong> foi recebida com sucesso.</p>
+      <p>Data marcada: <strong>${new Date(date).toLocaleString('pt-PT')}</strong></p>
+      <p>Em breve, o proprietário entrará em contato.</p>
+      <p>Obrigado por usar a SpotHome!</p>
+    `,
+    });
+}
+
+export async function sendVisitNotificationToOwner(ownerEmail: string, clientName: string, houseTitle: string, date: Date) {
+    await transporter.sendMail({
+        from: `"SpotHome" <${process.env.EMAIL_USER}>`,
+        to: ownerEmail,
+        subject: 'Nova solicitação de visita ao seu imóvel',
+        html: `
+      <p>Olá!</p>
+      <p>Você recebeu uma nova solicitação de visita ao imóvel <strong>${houseTitle}</strong>.</p>
+      <p>Solicitante: <strong>${clientName}</strong></p>
+      <p>Data sugerida: <strong>${new Date(date).toLocaleString('pt-PT')}</strong></p>
+      <p>Acesse a plataforma para visualizar os detalhes.</p>
+    `,
+    });
+}
+
+export async function sendVisitAcceptedEmailToClient(email: string, houseTitle: string, date: Date) {
+    await transporter.sendMail({
+        from: `"SpotHome" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: 'Sua visita foi confirmada!',
+        html: `
+      <p>Olá,</p>
+      <p>Sua visita ao imóvel <strong>${houseTitle}</strong> foi <strong>confirmada</strong>!</p>
+      <p>Data da visita: <strong>${new Date(date).toLocaleString('pt-PT')}</strong></p>
+      <p>Nos vemos lá! Equipe SpotHome.</p>
+    `,
+    });
+}
+
+export async function sendVisitConfirmationNoticeToAgent(email: string, clientName: string, houseTitle: string, date: Date) {
+    await transporter.sendMail({
+        from: `"SpotHome" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: 'Você confirmou uma visita',
+        html: `
+      <p>Olá,</p>
+      <p>Você confirmou a visita para o imóvel <strong>${houseTitle}</strong>.</p>
+      <p>Visitante: <strong>${clientName}</strong></p>
+      <p>Data da visita: <strong>${new Date(date).toLocaleString('pt-PT')}</strong></p>
+      <p>Obrigado por usar a SpotHome!</p>
+    `,
+    });
+}
+
+export async function sendVisitRejectedEmailToClient(
+    email: string,
+    houseTitle: string,
+    date: Date
+) {
+    await transporter.sendMail({
+        from: `"SpotHome" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: 'Sua visita foi rejeitada',
+        html: `
+      <p>Olá,</p>
+      <p>Lamentamos informar que sua solicitação de visita ao imóvel <strong>${houseTitle}</strong>, marcada para <strong>${new Date(date).toLocaleString('pt-PT')}</strong>, foi <strong>rejeitada</strong>.</p>
+      <p>Você pode tentar reagendar ou entrar em contato conosco para mais informações.</p>
+      <p>Atenciosamente,<br><strong>Equipe SpotHome</strong></p>
+    `,
+    });
+}

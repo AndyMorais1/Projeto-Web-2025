@@ -4,6 +4,7 @@ import { UserDropdown } from "./UserSidebar"
 const navLinksMain = [
     { label: "Comprar", href: "/user/comprar" },
     { label: "Buscar Agentes", href: "/user/agentes" },
+    { label: "Minhas Visitas", href: "/user/visitas" },
     { label: "Minha Lista", href: "/user/lista" },
     { label: "Ajuda", href: "/user/ajuda" },
 ];

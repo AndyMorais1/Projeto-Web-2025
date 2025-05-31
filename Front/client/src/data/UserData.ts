@@ -1,5 +1,5 @@
 import { HouseData } from "./HouseData";
-
+import { VisitData } from "./VisitsData";
 export interface UserData {
   id?: string;
   role: string;

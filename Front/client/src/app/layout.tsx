@@ -3,20 +3,23 @@ import "../style/globals.css";
 import { UsersProvider } from "@/contexts/UsersContext";
 import { HousesProvider } from "@/contexts/HousesContext";
 import { HouseTypesProvider } from "@/contexts/HouseTypesContext";
+import { VisitsProvider } from "@/contexts/VisitsContext"; // 👈 Novo
 import { Toaster } from "sonner";
 import "leaflet/dist/leaflet.css";
-import Initializer from "@/components/myComponents/Init"; // 👈 import
+import Initializer from "@/components/myComponents/Init";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="">
+      <body>
         <UsersProvider>
           <HousesProvider>
             <HouseTypesProvider>
-              <Initializer /> {/* 👈 roda ao iniciar o app */}
-              {children}
-              <Toaster richColors />
+              <VisitsProvider> {/* 👈 Novo wrapper */}
+                <Initializer />
+                {children}
+                <Toaster richColors />
+              </VisitsProvider>
             </HouseTypesProvider>
           </HousesProvider>
         </UsersProvider>

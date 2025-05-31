@@ -73,6 +73,7 @@ model Visit {
   house     House       @relation("HouseVisits", fields: [houseId], references: [id])
   houseId   String
   date      DateTime
+  message   String?
   status    VisitStatus @default(PENDING)
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt

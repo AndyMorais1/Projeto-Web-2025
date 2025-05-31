@@ -10,6 +10,7 @@ import {emailRoutes} from "./routes/EmailRoutes";
 import "./types/fastify.d.ts";
 import { favoriteRoutes } from "./routes/FavoriteRoutes";
 import { houseTypeRoutes } from './routes/HouseTypeRoute';
+import { visitRoutes } from './routes/VisitsRoutes';
 
 dotenv.config();
 
@@ -63,6 +64,7 @@ async function main() {
   server.register(emailRoutes, { prefix: '/email' });
   server.register(favoriteRoutes, { prefix: "/users" });
   server.register(houseTypeRoutes);
+  server.register(visitRoutes);
 
   try {
     await server.listen({ port: 3000, host: '0.0.0.0' });
