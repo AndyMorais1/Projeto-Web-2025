@@ -77,5 +77,8 @@ Siga os passos abaixo para rodar o projeto localmente:
 - [x] Listagem de imóveis com filtros
 
 ---
+## 📚 Relatório
+
+https://iade-my.sharepoint.com/:w:/g/personal/20230315_iade_pt/Ed3pLd3-YyBLlKGNirfKY5wBB3ZDUdw-fLNZSiQiFR4sCQ?e=CNi1Lu
 
 ## ✍️ Observações Finais
