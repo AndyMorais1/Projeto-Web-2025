@@ -6,10 +6,10 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { usersServices } from "@/api/Users";
-import { UserData, RegisterUserPayload } from "@/data/UserData";
+import { RegisterUserPayload } from "@/data/UserData";
 import { toast } from "sonner";
 
-export function RegisterForm() {
+export function RegisterAgentForm() {
   const router = useRouter();
 
   const [form, setForm] = useState({
@@ -28,36 +28,25 @@ export function RegisterForm() {
     confirmPassword: "",
   });
 
-  // Validação de email
-  const validateEmail = (email: string) => {
-    const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    return re.test(email);
-  };
-
-  // Validação de telefone (opcional, só um exemplo simples)
-  const validatePhone = (phone: string) => {
-    const re = /^[0-9]{10,15}$/; // Pode ser ajustado conforme necessário
-    return re.test(phone);
-  };
+  const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const validatePhone = (phone: string) => /^[0-9]{10,15}$/.test(phone);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setForm({ ...form, [id]: value });
 
-    // Resetando o erro específico ao digitar
     if (id === "email" && !validateEmail(value)) {
       setErrors({ ...errors, email: "E-mail inválido" });
     } else if (id === "phone" && !validatePhone(value)) {
       setErrors({ ...errors, phone: "Telefone inválido" });
     } else {
-      setErrors({ ...errors, [id]: "" }); // Limpar erro
+      setErrors({ ...errors, [id]: "" });
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validações
     if (form.password !== form.confirmPassword) {
       toast.error("As senhas não coincidem.");
       return;
@@ -73,32 +62,27 @@ export function RegisterForm() {
       return;
     }
 
-    const userData: RegisterUserPayload = {
+    const agentData: RegisterUserPayload = {
       name: form.name,
       email: form.email,
       phone: form.phone,
       password: form.password,
-      role: "CLIENT",
+      role: "AGENT",
     };
 
     try {
       setLoading(true);
-
-      // 1. Criar conta
-      await usersServices.createUser(userData);
-      toast.success("Cadastro realizado com sucesso!");
-
-      // 3. Redirecionar para home
-      router.replace("/confirm");
+      await usersServices.createUser(agentData);
+      toast.success("Cadastro de agente realizado com sucesso!");
+      router.replace("/confirmAgent");
       router.refresh();
-    } catch (err: any) {
-      toast.error("Erro ao cadastrar usuário. Verifique os dados e tente novamente.");
+    } catch (err) {
+      toast.error("Erro ao cadastrar agente. Tente novamente.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Garantir que isButtonDisabled seja sempre um valor booleano
   const isButtonDisabled =
     loading ||
     !form.name ||
@@ -112,43 +96,27 @@ export function RegisterForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-sm">
       <div className="text-center">
-        <h1 className="text-2xl font-bold">Criar Conta</h1>
-        <p className="text-sm text-muted-foreground">Preencha os dados para se cadastrar</p>
+        <h1 className="text-2xl font-bold">Cadastro de Agente</h1>
+        <p className="text-sm text-muted-foreground">
+          Torne-se um agente da plataforma
+        </p>
       </div>
 
       <div className="space-y-4">
         <div>
           <Label htmlFor="name">Nome completo</Label>
-          <Input
-            id="name"
-            type="text"
-            value={form.name}
-            onChange={handleChange}
-            required
-          />
+          <Input id="name" value={form.name} onChange={handleChange} required />
         </div>
 
         <div>
           <Label htmlFor="email">E-mail</Label>
-          <Input
-            id="email"
-            type="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
+          <Input id="email" value={form.email} onChange={handleChange} required />
           {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
         </div>
 
         <div>
           <Label htmlFor="phone">Telefone</Label>
-          <Input
-            id="phone"
-            type="tel"
-            value={form.phone}
-            onChange={handleChange}
-            required
-          />
+          <Input id="phone" value={form.phone} onChange={handleChange} required />
           {errors.phone && <p className="text-red-500 text-xs">{errors.phone}</p>}
         </div>
 
@@ -174,21 +142,12 @@ export function RegisterForm() {
           />
         </div>
 
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={isButtonDisabled}
-        >
-          {loading ? "Cadastrando..." : "Cadastrar"}
+        <Button type="submit" className="w-full" disabled={isButtonDisabled}>
+          {loading ? "Cadastrando..." : "Cadastrar como Agente"}
         </Button>
       </div>
 
-      <p className="text-sm text-center text-muted-foreground">
-        Já tem uma conta?{" "}
-        <a href="/login" className="text-blue-600 hover:underline">
-          Faça login
-        </a>
-      </p>
+      
     </form>
   );
 }

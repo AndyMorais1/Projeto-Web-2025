@@ -14,9 +14,11 @@ export default function SejaUmAgente() {
           <p className="text-lg md:text-xl mb-8">
             Publique imóveis, receba leads qualificados e aumente a sua presença no mercado com a Spot Home.
           </p>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-lg transition">
-            Cadastre-se agora
-          </Button>
+         <a href="/AgentCadastro">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-lg transition">
+              Cadastre-se agora
+            </Button>
+          </a>
         </div>
       </section>
 
@@ -85,10 +87,10 @@ export default function SejaUmAgente() {
           <p className="text-lg mb-8">
             Junte-se à Spot Home e ative o próximo nível da sua atuação no mercado imobiliário digital.
           </p>
-          <a href="/login">
-          <Button className="bg-white text-blue-600 hover:bg-blue-100 px-6 py-3 rounded-lg text-base font-semibold shadow-lg transition">
-            Comece agora
-          </Button>
+          <a href="/AgentCadastro">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-lg transition">
+              Cadastre-se agora
+            </Button>
           </a>
         </div>
       </section>

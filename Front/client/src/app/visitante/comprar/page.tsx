@@ -4,11 +4,24 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { MapView } from "@/components/myComponents/MapView";
 import { Houses } from "@/components/myComponents/Houses2";
-import { SearchFiltersBar } from "@/components/myComponents/searchfilterbar";
+import { SearchFiltersBar } from "@/components/myComponents/searchfilterbar2";
 
 export default function Page() {
   const [searchQuery, setSearchQuery] = useState("");
   const searchParams = useSearchParams();
+
+  const [filters, setFilters] = useState<{
+  priceMin: number | null;
+  priceMax: number | null;
+  rooms: number | null;
+  type: string | null;
+}>({
+  priceMin: null,
+  priceMax: null,
+  rooms: null,
+  type: null,
+});
+
 
   useEffect(() => {
     const initialSearch = searchParams.get("search") || "";

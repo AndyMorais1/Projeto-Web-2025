@@ -2,6 +2,7 @@
 import { Cards } from "@/components/myComponents/Cards";
 import { Chart1 } from "@/components/myComponents/chart1";
 
+
 export default function DashboardPage() {
   return (
     <div className="w-full">
