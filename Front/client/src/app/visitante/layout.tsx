@@ -1,5 +1,6 @@
 import { NavbarPublic } from "@/components/myComponents/NavbarPublic";
 import { Footer } from "@/components/myComponents/Footer";
+import { FooterPublic } from "@/components/myComponents/FooterPublic";
 
 export default function Layout({
   children,
@@ -13,7 +14,7 @@ export default function Layout({
       </header>
 
       <main className="flex-1">{children}</main>
-      <Footer/>
+      <FooterPublic/>
 
     </div>
   );

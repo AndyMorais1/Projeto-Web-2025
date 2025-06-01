@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { UserDropdown } from "./UserSidebar"
 
-const navLinksMain = [
+export const navLinksMain = [
     { label: "Comprar", href: "/user/comprar" },
     { label: "Buscar Agentes", href: "/user/agentes" },
     { label: "Minhas Visitas", href: "/user/visitas" },

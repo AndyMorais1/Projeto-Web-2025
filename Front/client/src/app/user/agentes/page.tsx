@@ -38,9 +38,8 @@ export default function AgentsPage() {
   };
 
   const handleSearchClick = () => {
-    // Função que será chamada quando o ícone de lupa for clicado
-    console.log("Pesquisando por:", searchQuery);
-    // Aqui você pode adicionar a lógica de pesquisa ou redirecionamento, caso necessário.
+    // Ação ao clicar no ícone de pesquisa, se necessário
+    console.log("Pesquisar por:", searchQuery);
   };
 
   return (

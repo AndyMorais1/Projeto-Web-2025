@@ -80,7 +80,7 @@ export function InfoCards() {
               href="/user/sejagente"
               className="inline-block border border-[#2563EB] text-[#2563EB] font-medium px-4 py-2 rounded-md hover:bg-[#2563EB]/10 transition"
             >
-              Quero participar
+              Seja um agente
             </Link>
           </div>
         </div>
