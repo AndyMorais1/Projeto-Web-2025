@@ -78,6 +78,26 @@ export default function SejaUmAgente() {
         </div>
       </section>
 
+<<<<<<< HEAD
+=======
+      {/* CALL TO ACTION FINAL */}
+      <section className="bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500 text-white px-6 md:px-20 py-24 text-center">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-4xl font-bold mb-6 leading-tight">
+            Pronto para transformar sua carreira como agente?
+          </h2>
+          <p className="text-lg mb-8">
+            Junte-se à Spot Home e ative o próximo nível da sua atuação no mercado imobiliário digital.
+          </p>
+          <a href="/AgentCadastro">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-semibold shadow-lg transition">
+              Cadastre-se agora
+            </Button>
+          </a>
+        </div>
+      </section>
+
+>>>>>>> main
     </div>
   );
 }
