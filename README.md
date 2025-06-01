@@ -94,6 +94,34 @@ Siga os passos abaixo para rodar o projeto localmente:
 
 ---
 
+## 📘 Documentação da API
+
+A API REST do Spot Home é totalmente documentada usando **Swagger (OpenAPI)**.
+
+### ▶️ Como acessar
+
+Após iniciar o backend com `npm run dev`, acesse:
+
+```
+http://localhost:3000/docs
+```
+
+Nesta interface você poderá:
+- Visualizar todas as rotas disponíveis
+- Entender os parâmetros e formatos esperados
+- Testar requisições diretamente pela interface
+
+### 📦 Recursos documentados
+
+- Usuários (cadastro, login, autenticação, verificação de e-mail)
+- Imóveis (CRUD, visualizações, favoritos)
+- Tipos de imóvel
+- Visitas
+- Favoritos
+- Envio de e-mails (suporte, contato com agente)
+
+---
+
 ### 💻 Frontend
 
 A aplicação possui três interfaces separadas. Execute cada uma conforme desejar:
@@ -143,7 +171,8 @@ Cada interface será iniciada localmente, normalmente em diferentes portas (ex: 
 ### 🏢 Interface Agente
 - [x] Gerenciamento de imóveis
 - [x] Gerenciamento de Visitas 
-- [x] Contacto com outros agentes 
+- [x] Contato com outros agentes 
+
 ---
 
 ### 🏠 Interface Cliente
@@ -157,5 +186,5 @@ Cada interface será iniciada localmente, normalmente em diferentes portas (ex: 
 
 ## 📎 Anexos
 
-[📄 Acesse o relatório completo do projeto](https://iade-my.sharepoint.com/:w:/g/personal/20230315_iade_pt/Ed3pLd3-YyBLlKGNirfKY5wBB3ZDUdw-fLNZSiQiFR4sCQ?e=CNi1Lu)
+[📄 Acesse o relatório completo do projeto](https://iade-my.sharepoint.com/:w:/g/personal/20230315_iade_pt/Ed3pLd3-YyBLlKGNirfKY5wBB3ZDUdw-fLNZSiQiFR4sCQ?e=CNi1Lu)  
 [🖥️ Acesse aos Mockups do projeto](https://www.figma.com/design/jaSY2cUMbrgTCAdF8MCzAV/Brand-Guidelines--Community-?node-id=0-1&p=f&t=WCL0J1ZRfeCbVD1w-0)
