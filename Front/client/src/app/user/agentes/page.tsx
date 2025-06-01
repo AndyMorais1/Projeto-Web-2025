@@ -18,7 +18,7 @@ export default function AgentsPage() {
   // Filtrando os usuários com o papel de AGENT
   const agents = users.filter(
     (user: UserData) =>
-      user.role === "AGENT" &&
+      user.role === "AGENT" && user.status === "ACTIVE" && 
       (user.name.toLowerCase().includes(searchQuery.toLowerCase()) || // Filtro por nome
         user.email.toLowerCase().includes(searchQuery.toLowerCase())) &&
       (!filteredRole || user.role === filteredRole) // Filtro por role, se estiver ativo

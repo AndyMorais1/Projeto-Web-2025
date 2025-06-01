@@ -83,12 +83,12 @@ export function Houses({ searchQuery }: { searchQuery: string }) {
           Nenhuma casa encontrada.
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-4 auto-rows-fr">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-4 auto-rows-fr w-full max-w-7xl">
           {filteredHouses.map((house) => {
             const isFavorited = favorites.find((fav) => fav.id === house.id);
             const totalImages = house.images.length;
             const currentIndex = carouselIndexes[house.id!] ?? 0;
-            const houseTypeName = types.find(t => t.id === house.typeId)?.name || "Tipo desconhecido";
+            const houseTypeName = types.find((t) => t.id === house.typeId)?.name || "Tipo desconhecido";
 
             return (
               <div
@@ -97,11 +97,10 @@ export function Houses({ searchQuery }: { searchQuery: string }) {
                 onClick={() => handleCardClick(house.id!)}
               >
                 <Card className="w-full h-full flex flex-col hover:shadow-lg transition-shadow cursor-pointer relative">
-                  
                   {token && (
                     <Button
                       className="absolute top-5 right-5 bg-white text-red-500 hover:bg-red-50 shadow-sm z-10 border border-red-500"
-                      size={"icon"}
+                      size="icon"
                       onClick={async (e) => {
                         e.preventDefault();
                         e.stopPropagation();

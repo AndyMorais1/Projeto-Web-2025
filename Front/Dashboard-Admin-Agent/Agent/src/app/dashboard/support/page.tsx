@@ -104,23 +104,6 @@ export default function Support() {
             {loading ? "Enviando..." : "Enviar"}
           </Button>
         </section>
-
-        {/* FAQ */}
-        <section className="bg-white p-6 rounded-xl shadow border mb-10 space-y-4">
-          <h2 className="text-xl font-semibold">Perguntas Frequentes</h2>
-          <div>
-            <p className="font-medium">❓ Como posso me tornar um agente?</p>
-            <p className="text-gray-600">Você pode solicitar o acesso na seção "Requisições de Agentes" no menu lateral.</p>
-          </div>
-          <div>
-            <p className="font-medium">❓ Posso editar uma casa depois de cadastrá-la?</p>
-            <p className="text-gray-600">Sim, acesse "Imóveis" e clique em "Editar" no imóvel desejado.</p>
-          </div>
-          <div>
-            <p className="font-medium">❓ Onde vejo as mensagens recebidas?</p>
-            <p className="text-gray-600">As mensagens podem ser acessadas na aba "Usuários", ao visualizar um perfil específico.</p>
-          </div>
-        </section>
       </div>
     </div>
   );

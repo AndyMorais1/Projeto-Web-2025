@@ -1,26 +1,44 @@
 "use client";
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { usersServices } from "@/api/Users";
 import { UserData } from "@/data/UserData";
 import { jwtDecode } from "jwt-decode";
+import { RatingService } from "@/api/Rating";
+import {
+  AgentRating,
+  AgentRatingSummary,
+} from "@/data/RatingData";
 
-// Tipagem do contexto
+// Tipagem extendida para agentes
+type AgentWithRatings = UserData & {
+  ratings?: AgentRating[];
+  ratingSummary?: AgentRatingSummary;
+};
+
 interface UsersContextType {
   users: UserData[];
-  currentUser: UserData | null;
+  currentUser: UserData | AgentWithRatings | null;
   setUsers: React.Dispatch<React.SetStateAction<UserData[]>>;
-  setCurrentUser: React.Dispatch<React.SetStateAction<UserData | null>>;
+  setCurrentUser: React.Dispatch<
+    React.SetStateAction<UserData | AgentWithRatings | null>
+  >;
   initializeUsersData: () => Promise<void>;
   resetUsers: () => void;
 }
 
-// Criando o contexto
 const UsersContext = createContext<UsersContextType | undefined>(undefined);
 
-// Provider
-export const UsersProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const UsersProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [users, setUsers] = useState<UserData[]>([]);
-  const [currentUser, setCurrentUser] = useState<UserData | null>(null);
+  const [currentUser, setCurrentUser] = useState<UserData | AgentWithRatings | null>(null);
 
   const initializeUsersData = async () => {
     try {
@@ -29,9 +47,26 @@ export const UsersProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
       const token = localStorage.getItem("token");
       if (token) {
-        const decoded = jwtDecode<{ id: string }>(token);
-        const updatedUser = await usersServices.getUserById(decoded.id);
-        setCurrentUser(updatedUser);
+        const decoded = jwtDecode<{ id: string; exp: number }>(token);
+        const isExpired = decoded.exp * 1000 < Date.now();
+        if (isExpired) return resetUsers();
+
+        const user = await usersServices.getUserById(decoded.id);
+
+        if (user.role === "AGENT") {
+          const [ratingSummary, ratings] = await Promise.all([
+            RatingService.getAgentRatingSummary(user.id!),
+            RatingService.getRatingsForAgent(user.id!),
+          ]);
+          const extendedUser: AgentWithRatings = {
+            ...user,
+            ratingSummary,
+            ratings,
+          };
+          setCurrentUser(extendedUser);
+        } else {
+          setCurrentUser(user);
+        }
       }
     } catch (error) {
       console.error("Erro ao inicializar dados dos usuários:", error);

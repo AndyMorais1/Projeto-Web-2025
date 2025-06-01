@@ -1,17 +1,24 @@
+// Houses.tsx
 "use client";
 
 import { useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { HouseData } from "@/data/HouseData";
 import { useHouses } from "@/contexts/HousesContext";
 import { useHouseTypes } from "@/contexts/HouseTypesContext";
 
-export function Houses({ searchQuery }: { searchQuery: string }) {
+type Filters = {
+  priceMin: number | null;
+  priceMax: number | null;
+  rooms: number | null;
+  type: string | null;
+};
+
+export function Houses({ searchQuery, filters }: { searchQuery: string; filters: Filters }) {
   const {
     houses,
     favorites,
@@ -20,8 +27,7 @@ export function Houses({ searchQuery }: { searchQuery: string }) {
     setSelectedDistrict,
   } = useHouses();
 
-  const { types } = useHouseTypes(); // ✅ Usando o contexto
-
+  const { types } = useHouseTypes();
   const [carouselIndexes, setCarouselIndexes] = useState<Record<string, number>>({});
 
   const priceFormatter = new Intl.NumberFormat("pt-PT", {
@@ -36,18 +42,35 @@ export function Houses({ searchQuery }: { searchQuery: string }) {
 
     const matchesSearch = searchQuery
       ? [
-        house.title,
-        house.location.address,
-        house.location.city,
-        house.location.zipCode,
-      ]
-        .filter(Boolean)
-        .some((field) =>
-          field.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+          house.title,
+          house.location.address,
+          house.location.city,
+          house.location.zipCode,
+        ]
+          .filter(Boolean)
+          .some((field) =>
+            field.toLowerCase().includes(searchQuery.toLowerCase())
+          )
       : true;
 
-    return matchesDistrict && matchesSearch;
+    const matchesPrice =
+      (filters.priceMin === null || house.price >= filters.priceMin) &&
+      (filters.priceMax === null || house.price <= filters.priceMax);
+
+    const matchesRooms =
+      filters.rooms === null || house.details.rooms === filters.rooms;
+
+    const matchesType =
+      filters.type === null ||
+      types.find((t) => t.id === house.typeId)?.name === filters.type;
+
+    return (
+      matchesDistrict &&
+      matchesSearch &&
+      matchesPrice &&
+      matchesRooms &&
+      matchesType
+    );
   };
 
   const filteredHouses = houses.filter(filterHouses);
@@ -143,8 +166,7 @@ export function Houses({ searchQuery }: { searchQuery: string }) {
                       {priceFormatter.format(house.price)}
                     </div>
                     <div className="text-sm text-gray-700">
-                      {house.details.rooms} quartos · {house.details.bathrooms} banheiros ·{" "}
-                      {house.details.area} m² - {houseTypeName}
+                      {house.details.rooms} quartos · {house.details.bathrooms} banheiros · {house.details.area} m² - {houseTypeName}
                     </div>
                     <div className="text-sm text-gray-600">
                       {house.location.address}, {house.location.city}

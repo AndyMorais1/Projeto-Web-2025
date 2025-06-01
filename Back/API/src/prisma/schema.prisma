@@ -37,6 +37,8 @@ model User {
   status                 UserStatus @default(PENDING) //admin,agent,client
   salt                   String //client, agent, admin
   favorites              Favorite[]
+  ratingsGiven    Rating[] @relation("ClientRatings") // avaliações feitas (cliente)
+  ratingsReceived Rating[] @relation("AgentRatings")  // avaliações recebidas (agente)
 
   @@map("users")
 }
@@ -141,4 +143,18 @@ model Favorite {
 
   @@unique([userId, houseId]) // Um usuário só pode favoritar uma casa uma vez
   @@map("favorites")
+}
+
+model Rating {
+  id        String   @id @default(uuid())
+  agent     User     @relation("AgentRatings", fields: [agentId], references: [id])
+  agentId   String
+  client    User     @relation("ClientRatings", fields: [clientId], references: [id])
+  clientId  String
+  score     Int      // de 1 a 5
+  comment   String?  // opcional
+  createdAt DateTime @default(now())
+
+  @@unique([agentId, clientId]) // Um cliente só pode avaliar um agente uma vez
+  @@map("ratings")
 }

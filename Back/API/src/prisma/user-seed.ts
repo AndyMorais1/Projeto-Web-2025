@@ -1,21 +1,17 @@
-import {PrismaClient, Role, UserStatus} from "@prisma/client";
-import {hashPassword} from "../utils/hash";
-import {Faker, pt_PT, en} from "@faker-js/faker";
+import { PrismaClient, Role, UserStatus } from "@prisma/client";
+import { hashPassword } from "../utils/hash";
+import { Faker, pt_PT, en } from "@faker-js/faker";
 
 // npx ts-node src/prisma/user-seed.ts
 const prisma = new PrismaClient();
-const faker = new Faker({locale: [pt_PT, en]});
+const faker = new Faker({ locale: [pt_PT, en] });
 
 function getRandomDateIn2025(): Date {
     const start = new Date("2025-01-01T00:00:00Z");
-    const end = new Date(); // data atual
-
-    if (start > end) return end; // Evita erro se a data atual for antes de 2025
-
-    const timestamp = faker.date.between({from: start, to: end});
-    return timestamp;
+    const end = new Date();
+    if (start > end) return end;
+    return faker.date.between({ from: start, to: end });
 }
-
 
 function getRandomRole(): Role {
     const roles: Role[] = [Role.CLIENT, Role.AGENT, Role.ADMIN];
@@ -23,15 +19,18 @@ function getRandomRole(): Role {
 }
 
 function getRandomProfileImage(): string {
-    // Gera imagem de rosto aleatória usando i.pravatar.cc
-    const seed = Math.floor(Math.random() * 70) + 1; // i.pravatar.cc suporta de 1 a 70
+    const seed = Math.floor(Math.random() * 70) + 1;
     return `https://i.pravatar.cc/150?img=${seed}`;
 }
 
+function getRandomScore(): number {
+    return faker.number.int({ min: 3, max: 5 });
+}
+
 async function main() {
-    const rawUsers = Array.from({length: 10}).map(() => {
+    const rawUsers = Array.from({ length: 10 }).map(() => {
         const name = faker.person.fullName();
-        const email = faker.internet.email({firstName: name.split(" ")[0]});
+        const email = faker.internet.email({ firstName: name.split(" ")[0] });
         const phone = "9" + faker.string.numeric(8);
         const password = "senha123";
         const role = getRandomRole();
@@ -50,7 +49,7 @@ async function main() {
     });
 
     const users = rawUsers.map((user) => {
-        const {salt, hash} = hashPassword(user.password);
+        const { salt, hash } = hashPassword(user.password);
         return {
             name: user.name,
             email: user.email,
@@ -65,8 +64,53 @@ async function main() {
         };
     });
 
-    await prisma.user.createMany({data: users});
-    console.log("✅ Usuários aleatórios com fotos criados com sucesso.");
+    // Criação dos usuários
+    await prisma.user.createMany({ data: users });
+    console.log("✅ Usuários criados.");
+
+    // Recuperar usuários criados
+    const allUsers = await prisma.user.findMany();
+    const agents = allUsers.filter((u) => u.role === Role.AGENT);
+    const clients = allUsers.filter((u) => u.role === Role.CLIENT);
+
+    if (agents.length === 0 || clients.length === 0) {
+        console.log("⚠️ Nenhum agente ou cliente disponível para gerar avaliações.");
+        return;
+    }
+
+    // Criar ratings aleatórios para os agentes
+    // Criar ratings aleatórios para os agentes
+    // Criar ratings aleatórios para os agentes
+    for (const agent of agents) {
+        const shuffledClients = faker.helpers.shuffle(clients);
+        const totalRatings = faker.number.int({ min: 1, max: Math.min(5, shuffledClients.length) });
+
+        for (let i = 0; i < totalRatings; i++) {
+            const client = shuffledClients[i];
+
+            try {
+                await prisma.rating.create({
+                    data: {
+                        agentId: agent.id,
+                        clientId: client.id,
+                        score: getRandomScore(),
+                        comment: faker.lorem.sentence(),
+                        createdAt: faker.date.recent({ days: 30 }),
+                    },
+                });
+            } catch (error: any) {
+                if (error.code === "P2002") {
+                    console.warn(`Rating já existe entre ${client.id} e ${agent.id}, pulando...`);
+                } else {
+                    throw error;
+                }
+            }
+        }
+    }
+
+
+
+    console.log("🌟 Avaliações aleatórias adicionadas para os agentes.");
 }
 
 main()

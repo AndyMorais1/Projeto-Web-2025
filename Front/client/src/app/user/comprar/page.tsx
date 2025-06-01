@@ -10,6 +10,18 @@ export default function Page() {
   const [searchQuery, setSearchQuery] = useState("");
   const searchParams = useSearchParams();
 
+  const [filters, setFilters] = useState<{
+    priceMin: number | null;
+    priceMax: number | null;
+    rooms: number | null;
+    type: string | null;
+  }>({
+    priceMin: null,
+    priceMax: null,
+    rooms: null,
+    type: null,
+  });
+
   useEffect(() => {
     const initialSearch = searchParams.get("search") || "";
     setSearchQuery(initialSearch);
@@ -27,10 +39,13 @@ export default function Page() {
             <SearchFiltersBar
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
+              filters={filters}
+              setFilters={setFilters}
             />
           </div>
+
           <div className="flex-1 overflow-y-auto bg-gray-100 py-4 px-2">
-            <Houses searchQuery={searchQuery} />
+            <Houses searchQuery={searchQuery} filters={filters} />
           </div>
         </div>
       </div>
