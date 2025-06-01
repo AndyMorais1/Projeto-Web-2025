@@ -155,7 +155,7 @@ Cada interface será iniciada localmente, normalmente em diferentes portas (ex: 
 
 ---
 
-## 📚 Relatório
+## 📎 Anexos
 
 [📄 Acesse o relatório completo do projeto](https://iade-my.sharepoint.com/:w:/g/personal/20230315_iade_pt/Ed3pLd3-YyBLlKGNirfKY5wBB3ZDUdw-fLNZSiQiFR4sCQ?e=CNi1Lu)
 [🖥️ Acesse aos Mockups do projeto](https://www.figma.com/design/jaSY2cUMbrgTCAdF8MCzAV/Brand-Guidelines--Community-?node-id=0-1&p=f&t=WCL0J1ZRfeCbVD1w-0)
