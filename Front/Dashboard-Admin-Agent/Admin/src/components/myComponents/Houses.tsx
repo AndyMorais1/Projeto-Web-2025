@@ -2,6 +2,7 @@
 
 import { DialogEditHouse } from "./DialogEditHouse";
 import { toast } from "sonner";
+import { DialogDeleteHouseType } from "./DialogDeleteHouseType";
 import { useState } from "react";
 import {
   Card,
@@ -28,6 +29,7 @@ import { useUsers } from "@/contexts/UsersContext";
 import { housesServices } from "@/api/Houses";
 import { DialogFilterHouses } from "./DialogFilterHouses";
 import { DialogCreateHouseType } from "./DialogCreateTypeHouse";
+import { useHouseTypes } from "@/contexts/HouseTypesContext";
 
 export function Houses() {
   const { houses, refreshHouses } = useHouses();
@@ -35,6 +37,7 @@ export function Houses() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { users } = useUsers();
+  const { types, refreshTypes } = useHouseTypes();
 
   const priceFormatter = new Intl.NumberFormat("pt-PT", {
     style: "currency",
@@ -92,6 +95,7 @@ export function Houses() {
         <DialogFilterHouses />
         <DialogCreateHouse />
         <DialogCreateHouseType />
+        <DialogDeleteHouseType onDeleted={refreshTypes} />
       </div>
 
       {houses.length === 0 ? (
@@ -113,8 +117,7 @@ export function Houses() {
                     {house.images.slice(0, 5).map((_, index) => (
                       <div
                         key={index}
-                        className={`w-2 h-2 rounded-full ${index === 0 ? "bg-gray-800" : "bg-gray-400"
-                          }`}
+                        className={`w-2 h-2 rounded-full ${index === 0 ? "bg-gray-800" : "bg-gray-400"}`}
                       />
                     ))}
                   </div>
@@ -130,8 +133,8 @@ export function Houses() {
                 </div>
 
                 <div className="text-gray-700 text-sm">
-                  {house.details.rooms} quartos | {house.details.bathrooms} banheiros |{" "}
-                  <span className="font-medium">{house.details.area} m²</span> -{" "}
+                  {house.details.rooms} quartos | {house.details.bathrooms} banheiros | {" "}
+                  <span className="font-medium">{house.details.area} m²</span> - {" "}
                   {house.type?.name ?? "Tipo não especificado"}
                 </div>
 
@@ -140,7 +143,7 @@ export function Houses() {
                 </div>
 
                 <div className="text-sm text-gray-600">
-                  Agente:{" "}
+                  Agente: {" "}
                   <span className="font-medium">
                     {users.find((user) => user.id === house.agentId)?.name ||
                       "Agente desconhecido"}
