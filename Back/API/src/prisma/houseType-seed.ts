@@ -20,6 +20,8 @@ async function main() {
         { name: 'CABANA' },
         { name: 'FAZENDA' },
         { name: 'MANSÃO' },
+        {name: 'GARAGEM'},
+        { name: 'COMÉRCIO' },
     ];
 
     await prisma.houseType.createMany({

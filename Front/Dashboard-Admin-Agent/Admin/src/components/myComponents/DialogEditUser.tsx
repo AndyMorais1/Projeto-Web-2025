@@ -26,18 +26,23 @@ import { usersServices } from "@/api/Users";
 import { toast } from "sonner";
 import { uploadImage } from "@/utils/uploadImage";
 
+interface DialogEditUserProps {
+  user: UserDataOptional;
+  onUserUpdated: (updatedUser: UserData) => void;
+  disabled?: boolean;
+}
+
 export function DialogEditUser({
   user,
   onUserUpdated,
-}: {
-  user: UserDataOptional;
-  onUserUpdated: (updatedUser: UserData) => void;
-}) {
+  disabled = false,
+}: DialogEditUserProps) {
   const [role, setRole] = React.useState<string>(user.role ?? "CLIENT");
   const [name, setName] = React.useState<string>(user.name ?? "");
   const [email, setEmail] = React.useState<string>(user.email ?? "");
   const [phone, setPhone] = React.useState<string>(user.phone ?? "");
   const [status, setStatus] = React.useState<string>(user.status ?? "PENDING");
+  const [isSuperAdmin, setIsSuperAdmin] = React.useState<boolean>(user.isSuperAdmin ?? false);
   const [image, setImage] = React.useState<File | null>(null);
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
@@ -48,11 +53,10 @@ export function DialogEditUser({
       setEmail(user.email ?? "");
       setPhone(user.phone ?? "");
       setStatus(user.status ?? "PENDING");
+      setIsSuperAdmin(user.isSuperAdmin ?? false);
     }
     setIsOpen(open);
   };
-
-  const isDisabled = user.role?.toLowerCase() === "admin";
 
   const handleUpdateUser = async () => {
     try {
@@ -62,8 +66,6 @@ export function DialogEditUser({
       }
 
       let photoUrl: string | undefined = user.photo;
-
-      // Se houver nova imagem, faz upload no Firebase e pega a URL
       if (image) {
         photoUrl = await uploadImage(image);
       }
@@ -75,14 +77,13 @@ export function DialogEditUser({
         phone,
         status,
         photo: photoUrl,
+        isSuperAdmin,
       };
 
       const response = await usersServices.updateUser(user.id, updatedUser);
 
       onUserUpdated(response);
-      toast.success("Usuário atualizado com sucesso!", {
-        duration: 3000,
-      });
+      toast.success("Usuário atualizado com sucesso!", { duration: 3000 });
       setIsOpen(false);
     } catch (error) {
       console.error("Erro ao atualizar usuário:", error);
@@ -97,63 +98,73 @@ export function DialogEditUser({
     <Dialog open={isOpen} onOpenChange={handleOpen}>
       <DialogTrigger asChild>
         <Button
-          onClick={() => setIsOpen(true)}
+          onClick={() => !disabled && setIsOpen(true)}
           variant="outline"
           size="icon"
-          disabled={isDisabled}
+          disabled={disabled}
+          title={disabled ? "Você não tem permissão para editar este usuário" : ""}
         >
           <Pencil className="text-blue-600" />
         </Button>
       </DialogTrigger>
+
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit User</DialogTitle>
-          <DialogDescription>Edit the details of the user.</DialogDescription>
+          <DialogTitle>Editar Usuário</DialogTitle>
+          <DialogDescription>Edite os dados do usuário abaixo.</DialogDescription>
         </DialogHeader>
+
         <div className="grid gap-4 py-4">
           {/* Role */}
           <div className="flex flex-col space-y-1.5">
-            <Label htmlFor="role">Role</Label>
-            <Select
-              onValueChange={setRole}
-              value={role}
-              disabled={isDisabled}
-            >
+            <Label htmlFor="role">Tipo</Label>
+            <Select onValueChange={setRole} value={role} disabled={disabled}>
               <SelectTrigger id="role">
-                <SelectValue placeholder="Select role" />
+                <SelectValue placeholder="Selecione o tipo" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="CLIENT">Client</SelectItem>
-                <SelectItem value="AGENT">Agent</SelectItem>
-                <SelectItem value="ADMIN" disabled>
-                  Admin
-                </SelectItem>
+                <SelectItem value="CLIENT">Cliente</SelectItem>
+                <SelectItem value="AGENT">Agente</SelectItem>
+                <SelectItem value="ADMIN" disabled>Administrador</SelectItem>
               </SelectContent>
             </Select>
           </div>
+
+          {/* Superadmin (visível somente para admins) */}
+          {role === "ADMIN" && (
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="isSuperAdmin"
+                checked={isSuperAdmin}
+                onChange={(e) => setIsSuperAdmin(e.target.checked)}
+                disabled={disabled}
+              />
+              <Label htmlFor="isSuperAdmin">Superadmin</Label>
+            </div>
+          )}
 
           {/* Status */}
           <div className="flex flex-col space-y-1.5">
             <Label htmlFor="status">Status</Label>
-            <Select onValueChange={setStatus} value={status}>
+            <Select onValueChange={setStatus} value={status} disabled={disabled}>
               <SelectTrigger id="status">
-                <SelectValue placeholder="Select status" />
+                <SelectValue placeholder="Selecione o status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ACTIVE">Active</SelectItem>
-                <SelectItem value="INACTIVE">Inactive</SelectItem>
-                <SelectItem value="PENDING">Pending</SelectItem>
+                <SelectItem value="ACTIVE">Ativo</SelectItem>
+                <SelectItem value="INACTIVE">Inativo</SelectItem>
+                <SelectItem value="PENDING">Pendente</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          {/* Form */}
+          {/* Formulário */}
           <form>
             <div className="grid gap-4">
-              {/* Name */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">
-                  Name
+                  Nome
                 </Label>
                 <Input
                   id="name"
@@ -161,11 +172,10 @@ export function DialogEditUser({
                   className="col-span-3"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  disabled={isDisabled}
+                  disabled={disabled}
                 />
               </div>
 
-              {/* Email & Phone */}
               {(role === "CLIENT" || role === "AGENT") && (
                 <>
                   <div className="grid grid-cols-4 items-center gap-4">
@@ -178,13 +188,13 @@ export function DialogEditUser({
                       className="col-span-3"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      disabled={isDisabled}
+                      disabled={disabled}
                     />
                   </div>
 
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="phone" className="text-right">
-                      Phone
+                      Telefone
                     </Label>
                     <Input
                       id="phone"
@@ -192,16 +202,16 @@ export function DialogEditUser({
                       className="col-span-3"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      disabled={isDisabled}
+                      disabled={disabled}
                     />
                   </div>
                 </>
               )}
 
-              {/* Profile Image Upload */}
+              {/* Imagem */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="image" className="text-right">
-                  Profile Image
+                  Foto de Perfil
                 </Label>
                 <Input
                   id="image"
@@ -211,10 +221,11 @@ export function DialogEditUser({
                   onChange={(e) =>
                     setImage(e.target.files ? e.target.files[0] : null)
                   }
+                  disabled={disabled}
                 />
               </div>
 
-              {/* Preview atual */}
+              {/* Pré-visualizações */}
               {user.photo && (
                 <div className="flex justify-center">
                   <img
@@ -225,7 +236,6 @@ export function DialogEditUser({
                 </div>
               )}
 
-              {/* Preview nova imagem */}
               {image && (
                 <div className="flex justify-center">
                   <img
@@ -243,16 +253,16 @@ export function DialogEditUser({
           <Button
             type="button"
             onClick={handleUpdateUser}
-            disabled={!role || !name || isDisabled}
+            disabled={!role || !name || disabled}
           >
-            Save
+            Salvar
           </Button>
           <Button
             type="button"
             variant="outline"
             onClick={() => setIsOpen(false)}
           >
-            Cancel
+            Cancelar
           </Button>
         </DialogFooter>
       </DialogContent>

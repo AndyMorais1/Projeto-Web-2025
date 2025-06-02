@@ -9,6 +9,8 @@ export const CreateUserSchema = zod.object({
     password: zod.string(),
     phone: zod.string().optional(),
     role: zod.enum(['CLIENT', 'ADMIN', 'AGENT']).default('CLIENT'),
+    isSuperAdmin: zod.boolean().optional(),
+
 });
 
 export const UpdateUserSchema = zod.object({
@@ -23,6 +25,7 @@ export const UpdateUserSchema = zod.object({
     role: zod.enum(['CLIENT', 'ADMIN', 'AGENT']).optional(),
     status: zod.enum(['ACTIVE', 'INACTIVE','PENDING']).optional(),
     photo: zod.string().optional(),
+    isSuperAdmin: zod.boolean().optional(),
 });
 
 export const ResponseUserSchema = zod.object({
@@ -38,6 +41,8 @@ export const ResponseUserSchema = zod.object({
     houses: zod.array(zod.string()).optional(),
     createdAt: zod.date(),
     updatedAt:zod.date(),
+    isSuperAdmin: zod.union([zod.boolean(), zod.null()]).optional(),
+
 });
 
 export const LoginSchema = zod.object({
