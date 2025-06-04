@@ -76,7 +76,7 @@ class UserService {
     public async updateUser(id: string, data: UpdateUserSchema) {
 
         if (data.isSuperAdmin) {
-            const requestingUser = await prisma.user.findUnique({ where: { id } });
+            const requestingUser = await prisma.user.findUnique({where: {id}});
 
             if (!requestingUser?.isSuperAdmin) {
                 throw new Error("Apenas um superadmin pode promover outro superadmin.");
@@ -94,7 +94,7 @@ class UserService {
         }
 
         const user = await prisma.user.update({
-            where: { id },
+            where: {id},
             data: {
                 name: data.name,
                 email: data.email,
@@ -162,20 +162,42 @@ class UserService {
 
 
     public async deleteUser(id: string) {
-        const user = await this.getUserById(id);
-        await prisma.house.deleteMany({
-            where: {
-                agentId: id,
-            },
-        });
-        await prisma.user.delete({
-            where: {
-                id,
-            },
-        });
+        try {
+            const user = await this.getUserById(id);
 
-        return {message: "Usuário e casas vinculadas deletados com sucesso."};
+            if (!user) {
+                return {
+                    statusCode: 404,
+                    message: "Usuário não encontrado.",
+                };
+            }
+
+            await prisma.$transaction(async (tx) => {
+                const houses = await tx.house.findMany({where: {agentId: id}});
+
+                for (const house of houses) {
+                    await tx.visit.deleteMany({where: {houseId: house.id}}); // CORRETO
+                }
+
+                await tx.house.deleteMany({where: {agentId: id}});
+                await tx.user.delete({where: {id}});
+            });
+
+            return {
+                statusCode: 200,
+                message: "Usuário e casas vinculadas deletados com sucesso.",
+            };
+        } catch (error) {
+            console.error("Erro ao deletar usuário:", error);
+
+            return {
+                statusCode: 500,
+                message: "Erro interno ao excluir usuário.",
+                error: error instanceof Error ? error.message : String(error),
+            };
+        }
     }
+
 
     public async getAllUsers(): Promise<ResponseUserSchema[]> {
         const users = await prisma.user.findMany({
