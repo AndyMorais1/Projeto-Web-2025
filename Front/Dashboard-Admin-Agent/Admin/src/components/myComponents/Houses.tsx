@@ -153,6 +153,7 @@ export function Houses() {
                     variant="outline"
                     size="icon"
                     onClick={() => handleDeleteHouse(house.id || "")}
+                    disabled
                   >
                     <Trash className="text-red-500" size={18} />
                   </Button>

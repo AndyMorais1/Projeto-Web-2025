@@ -72,7 +72,7 @@ export function DialogFilterHouses() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild >
         <Button variant="outline">
           <Filter className="mr-2" size={18} />
           Filtrar

@@ -245,7 +245,7 @@ export function DialogCreateHouse() {
         </div>
 
         <DialogFooter>
-          <Button onClick={handleSubmit}>Cadastrar</Button>
+          <Button disabled onClick={handleSubmit}>Cadastrar</Button>
           <Button variant="outline" onClick={() => setIsOpen(false)}>Cancelar</Button>
         </DialogFooter>
       </DialogContent>

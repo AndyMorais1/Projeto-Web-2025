@@ -109,7 +109,7 @@ export function EmailDialog({ recipientEmail }: EmailDialogProps) {
         </div>
 
         <DialogFooter>
-          <Button onClick={handleSend} disabled={isLoading}>
+          <Button onClick={handleSend} disabled>
             {isLoading ? "Enviando..." : "Enviar"}
           </Button>
         </DialogFooter>

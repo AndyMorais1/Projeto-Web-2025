@@ -100,7 +100,7 @@ export function DialogEditUser({
           onClick={() => setIsOpen(true)}
           variant="outline"
           size="icon"
-          disabled={isDisabled}
+          disabled
         >
           <Pencil className="text-blue-600" />
         </Button>

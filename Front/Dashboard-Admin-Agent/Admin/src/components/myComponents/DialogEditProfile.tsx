@@ -78,7 +78,7 @@ export function DialogEditProfile() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild disabled>
         <Button onClick={() => setIsOpen(true)}>
           <Pencil className="mr-2 h-4 w-4" /> Editar o perfil
         </Button>

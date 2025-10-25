@@ -146,7 +146,7 @@ export function UserTable() {
                       variant="outline"
                       size="icon"
                       onClick={() => handleDeleteClick(user.id || "")}
-                      disabled={user.role.toLowerCase() === "admin"}
+                      disabled
                     >
                       <Trash className="text-red-600" />
                     </Button>

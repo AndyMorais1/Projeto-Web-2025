@@ -83,6 +83,7 @@ export function Requests() {
   };
 
   return (
+    
     <div className="p-4">
       {/* Verifica se há agentes pendentes */}
       {pendingAgents.length === 0 ? (
@@ -103,6 +104,7 @@ export function Requests() {
                   variant="outline"
                   className="text-green-500 border-green-500 hover:bg-green-500 hover:text-white"
                   onClick={() => handleAcceptClick(agent)}
+                  disabled
                 >
                   <Check className="w-5 h-5" />
                 </Button>
@@ -110,6 +112,7 @@ export function Requests() {
                   variant="outline"
                   className="text-red-500 border-red-500 hover:bg-red-500 hover:text-white"
                   onClick={() => handleRejectClick(agent)}
+                  disabled
                 >
                   <X className="w-5 h-5" />
                 </Button>

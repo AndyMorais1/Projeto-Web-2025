@@ -8,7 +8,6 @@ export default function DashboardPage() {
       <header>
         <h1 className="p-2.5 text-2xl font-medium mb-5">Painel</h1>
       </header>
-
       <main>
         <Cards />
 

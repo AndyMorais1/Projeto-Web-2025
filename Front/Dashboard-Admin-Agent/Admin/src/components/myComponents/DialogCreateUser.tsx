@@ -205,7 +205,7 @@ export function DialogCreateUser({
           <Button
             type="button"
             onClick={handleCreateUser}
-            disabled={!role || !name || !password}
+            disabled
           >
             Criar
           </Button>

@@ -78,7 +78,7 @@ export function DialogCreateHouseType() {
                 </div>
 
                 <DialogFooter>
-                    <Button type="button" onClick={handleSubmit}>
+                    <Button type="button" disabled onClick={handleSubmit}>
                         Criar
                     </Button>
                     <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>

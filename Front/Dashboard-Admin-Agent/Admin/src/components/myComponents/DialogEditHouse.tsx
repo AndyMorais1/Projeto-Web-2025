@@ -121,7 +121,7 @@ export function DialogEditHouse({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild disabled>
         <Button onClick={() => setIsOpen(true)} variant="outline" size="icon">
           <Pencil className="text-blue-500" size={18} />
         </Button>

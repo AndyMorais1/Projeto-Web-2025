@@ -43,7 +43,7 @@ export function DialogFilterUser({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild >
         <Button onClick={() => setIsOpen(true)} variant="outline">
           <Filter className="mr-2 h-4 w-4" />
           Filtrar
@@ -76,7 +76,7 @@ export function DialogFilterUser({
         </div>
         <DialogFooter>
           <Button type="button" onClick={handleSubmit}>
-            Apply
+            Aplicar
           </Button>
           <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
             Cancel
