@@ -48,12 +48,10 @@ const renderUserRole = (role?: string) => {
   }
 };
 
-
 export function UserTable() {
-  const { users, setUsers } = useUsers();
+  const { users, setUsers, currentUser } = useUsers();
   const [originalUsers, setOriginalUsers] = useState<UserData[]>([]);
 
-  // Salvar os dados originais apenas uma vez ao carregar
   useEffect(() => {
     if (users.length > 0 && originalUsers.length === 0) {
       setOriginalUsers(users);
@@ -87,7 +85,7 @@ export function UserTable() {
 
   const handleFilter = ({ role }: { role?: string | null }) => {
     if (!role) {
-      setUsers(originalUsers); // Restaura a lista original
+      setUsers(originalUsers);
     } else {
       const filtered = originalUsers.filter(
         (user) => user.role.toLowerCase() === role.toLowerCase()
@@ -108,7 +106,8 @@ export function UserTable() {
       <div className="w-full max-w-5xl overflow-x-auto">
         <Table className="w-full border">
           <TableCaption className="mt-10">
-            Lista de usuários cadastrados no sistema. / Não é possível executar ações de edição e exclusão em usuários do tipo administrador.
+            Lista de usuários cadastrados no sistema. / Apenas superadmins
+            podem editar ou excluir administradores.
           </TableCaption>
           <TableHeader>
             <TableRow>
@@ -122,20 +121,9 @@ export function UserTable() {
           </TableHeader>
           <TableBody>
             {users.length > 0 ? (
-              users.map((user) => (
-                <TableRow key={String(user.id)}>
-                  <TableCell className="text-center">
-                    {renderUserRole(user.role)}
-                  </TableCell>
-
-                  <TableCell className="text-center">{user.name}</TableCell>
-                  <TableCell className="text-center">
-                    {user.email || "-"}
-                  </TableCell>
-                  <TableCell className="text-center">{user.phone || "---"}</TableCell>
-                  <TableCell className="text-center">
-                    {renderUserStatus(user.status)}
-                  </TableCell>
+              users.map((user) => {
+                const isAdmin = user.role.toLowerCase() === "admin";
+                const canModify = !isAdmin || currentUser?.isSuperAdmin;
 
                   <TableCell className="flex justify-center gap-4">
                     <DialogEditUser

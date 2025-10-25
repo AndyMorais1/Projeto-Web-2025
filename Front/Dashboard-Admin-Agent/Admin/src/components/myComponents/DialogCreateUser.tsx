@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +25,7 @@ import { usersServices } from "@/api/Users";
 import { UserData } from "@/data/UserData";
 import { toast } from "sonner";
 import { uploadImage } from "@/utils/uploadImage";
+import { useUsers } from "@/contexts/UsersContext";
 
 export function DialogCreateUser({
   onUserCreated,
@@ -35,7 +38,9 @@ export function DialogCreateUser({
   const [phone, setPhone] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
   const [image, setImage] = React.useState<File | null>(null);
+  const [isSuperAdmin, setIsSuperAdmin] = React.useState<boolean>(false); // ✅
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
+  const { currentUser } = useUsers();
 
   const handleCreateUser = async () => {
     try {
@@ -44,7 +49,7 @@ export function DialogCreateUser({
         photo = await uploadImage(image);
       }
 
-      const userData: UserData = {
+      const userData: UserData & { isSuperAdmin?: boolean } = {
         role,
         name,
         email,
@@ -55,6 +60,10 @@ export function DialogCreateUser({
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
+
+      if (role === "ADMIN" && currentUser?.isSuperAdmin) {
+        userData.isSuperAdmin = isSuperAdmin; // ✅
+      }
 
       usersServices
         .createUser(userData)
@@ -70,6 +79,7 @@ export function DialogCreateUser({
           setPhone("");
           setPassword("");
           setImage(null);
+          setIsSuperAdmin(false); // reset
           onUserCreated(createdUser);
         })
         .catch((error) => {
@@ -96,6 +106,7 @@ export function DialogCreateUser({
     setPhone("");
     setPassword("");
     setImage(null);
+    setIsSuperAdmin(false);
   };
 
   return (
@@ -103,7 +114,7 @@ export function DialogCreateUser({
       <DialogTrigger asChild>
         <Button onClick={() => setIsOpen(true)}>
           <CirclePlus className="mr-2" />
-        Criar Usuário
+          Criar Usuário
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -114,6 +125,7 @@ export function DialogCreateUser({
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
+          {/* Select role */}
           <div className="flex flex-col space-y-1.5">
             <Label htmlFor="role">Tipo de Usuário</Label>
             <Select value={role} onValueChange={(value) => setRole(value)}>
@@ -123,7 +135,13 @@ export function DialogCreateUser({
               <SelectContent>
                 <SelectItem value="CLIENT">Cliente</SelectItem>
                 <SelectItem value="AGENT">Agente</SelectItem>
-                <SelectItem value="ADMIN" disabled>Administrador</SelectItem>
+                <SelectItem
+                  value="ADMIN"
+                  disabled={!currentUser?.isSuperAdmin}
+                  title={!currentUser?.isSuperAdmin ? "Apenas superadmin pode criar um administrador" : ""}
+                >
+                  Administrador
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -131,6 +149,7 @@ export function DialogCreateUser({
           {role && (
             <form>
               <div className="grid gap-4">
+                {/* Nome */}
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="name" className="text-right">
                     Nome
@@ -143,7 +162,9 @@ export function DialogCreateUser({
                     onChange={(e) => setName(e.target.value)}
                   />
                 </div>
-                {(role === "CLIENT" || role === "AGENT") && (
+
+                {/* Email e Telefone */}
+                {(role === "CLIENT" || role === "AGENT" || role === "ADMIN") && (
                   <>
                     <div className="grid grid-cols-4 items-center gap-4">
                       <Label htmlFor="email" className="text-right">
@@ -171,6 +192,8 @@ export function DialogCreateUser({
                     </div>
                   </>
                 )}
+
+                {/* Senha */}
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="password" className="text-right">
                     Senha
@@ -183,6 +206,8 @@ export function DialogCreateUser({
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
+
+                {/* Foto */}
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="image" className="text-right">
                     Foto de Perfil
@@ -197,10 +222,27 @@ export function DialogCreateUser({
                     }
                   />
                 </div>
+
+                {/* Superadmin toggle (somente se admin) */}
+                {role === "ADMIN" && currentUser?.isSuperAdmin && (
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="superadmin" className="text-right">
+                      Superadmin
+                    </Label>
+                    <input
+                      id="superadmin"
+                      type="checkbox"
+                      checked={isSuperAdmin}
+                      onChange={(e) => setIsSuperAdmin(e.target.checked)}
+                      className="col-span-3 h-5 w-5"
+                    />
+                  </div>
+                )}
               </div>
             </form>
           )}
         </div>
+
         <DialogFooter>
           <Button
             type="button"

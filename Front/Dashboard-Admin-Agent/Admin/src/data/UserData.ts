@@ -9,6 +9,7 @@ export interface UserData {
   photo?: string;
   createdAt: string;
   updatedAt: string;
+   isSuperAdmin?: boolean;
 }
 
 
@@ -16,6 +17,7 @@ export interface UserData {
 export type UserDataOptional = Partial<UserData> & {
   currentPassword?: string;
   newPassword?: string;
+   isSuperAdmin?: boolean;
 };
 
 
